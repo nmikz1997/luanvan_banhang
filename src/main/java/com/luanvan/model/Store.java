@@ -14,7 +14,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -24,14 +23,16 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "store")
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public class Store{
@@ -58,7 +59,6 @@ public class Store{
 	@Column(columnDefinition = "TEXT")
 	private String derciption;
 	
-	@AssertTrue
 	private boolean status;
 	
 	@CreatedDate
@@ -71,10 +71,12 @@ public class Store{
 	@JoinColumn(name = "user_id",referencedColumnName = "id")
 	private User user;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "store")
 	private List<Product> products;
 	
 	//OneToMany Member
+	@JsonIgnore
 	@OneToMany(mappedBy = "store")
 	private List<Member> members;
 	

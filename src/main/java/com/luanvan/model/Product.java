@@ -14,23 +14,36 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(name = "product")
 @EntityListeners(AuditingEntityListener.class)
-@Data // lombok giúp generate các hàm constructor, get, set
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Product implements Serializable{	
+@ToString(exclude = "pictures")
+@EqualsAndHashCode(exclude = "pictures")
+//@JsonIgnoreProperties(value = {"createdAt", "updatedAt"}, allowGetters = true)
+//@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="id")
+public class Product implements Serializable{
+
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -52,34 +65,58 @@ public class Product implements Serializable{
 	private Long quantity;
 	
 	@CreatedDate
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdAt;
 	
 	@LastModifiedDate
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date updatedAt;
 	
 	@ManyToOne
-	@JoinColumn(name = "category_id")
+	@JoinColumn(nullable = false)
 	private Category category;
 	
 	@ManyToOne
-	@JoinColumn(name = "material_id")
+	@JoinColumn(nullable = false)
 	private Material material;
 	
 	@ManyToOne
-	@JoinColumn(name = "origin_id")
+	@JoinColumn(nullable = false)
 	private Origin origin;
 	
 	@ManyToOne
-	@JoinColumn(name = "store_id")
+	@JoinColumn(nullable = false)
 	private Store store;
 	
-	@OneToMany(mappedBy = "product")
-	private List<Image> images;
+	@ManyToOne
+	@JoinColumn(nullable = false)
+	private Producer producer;
 	
-	@OneToMany(mappedBy = "product")
-	private List<UnitPrice> unitPrice;
+	@JsonIgnore
+	@OneToMany(mappedBy="product")
+	private List<Picture> pictures;
 	
-	@OneToMany(mappedBy = "product")
-	private List<PromotionProduct> promotionProducts;
-
+	@JsonIgnore
+	@OneToMany(mappedBy="product")
+	private List<Price> prices;
+	
+	@JsonIgnore
+	@OneToMany(mappedBy="product")
+	private List<Question> questions;
+	
+	@JsonIgnore
+	@OneToMany(mappedBy="product")
+	private List<Review> reviews;
+	
+//	@ManyToMany(cascade = {CascadeType.MERGE})
+//	@EqualsAndHashCode.Exclude
+//	@ToString.Exclude
+//	@JoinTable(name = "attribute_value_product",
+//			joinColumns = @JoinColumn(name = "product_id"),
+//			inverseJoinColumns = @JoinColumn(name = "attribute_value_id")
+//	)
+//	private Set<AttributeValue> attributeValues = new HashSet<>();
+	
+//	@OneToMany(mappedBy = "product")
+//	private List<PromotionProduct> promotionProducts;
 }

@@ -3,9 +3,11 @@ package com.luanvan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import nz.net.ultraq.thymeleaf.LayoutDialect;
 
+@EnableJpaAuditing
 @SpringBootApplication
 public class LuanVanApplication {
 
@@ -17,15 +19,4 @@ public class LuanVanApplication {
 	public LayoutDialect layoutDialect() {
 		return new LayoutDialect();
 	}
-
-	
-//	@GetMapping(value = "/content1")
-//	public String content1() {
-//		return "admin/index";
-//	}
-//	
-//	@GetMapping(value = "/content2")
-//	public String content2() {
-//		return "Content2";
-//	}
 }

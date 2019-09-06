@@ -40,7 +40,7 @@ public class Order{
 	private Date createdAt;
 	
 	//tong gia tri
-	@NotNull
+
 	private int total;
 	
 	//OneToMany OrderStatusDetail

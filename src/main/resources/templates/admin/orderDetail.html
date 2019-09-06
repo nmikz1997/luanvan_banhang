@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{admin/layout/Layout}">
+<head>
+  <title>Quản lý chi tiết đơn đặt hàng</title>
+</head>
+<body>
+  <section layout:fragment="content">
+    <div class="container-fluid" ng-controller="OrderDetailController">
+          <!-- Page Heading -->
+          <h1 class="h3 mb-2 text-gray-800">Quản lý chi tiết đơn đặt hàng</h1>
+          <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below. For more information about DataTables, please visit the <a target="_blank" href="https://datatables.net">official DataTables documentation</a>.</p>
+          <!-- DataTales Example -->
+          <div class="card shadow mb-4">
+            <div class="card-header py-3">
+              <h6 class="m-0 font-weight-bold text-primary">Danh sách sản phẩm</h6>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th>Tên sản phẩm</th>
+                      <th>Số lượng</th>
+                      <th>Thành tiền</th>
+                      <th>Khách hàng</th>
+                      <th>Tình trạng</th>
+                      <th>Thời điểm</th>
+                      <th>
+	                      <a href="#" class="btn btn-success" ng-click="modal('add')">
+	                      	Thêm sản phẩm
+	                      </a>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat = "product in products">
+                      <td>
+                      	<a href="#">
+                      		{{ product.name }}
+                      	</a>
+                      </td>
+                      <td>	{{ product.quantity }}	</td>
+                      <td>	{{ product.price }}	</td>
+                      <td>	{{ product.price }}	</td>
+                      <td>	<button>aaa</button></td>
+                      <td>	{{ product.createdAt }}	</td>
+                      
+                      <td align="center">
+                      	  <a href="#" class="btn btn-info" title="Xem thông tin chi tiết sản phẩm" />
+	                      <i class="fas fa-info-circle"></i>
+	                      </a>
+                      	  <a href="#" ng-click="modal('images',product.id)" class="btn btn-primary" title="Quản lý hình ảnh sản phẩm" />
+	                      <i class="fas fa-images"></i>
+	                      </a>
+	                      <a href="#" ng-click="modal('edit',product.id)" class="btn btn-warning" title="Chỉnh sửa thông tin sản phẩm" />
+	                      <i class="fas fa-edit"></i>
+	                      </a>
+	                      <a href="#" ng-click="confirmDelete(product.id)" class="btn btn-danger" title="Xóa sản phẩm">
+	                      <i class="fas fa-trash"></i>
+	                      </a>
+                      </td>
+                    </tr>
+                    <tr>
+                    	<td colspan="6">Tổng giá trị:</td>
+                    	<td>3333333</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        <!-- /.container-fluid -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">{{frmTitle}}</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<form name="frmProduct" class="form-horizontal">
+							<div class="form-group">
+								<label for="name" class="col-form-label">Tên sản phẩm:</label>
+								<input type="text" class="form-control" id="name" name="name" ng-model="product.name" ng-required="true"/>
+								<span id="helpBlock2" class="help-block" ng-show="frmProduct.name.$error.required">Vui lòng nhập tên sản phẩm</span>
+							</div>
+							<div class="form-group">
+								<label for="category" class="col-form-label">Loại sản phẩm: </label>
+								<select name="category" id="category" ng-model="product.category.id" class="form-control" ng-options="category.id as category.name for category in arrCategory">
+                				<span id="helpBlock" class="help-block" ng-show="frmProduct.category.$error.required">Vui lòng chọn </span>
+								</select>
+							</div>
+							<div class="form-group">
+								<label for="origin" class="col-form-label">Nhà sản xuất: </label>
+								<select name="origin" id="origin" ng-model="product.origin.id" class="form-control" ng-options="origin.id as origin.name for origin in arrOrigin">
+								</select>
+								<span id="helpBlock2" class="help-block" ng-show="frmProduct.ten.$error.required">Vui lòng chọn </span>
+							</div>
+							<div class="form-group">
+								<label for="material" class="col-form-label">Loại vật liệu <span id="helpBlock2" class="help-block" ng-show="frmProduct.material.$error.required">*</span>: </label>
+								<select name="material" id="material" ng-model="product.material.id" class="form-control" ng-options="material.id as material.name for material in arrMaterial">
+								</select>
+							</div>
+							<div class="form-group">
+								<label for="quantity" class="col-form-label">Số lượng:</label>
+								<input type="number" min="0" class="form-control" id="quantity" name="quantity" ng-model="product.quantity" ng-required="true" />
+								<span id="helpBlock2" class="help-block" ng-show="frmProduct.quantity.$error.required">Vui lòng nhập số lượng</span>
+							</div>
+							<div class="form-group">
+								<label for="price" class="col-form-label">Giá gốc:</label>
+								<input type="number" min="0" class="form-control" id="price" name="price" ng-model="product.price" ng-required="true" />
+								<span id="helpBlock2" class="help-block" ng-show="frmProduct.price.$error.required">Vui lòng nhập giá gốc</span>
+							</div>
+				            <div class="form-group">
+				                <label for="image" class="col-form-label">Ảnh đại diện:</label>
+				                <input type="file" min="0" id="image" name="image" ng-file-select="onFileSelect($files)" ng-model="product.image" />
+				                <img style="width:200px; height:200px" ng-src="{{product.image}}" />
+				            </div>
+							<div class="form-group">
+								<label for="mota" class="col-form-label">Mô tả:</label>
+								<textarea class="form-control" id="derciption" name="derciption" ng-model="product.derciption" ng-required="true"></textarea>
+								<span id="helpBlock2" class="help-block" ng-show="frmProduct.derciption.$error.required">Vui lòng mô tả sản phẩm</span>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" ng-disabled="frmProduct.$invalid" ng-click="save(state,product.id)">Gửi</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+        
+  </section>
+  <section layout:fragment="script">
+  	<script th:src="@{/app/order.js}"></script>
+  </section>
+</body>
+</html>

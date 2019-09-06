@@ -4,6 +4,16 @@ import java.util.List;
 
 import com.luanvan.model.Store;
 public interface StoreService {
-	List<Store> findAllStore();
-	Store findStoreById(Long id);
+	
+	List<Store> findAll();
+	
+	List<Store> findByName(String name);
+	
+	Store findById(Long id);
+	
+	Store create(Store origin);
+
+	Store update(Store origin, Long id);
+	
+	void delete(Long id);
 }

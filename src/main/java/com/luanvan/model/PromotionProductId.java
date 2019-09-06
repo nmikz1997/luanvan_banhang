@@ -15,6 +15,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PromotionProductId implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7797599881073041071L;
+
 	@Column(name = "promotion_id")
 	private Long promotionId;
 	

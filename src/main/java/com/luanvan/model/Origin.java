@@ -10,7 +10,16 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "origin")
 public class Origin {
 	
@@ -21,43 +30,10 @@ public class Origin {
 	@NotNull
 	private String name;
 	
-	@OneToMany(mappedBy = "origin")
-	private List<Product> products;
-
-	public Origin() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	public Origin(Long id, @NotNull String name, List<Product> products) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.products = products;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public List<Product> getProducts() {
-		return products;
-	}
-
-	public void setProducts(List<Product> products) {
-		this.products = products;
-	}
+	private boolean status;
+	
+	@JsonIgnore
+	@OneToMany(mappedBy="category")
+	private List<Product> product;
 
 }

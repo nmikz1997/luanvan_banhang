@@ -1,9 +1,12 @@
 package com.luanvan.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,6 +30,11 @@ public class CategoryController {
 		this.categoryService = categoryService;
 	}
 	
+	@GetMapping
+	public List<Category> findAll() {
+		return categoryService.findAll();
+	}
+	
 	@GetMapping("{id}")
 	public Category show(@PathVariable(name = "id") Long id) {
 		return categoryService.findById(id);
@@ -41,6 +49,11 @@ public class CategoryController {
 	@PutMapping("/{id}")
 	public Category update(@PathVariable Long id, @Valid @RequestBody Category category) {
 		return categoryService.update(category, id);
+	}
+	
+	@DeleteMapping("/{id}")
+	public void delete(@PathVariable Long id) {
+		categoryService.delete(id);
 	}
 
 }

@@ -11,11 +11,17 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
-@Table(name = "payment_type")
+@Table
 public class PaymentType{
 
 	@Id
@@ -26,6 +32,7 @@ public class PaymentType{
 	private String name;
 
 	//OneToMany Order
+	@JsonIgnore
 	@OneToMany(mappedBy = "paymentType")
 	private List<Order> orders;
 }

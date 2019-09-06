@@ -10,6 +10,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,7 +21,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Material {//chất liệu
+public class Material {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,6 +30,9 @@ public class Material {//chất liệu
 	@NotNull
 	private String name;
 	
-	@OneToMany(mappedBy = "material")
-	private List<Product> products;
+	private boolean status;
+	
+	@JsonIgnore
+	@OneToMany(mappedBy="material")
+	private List<Product> product;
 }

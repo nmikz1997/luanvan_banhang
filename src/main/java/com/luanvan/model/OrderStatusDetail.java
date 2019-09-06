@@ -1,6 +1,7 @@
 package com.luanvan.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -9,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import lombok.Data;
@@ -19,6 +21,8 @@ import lombok.Data;
 @EntityListeners(AuditingEntityListener.class)
 public class OrderStatusDetail implements Serializable{
 	
+	private static final long serialVersionUID = -2818982875581539085L;
+
 	@Id
 	@ManyToOne
 	@JoinColumn(name = "order_status_id")
@@ -29,13 +33,7 @@ public class OrderStatusDetail implements Serializable{
 	@JoinColumn(name = "order_id")
 	private Order order;
 	
-	
-	//tinh trang don hang
-
-	
 	//ngay tao
-	
-	//ngay cap nhat
-	
-	//User cap nhat
+	@CreatedDate
+	private Date createdAt;
 }
