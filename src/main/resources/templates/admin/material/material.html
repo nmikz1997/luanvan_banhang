@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{admin/layout/Layout}">
+<head>
+<title>Quản lý danh mục sản phẩm</title>
+<meta charset="utf-8" />
+<section layout:fragment="css"></section>
+</head>
+<body>
+	<section layout:fragment="content" ng-controller="MaterialController">
+		<div class="container-fluid">
+			<!-- Page Heading -->
+			<h1 class="h3 mb-2 text-gray-800">Quản lý danh mục sản phẩm</h1>
+			<p class="mb-4">
+				DataTables is a third party plugin that is used to generate the demo
+				table below. For more information about DataTables, please visit the
+				<a target="_blank" href="https://datatables.net">official
+					DataTables documentation</a>.
+			</p>
+			<!-- DataTales Example -->
+			<div class="row">
+				<div class="col-lg-6 offset-lg-3">
+					<div class="card shadow mb-4">
+						<div class="card-body">
+							<form name="frmData" class="form-horizontal">
+								<div class="form-group">
+									<label for="name" class="col-form-label">Mã</label> 
+									<input type="text" class="form-control" id="dataName"
+										name="name" ng-model="obj.id" ng-readonly="true"/>
+									<label for="name" class="col-form-label">Chất liệu <span
+										id="helpBlock2" class="help-block"
+										ng-show="frmData.name.$error.required">(*)</span>
+									</label> 
+									<input type="text" class="form-control" id="dataName"
+										name="name" ng-model="obj.name" ng-required="true" />
+								</div>
+								<button type="button" class="btn btn-primary"
+									ng-disabled="frmData.$invalid" ng-click="save(state)">Lưu</button>
+								<button type="button" class="btn btn-warning"
+									ng-disabled="frmData.$invalid" ng-click="reset()">Reset</button>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-12">
+					<div class="card shadow mb-4">
+						<div class="card-header py-3">
+							<h6 class="m-0 font-weight-bold text-primary">DataTables
+								Example</h6>
+						</div>
+						<div class="card-body">
+							<div class="table-responsive">
+								<table class="table table-bordered table-hover" id="dataTable" 
+								width="100%" cellspacing="0" >
+									<thead>
+										<tr>
+											<th>Mã</th>
+											<th>Chất liệu</th>
+											<th>Action</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-repeat="dt in data">
+											<td>{{ dt.id }}</td>
+											<td>{{ dt.name }}</td>
+											<td style="text-align: center">
+												<button class="btn btn-warning" ng-click="get(dt.id)">
+													<i class="far fa-edit"></i>
+												</button>
+												<button class="btn btn-danger"
+													ng-click="confirmDelete(dt.id)">
+													<i class="far fa-trash-alt"></i>
+												</button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<section layout:fragment="script">
+		<script th:src="@{/app/material.js}"></script>
+	</section>
+</body>
+</html>

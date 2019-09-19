@@ -47,13 +47,9 @@ public class Category{
 	private List<Product> product;
 	
 	@JsonIgnore
-	@ManyToMany(cascade = {CascadeType.MERGE})
-	@EqualsAndHashCode.Exclude
+	@ManyToMany(mappedBy = "categories",cascade = CascadeType.ALL)
 	@ToString.Exclude
-	@JoinTable(name = "category_attribute",
-			joinColumns = @JoinColumn(name = "category_id"),
-			inverseJoinColumns = @JoinColumn(name = "attribute_id")
-	)
-	private Set<Attribute> attributes = new HashSet<>();
+	@EqualsAndHashCode.Exclude
+    private Set<Attribute> attributes;
 
 }

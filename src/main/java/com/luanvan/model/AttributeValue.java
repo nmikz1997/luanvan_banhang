@@ -1,9 +1,8 @@
 package com.luanvan.model;
 
-import java.io.Serializable;
-import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,22 +14,20 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
-@Table
+@Table(name = "attribute_value")
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class AttributeValue implements Serializable{
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+@AllArgsConstructor
+public class AttributeValue{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,11 +36,14 @@ public class AttributeValue implements Serializable{
 	@NotNull
 	private String name;
 	
-//	@JsonIgnore
-//	@ManyToMany(mappedBy = "attributeValues")
-//    private Set<Product> products = new HashSet<>();
+	@JsonIgnore
+	@ToString.Exclude
+	@EqualsAndHashCode.Exclude
+	@ManyToMany(mappedBy = "attributeValues", cascade = CascadeType.ALL)
+    private Set<Product> products;
 	
-	@ManyToOne
+	@JsonIgnoreProperties("attributeValues")
+	@ManyToOne()
 	@JoinColumn(nullable = false)
 	private Attribute attribute;
 	

@@ -3,7 +3,6 @@ package com.luanvan.model;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -23,14 +22,18 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode.Exclude;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-@Table(name = "store")
+@Table(name="store")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -62,13 +65,17 @@ public class Store{
 	private boolean status;
 	
 	@CreatedDate
+	@JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 	private Date createdAt;
 	
 	@LastModifiedDate
+	@JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 	private Date updatedAt;
 	
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "user_id",referencedColumnName = "id")
+	@NotNull
+	@OneToOne
+	@Exclude
+	@JoinColumn(name = "user_id")
 	private User user;
 	
 	@JsonIgnore
@@ -80,5 +87,8 @@ public class Store{
 	@OneToMany(mappedBy = "store")
 	private List<Member> members;
 	
+	@JsonIgnore
+	@OneToMany(mappedBy = "store")
+	private List<Order> orders;
 	//OneToMany order
 }

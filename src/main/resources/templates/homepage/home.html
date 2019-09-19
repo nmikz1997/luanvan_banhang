@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{homepage/layout/Layout}">
+<head>
+  <title>Cuộc sống xanh</title>
+  <section layout:fragment="css"></section>
+</head>
+<body ng-controller="HomeController">
+  <section layout:fragment="content">
+  	<section layout:replace="homepage/section/banner :: banner" ></section>
+  	<section layout:replace="homepage/section/sanphamkhuyenmai :: sectionSPKM"></section>
+  </section>
+  <section layout:fragment="script">
+  <script th:src="@{/app/home.js}"></script>
+  </section>
+</body>
+</html>

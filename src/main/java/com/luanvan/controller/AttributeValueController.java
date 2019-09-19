@@ -1,6 +1,9 @@
 package com.luanvan.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +24,12 @@ public class AttributeValueController {
 	}
 	
 	@PostMapping
-	public AttributeValue save(@RequestBody AttributeValue attributeValue) {
-		return attributeValueService.save(attributeValue);
+	public void save(@RequestBody AttributeValue attributeValue) {
+		attributeValueService.save(attributeValue);
+	};
+	
+	@GetMapping
+	public List<AttributeValue> findAll() {
+		return attributeValueService.findAll();
 	};
 }

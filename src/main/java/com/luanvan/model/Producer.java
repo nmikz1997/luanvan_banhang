@@ -8,7 +8,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.URL;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -29,6 +32,19 @@ public class Producer {
 	
 	@NotNull
 	private String name;
+	
+	@NotNull
+	private Boolean status;
+	
+	@NotNull
+	@Email
+	private String email;
+	
+	@NotNull
+	private String phoneNumber;
+	
+	@URL
+	private String website;
 	
 	@JsonIgnore
 	@OneToMany(mappedBy="producer")

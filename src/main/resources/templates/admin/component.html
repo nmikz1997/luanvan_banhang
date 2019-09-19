@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{admin/layout/Layout}">
+<head>
+  <title>Quản lý danh mục sản phẩm</title>
+  <meta charset="utf-8" />
+  <section layout:fragment="css">
+  	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.10/css/bootstrap-select.min.css" />
+  </section>
+</head>
+<body>
+  <section layout:fragment="content" ng-controller="ComponentController">
+    <div class="container-fluid">
+    	<h1 ng-bind="hello"></h1>
+    	<label>Tỉnh thành:</label>
+		<select class="selectpicker" data-size="5" data-style="btn-success"
+				data-live-search="true" 
+				ng-model="selectedProvince" 
+				ng-change="getId('province')">
+			<option data-tokens="ketchup mustard" 
+					ng-repeat="province in provinces" 
+					ng-selected="selectedProvince == province.provinceid" 
+					value="{{province.provinceid}}">
+				{{province.name}}
+			</option>
+		</select>
+		
+		<label>Quận huyện:</label>
+		<select class="selectpicker" data-size="5" data-style="btn-success"
+				data-live-search="true" 
+				ng-model="selectedDistrict" 
+				ng-change="getId('district')">
+			<option data-tokens="ketchup mustard" 
+					ng-repeat="district in districts"
+					ng-selected="selectedDistrict == district.districtid" 
+					value="{{district.districtid}}">
+				{{district.name}}
+			</option>
+		</select>
+		
+		<label>Phường xã:</label>
+		<select class="selectpicker" data-style="btn-success"
+				data-size="5"
+				data-live-search="true"
+				ng-model="selectedWard"
+				ng-change="getId('ward')">
+			<option 
+				data-tokens="ketchup mustard" 
+				ng-repeat="ward in wards" 
+				value="{{ward.wardid}}">
+				{{ward.name}}
+			</option>
+		</select>
+		
+		<div style="margin-top:10px">
+		<label>Chọn danh mục</label>
+		<select class="selectpicker test" data-style="btn-success">
+		  <optgroup ng-repeat="cate in categories" label="{{ cate.name }}">
+		    <option ng-repeat="ct in cate.categories" value="{{ct.id}}">{{ ct.name }}</option>
+		  </optgroup>
+		</select>
+		</div>
+		<div ng-repeat="attribute in attributes">
+			<label>{{attribute.name}}</label>
+			<select class="selectpicker" multiple data-actions-box="true" name="color" id="color" data-style="btn-success">
+			  <option ng-repeat="value in attribute.attributeValues" ng-value="{{value.id}}">{{value.name}}</option>
+			</select>
+		</div>
+		<input type="button" id="save_value" name="save_value" value="Save" />
+	<div>
+		<form name="frmobj" id="frmobj" enctype="multipart/form-data" class="form-horizontal">
+			<div class="form-group">
+				<label for="name" class="col-form-label">Tên nhà sản xuất:</label><span id="helpBlock2" class="help-block" ng-show="frmobj.name.$error.required">*</span>
+				<input type="text" class="form-control" ng-model="obj.name" ng-required="true"/>
+			</div>
+			<div class="form-group">
+			    <label for="file">Example file input</label>
+			    <input type="file" class="form-control-file" id="image">
+		 	 </div>
+			<button type="submit" class="btn btn-primary" ng-disabled="frmobj.$invalid" >Gửi</button>
+		</form>
+	</div>
+		
+   	</div>
+    <!-- /.container-fluid -->
+  </section>
+  <section layout:fragment="script">
+  	<script th:src="@{/app/component.js}"></script>
+  	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.10/js/bootstrap-select.min.js"></script>
+  </section>
+</body>
+</html>

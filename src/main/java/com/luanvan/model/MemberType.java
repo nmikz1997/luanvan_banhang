@@ -11,6 +11,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -34,12 +36,16 @@ public class MemberType {
 	@NotNull
 	private int duration; //thoi han la thang
 	
+	@NotNull
+	private int price;
+	
 	//mota
 	@NotNull
 	@Column(columnDefinition = "TEXT")
 	private String derciption;
 	
 	//OneToMany Member
+	@JsonIgnore
 	@OneToMany(mappedBy = "memberType")
 	private List<Member> members;
 	

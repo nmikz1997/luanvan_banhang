@@ -1,0 +1,38 @@
+.card .img-wrap{
+	height: 100%;
+	width: 100%;
+}
+.card-img-top {
+	height: 189px;
+	width: 100%;
+	object-fit: cover;
+}    
+.discout {
+	color: black;
+}
+.menu-mobi{
+	display: none;
+}
+.dropdown-menu{
+	width: 300px;
+}
+@media screen and (max-width: 768px){
+	.card-img-top {
+		height: 134px;
+	}
+	.card-product .info-wrap{
+		padding: 5px;
+	}
+	.aside-menu{
+		display: none;
+	}
+	.widget-header {
+		margin-right: unset;
+	}
+	.menu-mobi{
+		display: block;
+	}
+	.aside-product-hot{
+		display: none;
+	}
+}

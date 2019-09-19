@@ -1,0 +1,68 @@
+<section layout:fragment="banner" class="section-main bg-white padding-y-sm">
+	<div class="container">
+		<div class="card">
+			<div class="card-body">
+				<div class="row row-sm row row-eq-height">
+					<aside class="aside-menu col-lg-3 col-sm-0">
+						<h5 class="text-uppercase">Danh mục loại sản phẩm</h5>
+						<ul class="menu-category">
+							<li ng-repeat="category in categories" ng-include="'categoryTree'"></li>
+							<script type="text/ng-template" id="categoryTree">
+								<a href="#" ng-click="getCate(category.id)" >{{ category.name }}</a>
+								<ul ng-if="category.categories" class="submenu">
+									<li ng-repeat="category in category.categories" ng-include="'categoryTree'">     
+									</li>
+								</ul>
+							</script>
+						</ul>
+					</aside> <!-- col.// -->
+					<aside class="col-lg-6 col-sm-12">
+						<div id="carousel2_indicator" class="carousel slide carousel-fade" data-ride="carousel">
+							<div class="carousel-inner">
+								<div class="carousel-item" ng-class='{active:$first}' ng-repeat="banner in banners">
+									<img class="d-block w-100" ng-src="{{ banner.image }}" alt="First slide">
+								</div>
+							</div>
+							<a class="carousel-control-prev" href="#carousel2_indicator" role="button" data-slide="prev">
+								<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+								<span class="sr-only">Previous</span>
+							</a>
+							<a class="carousel-control-next" href="#carousel2_indicator" role="button" data-slide="next">
+								<span class="carousel-control-next-icon" aria-hidden="true"></span>
+								<span class="sr-only">Next</span>
+							</a>
+						</div> 
+					</aside>
+					<aside class="col-lg-3 col-sm-12">
+						<h6 class="title-bg bg-secondary"> Qualified Suppliers</h6>
+						<div style="height:280px;">
+							<figure class="itemside has-bg border-bottom" style="height: 33%;">
+								<img class="img-bg" src="images/items/item-sm.png">
+								<figcaption class="p-2">
+									<h6 class="title">One request, many offers </h6>
+									<a href="#">Good link</a>
+								</figcaption>
+							</figure>
+				
+							<figure class="itemside has-bg border-bottom" style="height: 33%;">
+								<img class="img-bg" src="images/items/1.jpg" height="80">
+								<figcaption class="p-2">
+									<h6 class="title">One request, many offers </h6>
+									<a href="#">Good link</a>
+								</figcaption>
+							</figure>
+							<figure class="itemside has-bg border-bottom" style="height: 33%;">
+								<img class="img-bg" src="images/items/2.jpg" height="80">
+								<figcaption class="p-2">
+									<h6 class="title">One request, many offers </h6>
+									<a href="#">Good link</a>
+								</figcaption>
+							</figure>
+						</div>
+				
+					</aside>
+					</div>
+				</div>
+			</div>
+		</div>
+</section>

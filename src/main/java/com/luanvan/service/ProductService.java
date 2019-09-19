@@ -1,11 +1,15 @@
 package com.luanvan.service;
 
+import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.luanvan.dto.request.SaveDetailProductDTO;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.luanvan.dto.response.ProductDTO;
+import com.luanvan.dto.response.ProductDetailDTO;
 import com.luanvan.model.Product;
 
 public interface ProductService {
@@ -22,11 +26,26 @@ public interface ProductService {
 	
 	ProductDTO findDTOById(Long id);
 	
-	void save(SaveDetailProductDTO productDetail);
+	String save(String productReq, MultipartFile fileupload) throws IOException;
 	
 	List<Product> findByCategory(Long categoryId);
 	
 	void delete(Long id);
 	
 	void deleteByCategoryId(Long categoryId);
+
+	void update(Product product);
+	
+	//san pham dang khuyen mai
+	List<Product> findProductPromotion(Date dayStart,Date dayEnd);
+
+	ProductDTO findProducts(Long id);
+
+	List<ProductDTO> listSPKM();
+
+	List<ProductDTO> listSPMoi();
+	
+	ProductDetailDTO chiTietSanPham(Long id);
+
+	List<ProductDTO> productsInIds(List<Long> ids);
 }

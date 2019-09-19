@@ -3,7 +3,6 @@ package com.luanvan.model;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
@@ -38,8 +37,7 @@ public class Question{
 	private Long id;
 	
 	@NotNull
-	@Column(columnDefinition = "TEXT")
-	private String content;
+	private String topic;
 	
 	@NotNull
 	private boolean status;
@@ -54,6 +52,7 @@ public class Question{
 	@JoinColumn(nullable = false)
 	private Product product;
 	
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(nullable = false)
 	private Customer customer;

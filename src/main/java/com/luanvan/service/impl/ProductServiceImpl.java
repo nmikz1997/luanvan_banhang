@@ -1,25 +1,35 @@
 package com.luanvan.service.impl;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.luanvan.dto.request.SaveDetailProductDTO;
-import com.luanvan.dto.response.PictureDTO;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.luanvan.dto.request.CreateProduct;
 import com.luanvan.dto.response.ProductDTO;
-import com.luanvan.model.Picture;
-import com.luanvan.model.Price;
+import com.luanvan.dto.response.ProductDetailDTO;
 import com.luanvan.model.Product;
 import com.luanvan.repo.PictureRepository;
 import com.luanvan.repo.PriceRepository;
 import com.luanvan.repo.ProductRepository;
+import com.luanvan.repo.PromotionRepository;
+import com.luanvan.repo.StoreRepository;
 import com.luanvan.service.ProductService;
 
 @Service
@@ -28,14 +38,23 @@ public class ProductServiceImpl implements ProductService{
 	private ProductRepository productRepository;
 	private PictureRepository pictureRepository;
 	private PriceRepository priceRepository;
+	private StoreRepository storeRepository;
+	private PromotionRepository promotionRepository;
+	private List<Long> ids;
 	
 	@Autowired
-	public ProductServiceImpl(ProductRepository productRepository,
+	public ProductServiceImpl(
+			ProductRepository productRepository,
 			PictureRepository pictureRepository,
-			PriceRepository priceRepository) {
+			PriceRepository priceRepository,
+			StoreRepository storeRepository,
+			PromotionRepository promotionRepository
+			) {
 		this.productRepository 	= productRepository;
 		this.pictureRepository 	= pictureRepository;
 		this.priceRepository	= priceRepository;
+		this.storeRepository	= storeRepository;
+		this.promotionRepository= promotionRepository;
 	}
 	
 	@Override
@@ -61,16 +80,60 @@ public class ProductServiceImpl implements ProductService{
 		return res;
 	}
 
-	@Override
+//	@Override
+//	@Transactional
+//	public void save(CreateProduct productDetail) {
+//		
+//		//lay id store theo user login
+//		Long id = (long) 1;
+//		
+//		Product product = new Product();
+//		product = productDetail.getProduct();
+//		product.setAttributeValues(productDetail.getAttributeValues());
+//		product.setStore(storeRepository.getOne(id));
+//		productRepository.save(product);
+//	}
+	
 	@Transactional
-	public void save(SaveDetailProductDTO productDetail) {
-		//System.out.println(productDetail.getProduct());
-		Product product = new Product();
+	@Override
+	public String save(String productReq,MultipartFile fileupload) throws IOException {
+		//Ví dụ đây là id cửa hàng
+		Long Storeid = (long) 1;
+		//ánh xạ dữ liệu
+		ObjectMapper mapper = new ObjectMapper();
+		CreateProduct productDTO = mapper.readValue(productReq, CreateProduct.class);
 		
-		product = productDetail.getProduct();
-		//product.setAttributeValues(productDetail.getAttributeValues());
-		System.out.println(productDetail.getAttributeValues());
+		//new đối tượng product
+		Product product = new Product();
+		product = productDTO.getProduct();
+		product.setAttributeValues(productDTO.getAttributeValues());
+		product.setStore(storeRepository.getOne(Storeid));
+		
+		if(fileupload != null) {
+			//đường dẫn của ảnh
+			String uploadingDir = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\picture\\";
+			//xóa ảnh cũ
+			File file = new File(uploadingDir + product.getAvatar());
+			Path path = Paths.get(uploadingDir + product.getAvatar());
+
+			//check ton tai anh
+			if(Files.exists(path)) {
+				file.delete();
+			}
+			
+			//lấy tên ảnh mới
+			String fileName = Storeid+"-"+System.currentTimeMillis()+"-"+fileupload.getOriginalFilename();
+			//nếu không cập nhật ảnh thì không set lại avatar
+			product.setAvatar(fileName);
+			
+			//lưu ảnh moi
+			file = new File(uploadingDir + fileName);
+			fileupload.transferTo(file);
+		};
+		
 		productRepository.save(product);
+		
+		return "thêm và upload thành công";
 	}
 
 	@Override
@@ -88,6 +151,11 @@ public class ProductServiceImpl implements ProductService{
 //		// TODO Auto-generated method stub
 //		return null;
 //	}
+	
+	@Override
+	public void update(Product product) {
+		productRepository.save(product);
+	}
 
 	@Override
 	public void delete(Long id) {
@@ -95,49 +163,67 @@ public class ProductServiceImpl implements ProductService{
 	}
 
 	@Override
-	public ProductDTO findDTOById(Long id) {
-		Product product = productRepository.findById(id).get();
-		Picture avatar = pictureRepository.findByProductIdAndAvatar(id, true);
-		Price price = priceRepository.findTopPriceByProductIdOrderByIdDesc(id);
-		
-//		Set<PictureDTO> listPictures = new HashSet<>();
-		
-//		product.getPictures().forEach(pic->{
-//			listPictures.add(new PictureDTO(pic.getId(),pic.getPath()));
-//		});
-		
-		ProductDTO productDTO = new ProductDTO(
-				product.getId(),
-				product.getName(),
-				avatar.getPath(),
-				price.getUnitPrice(),
-				price.getUnitPrice()
-				);
-		
-		return productDTO;
+	public ProductDTO findDTOById(Long id) {	
+		return null;
 	}
 
 	@Override
 	public Set<ProductDTO> selectAll() {
-		List<Product> products = productRepository.findAll();
-		
-		Set<ProductDTO> data = new HashSet<>();
+		return null;
+	}
 
-		products.forEach(prod->{
-			System.out.println(prod.getId());
-			Picture avatar = pictureRepository.findByProductIdAndAvatar(prod.getId(), true);
-			Price price = priceRepository.findTopPriceByProductIdOrderByIdDesc(prod.getId());
-			data.add(
-					new ProductDTO(
-							prod.getId(),
-							prod.getName(),
-							avatar.getPath(),
-							price.getUnitPrice(),
-							price.getUnitPrice()
-							)
-					);
-			});
-		return data;
+	@Override
+	public List<Product> findProductPromotion(Date dayStart,Date dayEnd) {		
+		//List<Product> products = productRepository.findByPromotionsDayStartBeforeAndPromotionsDayEndAfter(dayStart, dayEnd);
+		return null;
+	}
+
+	@Override
+	public ProductDTO findProducts(Long id) {
+		Product product = productRepository.findById(id).get();
+		ModelMapper modelMapper = new ModelMapper();
+ 		ProductDTO productDTO = modelMapper.map(product, ProductDTO.class);
+		return productDTO;
+	}
+	
+	@Override
+	public List<ProductDTO> listSPMoi() {
+		List<Product> products = productRepository.findAllByOrderByIdDesc();
+		ModelMapper mapper = new ModelMapper();
+		List<ProductDTO> productDTO = mapper.map(products,new TypeToken<List<ProductDTO>>(){}.getType());
+		return productDTO;//danh sách sản phẩm mới
+	}
+
+	@Override
+	public List<ProductDTO> listSPKM() {
+		List<Product> products = findAll();
+		ModelMapper mapper = new ModelMapper();
+		List<ProductDTO> productDTO = mapper.map(products,new TypeToken<List<ProductDTO>>(){}.getType());
+		return productDTO.stream()
+						.filter(product -> product.getMaxPromotion().getId() != null)
+						.limit(6)
+						.collect(Collectors.toList());
+	}
+	
+	@Override
+	public ProductDetailDTO chiTietSanPham(Long id) {
+		Product product = productRepository.findById(id).get();
+		ModelMapper modelMapper = new ModelMapper();
+ 		ProductDetailDTO productDetailDTO = modelMapper.map(product, ProductDetailDTO.class);
+		return productDetailDTO;
+	}
+	
+	private ProductDTO convertToDto(Product product) {
+		ModelMapper modelMapper = new ModelMapper();
+ 		ProductDTO productDTO = modelMapper.map(product, ProductDTO.class);
+        return productDTO;
+    }
+
+	@Override
+	public List<ProductDTO> productsInIds(List<Long> ids) {
+		ModelMapper mapper = new ModelMapper();
+		List<ProductDTO> productDTO = mapper.map(productRepository.findByIdIn(ids),new TypeToken<List<ProductDTO>>(){}.getType());
+		return productDTO;
 	}
 
 }

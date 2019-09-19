@@ -2,6 +2,7 @@ package com.luanvan.service;
 
 import java.util.List;
 
+import com.luanvan.dto.response.PromotionDTO;
 import com.luanvan.model.Promotion;
 
 public interface PromotionService {
@@ -10,7 +11,7 @@ public interface PromotionService {
 	
 	List<Promotion> findByName(String name);
 	
-	Promotion findById(Long id);
+	PromotionDTO findById(Long id);
 	
 	Promotion create(Promotion promotion);
 

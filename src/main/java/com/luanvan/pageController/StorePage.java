@@ -10,12 +10,12 @@ public class StorePage {
 	
 	@GetMapping("product")
 	public String category() {
-		return "admin/product";
+		return "admin/product/product";
 	}
 	
 	@GetMapping("promotion")
 	public String promotion() {
-		return "admin/promotion";
+		return "admin/promotion/promotion";
 	}
 	
 	@GetMapping("order")

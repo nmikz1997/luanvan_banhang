@@ -1,9 +1,10 @@
 package com.luanvan.model;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -11,17 +12,18 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
@@ -32,17 +34,11 @@ import lombok.ToString;
 
 @Entity
 @Table(name = "product")
-@EntityListeners(AuditingEntityListener.class)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = "pictures")
-@EqualsAndHashCode(exclude = "pictures")
-//@JsonIgnoreProperties(value = {"createdAt", "updatedAt"}, allowGetters = true)
-//@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="id")
-public class Product implements Serializable{
-
-	private static final long serialVersionUID = 1L;
+@EntityListeners(AuditingEntityListener.class)
+public class Product{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,15 +57,22 @@ public class Product implements Serializable{
 	@NotNull
 	private int price;
 	
+	private int priceNew;
+	
+	private int avgStar;
+	
+	@NotNull
+	private String avatar;
+	
 	@NotNull
 	private Long quantity;
 	
 	@CreatedDate
-	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 	private Date createdAt;
 	
 	@LastModifiedDate
-	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 	private Date updatedAt;
 	
 	@ManyToOne
@@ -108,14 +111,23 @@ public class Product implements Serializable{
 	@OneToMany(mappedBy="product")
 	private List<Review> reviews;
 	
-//	@ManyToMany(cascade = {CascadeType.MERGE})
-//	@EqualsAndHashCode.Exclude
-//	@ToString.Exclude
-//	@JoinTable(name = "attribute_value_product",
-//			joinColumns = @JoinColumn(name = "product_id"),
-//			inverseJoinColumns = @JoinColumn(name = "attribute_value_id")
-//	)
-//	private Set<AttributeValue> attributeValues = new HashSet<>();
+	
+	@ManyToMany
+    @JoinTable(
+            name = "product_attribute_value",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "attribute_value_id")
+    )
+	@ToString.Exclude
+	@EqualsAndHashCode.Exclude
+    private Set<AttributeValue> attributeValues;
+	
+	@JsonIgnore
+	@ManyToMany(mappedBy = "products",cascade = CascadeType.ALL)
+	@ToString.Exclude
+	@EqualsAndHashCode.Exclude
+    private List<Promotion> promotions;
+
 	
 //	@OneToMany(mappedBy = "product")
 //	private List<PromotionProduct> promotionProducts;

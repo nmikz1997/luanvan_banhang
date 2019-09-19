@@ -1,6 +1,6 @@
 package com.luanvan.service;
 
-import java.util.HashSet;
+import java.util.List;
 
 import com.luanvan.model.Attribute;
 
@@ -9,5 +9,7 @@ public interface AttributeService {
 	Attribute save(Attribute attribute);
 	
 	//findAll
-	HashSet<Object> findAll();
+	List<Attribute> findAll();
+	
+	List<Attribute> findByCategory(Long categoryId);
 }

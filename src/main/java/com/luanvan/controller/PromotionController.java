@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,13 +17,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.luanvan.dto.response.PromotionDTO;
 import com.luanvan.model.Promotion;
+import com.luanvan.repo.ProductRepository;
 import com.luanvan.service.PromotionService;
 
 @RestController
 @RequestMapping("promotions")
 public class PromotionController {
 	private PromotionService promotionService;
+	private ProductRepository productRepository;
 	
 	@Autowired
 	public PromotionController (PromotionService promotionService) {
@@ -35,15 +39,28 @@ public class PromotionController {
 	}
 	
 	@GetMapping("{id}")
-	public Promotion show(@PathVariable(name = "id") Long id) {
+	public PromotionDTO show(@PathVariable(name = "id") Long id) {
 		return promotionService.findById(id);
 	}
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Promotion create(@Valid @RequestBody Promotion promotion){
+	public Promotion create(@RequestBody PromotionDTO req){
+		
+		ModelMapper modelMapper = new ModelMapper();
+ 		Promotion promotion = modelMapper.map(req, Promotion.class);
+ 		
 		return promotionService.create(promotion);
 	}
+	
+	
+//	@PostMapping
+//	@ResponseStatus(HttpStatus.CREATED)
+//	public Promotion create(@Valid @RequestBody CreatePromotionDTO promotionDTO){
+//		//System.out.println(promotionDTO);
+//		return promotionService.create(promotionDTO);
+////		return null;
+//	}
 
 	@PutMapping("/{id}")
 	public Promotion update(@PathVariable Long id, @Valid @RequestBody Promotion promotion) {

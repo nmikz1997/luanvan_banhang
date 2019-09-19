@@ -1,5 +1,6 @@
 package com.luanvan.repo;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -50,5 +51,25 @@ public interface ProductRepository extends JpaRepository<Product, Long>{
 	
 	//List<Product> findAllByNameLike(String name, Pageable pageable);
 	
+	//tim san pham het khuyen mai
+	// where x.dayEndDate < today
+	//List<Product> findByPromotionsDayEndBefore(Date today);
+	
+	//san pham dang khuyen mai
+	//List<AnEntity> findByStartDateBeforeAndEndDateAfter(Date startDate, Date endDate);
+	//List<Product> findByPromotionsDayStartBeforeAndPromotionsDayEndAfter(Date today,Date toDay);
+	
+	//sản pham moi nhat
+	List<Product> findAllByOrderByIdDesc();
+	
+	//sản phẩm theo của hàng
+	List<Product> findByStoreId(Long storeId);
+	
+	//tìm sản phẩm theo mảng id sản phẩm
+	List<Product> findByIdIn(List<Long> ids);
+	
+	//tất cả sản phẩm còn hàng và có khuyến mãi sẽ bị lặp record do join
+	//findProductsByQuantityGreaterThanAndPromotionsIdNotNull
+	//List<Product> findProductsByQuantityGreaterThanAndPromotionsIdNotNull(Long soluong);
 	
 }

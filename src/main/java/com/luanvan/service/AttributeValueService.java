@@ -6,11 +6,13 @@ import com.luanvan.model.AttributeValue;
 
 public interface AttributeValueService {
 	//them attribute value
-	AttributeValue save(AttributeValue attributeValue);
+	void save(AttributeValue attributeValue);
 	
 	//tim Attribute theo product
 	List<AttributeValue> findByProduct(Long id);
 	
 	//
 	List<AttributeValue> findByAttribute(Long attributeId);
+
+	List<AttributeValue> findAll();
 }

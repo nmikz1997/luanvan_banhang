@@ -1,5 +1,7 @@
 package com.luanvan.controller;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -10,13 +12,17 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.luanvan.dto.request.SaveDetailProductDTO;
+import com.luanvan.dto.response.CartItemsDTO;
 import com.luanvan.dto.response.ProductDTO;
+import com.luanvan.dto.response.ProductDetailDTO;
 import com.luanvan.model.Product;
 import com.luanvan.service.ProductService;
 
@@ -56,10 +62,59 @@ public class ProductController {
 		return productService.findByCategory(categoryId);
 	}
 	
+	
 	@PostMapping
 	@ResponseStatus(HttpStatus.OK)
-	public void save(@RequestBody SaveDetailProductDTO productDetail) {
-		productService.save(productDetail);
+	public void save(
+			@RequestParam(value = "model") String productReq,
+			@RequestParam(value = "file", required = false) MultipartFile fileupload) throws IOException {
+		productService.save(productReq, fileupload);
+	}
+	
+	@GetMapping("/san-pham-dang-khuyen-mai/{id}")
+	public ProductDTO findSanPhamKhuyenMai(@PathVariable("id") Long id) {
+		return productService.findProducts(id);
+	}
+	
+	@GetMapping("/chi-tiet-san-pham/{id}")
+	public ProductDetailDTO chiTietSanPham(@PathVariable("id") Long id) {
+		return productService.chiTietSanPham(id);
+	}
+	
+	@PostMapping("/gio-hang")
+	public List<ProductDTO> gioHang(@RequestBody List<CartItemsDTO> req) {
+		List<Long> ids = new ArrayList<Long>();
+		req.forEach(product ->{
+			ids.add(product.getId());
+		});
+		List<ProductDTO> dataCart = productService.productsInIds(ids);
+		return dataCart;
+	}
+	
+	@GetMapping("/san-pham-dang-khuyen-mai")
+	public List<ProductDTO> listSPKM(){
+		return productService.listSPKM();
+	}
+	
+	@GetMapping("/san-pham-moi")
+	public List<ProductDTO> listSPMoi(){
+		return productService.listSPMoi();
+	}
+	
+	@GetMapping("/san-pham-danh-gia-cao")
+	public List<ProductDTO> listTopStar(){
+		return null;
+	}
+	
+	@GetMapping("/san-pham-trong-khoang-gia")
+	public List<ProductDTO> listPriceBetween(){
+		return null;
+	}
+	
+	@PutMapping
+	@ResponseStatus(HttpStatus.OK)
+	public void update(@RequestBody Product product) {
+		productService.update(product);
 	}
 	
 	@DeleteMapping("{id}")
@@ -67,6 +122,7 @@ public class ProductController {
 	public void delete(@PathVariable("id") Long id) {
 		productService.delete(id);
 	}
+	
 
 
 }

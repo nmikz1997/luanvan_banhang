@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{admin/layout/Layout}">
+<head>
+  <title>Quản lý danh mục sản phẩm</title>
+  <meta charset="utf-8" />
+  <section layout:fragment="css">
+  	<link th:href="@{/css/ui.css}" rel="stylesheet" type="text/css"/>
+  </section>
+</head>
+<body>
+  <section layout:fragment="content" ng-controller="CategoryController">
+    <div class="container-fluid">
+          <!-- Page Heading -->
+          <h1 class="h3 mb-2 text-gray-800">Quản lý danh mục sản phẩm</h1>
+          <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below. For more information about DataTables, please visit the <a target="_blank" href="https://datatables.net">official DataTables documentation</a>.</p>
+          <!-- DataTales Example -->
+          <div class="card shadow mb-4">
+            <div class="card-header py-3">
+              <h6 class="m-0 font-weight-bold text-primary">Thông tin danh mục sản phẩm</h6>
+            </div>
+            <div class="card-body">
+	            <div class="row">
+	            	<div class="col-md-6">
+	            		<form name="frmCategory" class="form-horizontal">
+							<div class="form-group">
+								<label for="name" class="col-form-label">Tên danh mục
+									<span id="helpBlock2" class="help-block" ng-show="frmCategory.name.$error.required">(*)</span>
+								</label>
+								<input type="text" class="form-control" id="categoryName" name="name" ng-model="category.name" ng-required="true"/>
+								
+							</div>
+							<div class="form-group">
+								<label for="name" class="col-form-label">Mã nhóm danh mục
+									<span id="helpBlock2" class="help-block" ng-show="frmCategory.name.$error.required">(*)</span>:
+								</label>
+								<input type="text" class="form-control" id="name" name="name" ng-model="category.parentId" ng-required="true" ng-readOnly="true"/>
+							</div>
+							<button type="button" class="btn btn-primary" ng-disabled="frmCategory.$invalid" ng-click="save(state)">Save</button>
+							<button type="button" class="btn btn-warning" ng-disabled="frmCategory.$invalid" ng-click="reset()">Reset</button>
+							<button type="button" class="btn btn-danger float-right" ng-disabled="frmCategory.$invalid" ng-click="confirmDelete(category.id)">Xóa</button>
+						</form>	
+	            	</div>
+	            	<div class="aside-menu col-lg-6">
+						<h5 class="text-uppercase">Danh mục loại sản phẩm</h5>
+						<ul class="menu-category col-lg-6">
+							<li ng-repeat="category in categories" ng-include="'categoryTree'"></li>
+							<li ng-click='myFunction(0)'><a href="#">Thêm danh mục...</a></li>
+							<script type="text/ng-template" id="categoryTree">
+								<a href="#" ng-click="getCate(category.id)" >{{ category.name }}</a>
+								<ul ng-if="!category.categories && category.parentId == 0" class="submenu">
+									<li ng-click='myFunction(category.id)'><a href="#">Thêm danh mục...</a></li>
+								</ul>
+								<ul ng-if="category.categories" class="submenu">
+									<li ng-repeat="category in category.categories" ng-include="'categoryTree'">     
+									</li>
+									<li ng-click='myFunction(category.id)'><a href="#">Thêm danh mục...</a></li>
+								</ul>
+							</script>
+						</ul>
+					</div> <!-- col.// -->
+	            </div>
+            </div>
+          </div>
+   	</div>
+    <!-- /.container-fluid -->
+  </section>
+  <section layout:fragment="script">
+  	<script th:src="@{/app/category.js}"></script>
+  </section>
+</body>
+</html>

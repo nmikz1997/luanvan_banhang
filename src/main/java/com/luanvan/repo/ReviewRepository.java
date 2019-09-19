@@ -11,8 +11,6 @@ import com.luanvan.model.Review;
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 	
-	//List<Price> findPriceByProductId(Long id);
-	
 	List<Review> findReviewByProductId(Long productId);
 	
 	@Query(value = "SELECT * FROM review WHERE customer_id = ?1", nativeQuery = true)

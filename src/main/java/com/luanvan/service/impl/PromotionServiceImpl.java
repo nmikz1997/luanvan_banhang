@@ -2,9 +2,11 @@ package com.luanvan.service.impl;
 
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.luanvan.dto.response.PromotionDTO;
 import com.luanvan.exception.NotFoundException;
 import com.luanvan.model.Promotion;
 import com.luanvan.repo.PromotionRepository;
@@ -32,9 +34,12 @@ public class PromotionServiceImpl implements PromotionService{
 	}
 
 	@Override
-	public Promotion findById(Long id) {
-		return promotionRepository.findById(id)
+	public PromotionDTO findById(Long id) {
+		Promotion promotion = promotionRepository.findById(id)
 				.orElseThrow(NotFoundException::new);
+		ModelMapper modelMapper = new ModelMapper();
+ 		PromotionDTO promotiondto = modelMapper.map(promotion, PromotionDTO.class);
+		return promotiondto;
 	}
 
 	@Override
@@ -51,7 +56,7 @@ public class PromotionServiceImpl implements PromotionService{
 
 	@Override
 	public void delete(Long id) {
-		// TODO Auto-generated method stub
+		promotionRepository.deleteById(id);
 	}
 
 }

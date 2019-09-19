@@ -17,9 +17,11 @@
   <!-- Custom styles for this template-->
   <link th:href="@{/css/sb-admin-2.min.css}" rel="stylesheet">
   <link th:href="@{/css/admin-custom.css}" rel="stylesheet">
+  <link th:href="@{/css/angular-datatables.min.css}" rel="stylesheet">
 
-  <!-- Custom styles for this page -->
+  <!--  -->
   <link th:href="@{/vendor/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet">
+  <section layout:fragment="css"></section>
 </head>
 
 <body id="page-top" ng-app="luanvan">
@@ -91,7 +93,8 @@
   <script th:src="@{/js/sb-admin-2.min.js}"></script>
 
   <script th:src="@{/app/app.js}"></script>
-	
+  <script th:src="@{/js/angular-datatables.min.js}"></script>
+  <script th:src="@{/js/jquery.dataTables.min.js}"></script>
 <section layout:fragment="script"></section>	
 	
 </body>

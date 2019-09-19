@@ -1,5 +1,6 @@
 package com.luanvan.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -30,7 +31,7 @@ public class CategoryServiceImpl implements CategoryService{
 	@Override
 	public List<Category> findAll() {
 		//System.out.println(categoryRepository.findAll());
-		return categoryRepository.findAll();
+		return categoryRepository.findByStatus(true);
 	}
 
 	@Override

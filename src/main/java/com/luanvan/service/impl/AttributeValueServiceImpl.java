@@ -21,8 +21,8 @@ public class AttributeValueServiceImpl implements AttributeValueService {
 	}
 
 	@Override
-	public AttributeValue save(AttributeValue attributeValue) {
-		return attributeValueRepository.save(attributeValue);
+	public void save(AttributeValue attributeValue) {
+		attributeValueRepository.save(attributeValue);
 	}
 
 	@Override
@@ -34,6 +34,12 @@ public class AttributeValueServiceImpl implements AttributeValueService {
 	@Override
 	public List<AttributeValue> findByAttribute(Long attributeId) {
 		return attributeValueRepository.findByAttributeId(attributeId);
+	}
+
+	@Override
+	public List<AttributeValue> findAll() {
+		// TODO Auto-generated method stub
+		return attributeValueRepository.findAll();
 	}
 
 }

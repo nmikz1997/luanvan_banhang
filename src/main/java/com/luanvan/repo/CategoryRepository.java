@@ -13,6 +13,8 @@ public interface CategoryRepository extends JpaRepository<Category, Long>{
 	
 	List<Category> findByNameContaining(String name);
 	
+	List<Category> findByStatus(Boolean status);
+	
 //	@Query(value = "UPDATE category SET status = 0 WHERE id = ?1", nativeQuery = true)
 //	void delete(Long id);
 }

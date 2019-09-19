@@ -31,6 +31,9 @@ public class ReviewServiceImpl implements ReviewService{
 
 	@Override
 	public Review save(Review review) {
+		//lấy ra số lượt đánh giá sản phẩm
+		//điểm trung bình = (điểm hiện tại * số lượt đánh giá + điểm mới review.getStar() ) / (số lượt đánh giá + 1)
+		//số lượt đánh giá sản phẩm +1
 		return reviewRepository.save(review);
 	}
 

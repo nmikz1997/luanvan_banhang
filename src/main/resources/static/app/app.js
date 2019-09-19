@@ -1,8 +1,3 @@
-var app = angular.module('luanvan',[])
+var app = angular.module('luanvan',['datatables']).constant('API', 'http://localhost:8080/');
 
-.constant('API', 'http://localhost:8080/');
-
-//,function($interpolateProvider){
-//	$interpolateProvider.startSymbol('<%');
-//	$interpolateProvider.endSymbol('%>');
-//}
+var homepage = angular.module('homepage',['ngCart','ngSanitize']).constant('API', 'http://localhost:8080/');

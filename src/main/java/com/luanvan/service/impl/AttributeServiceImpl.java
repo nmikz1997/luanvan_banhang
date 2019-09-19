@@ -1,11 +1,10 @@
 package com.luanvan.service.impl;
 
-import java.util.HashSet;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.luanvan.dto.response.AttributeResponseDTO;
 import com.luanvan.model.Attribute;
 import com.luanvan.repo.AttributeRepository;
 import com.luanvan.service.AttributeService;
@@ -22,13 +21,20 @@ public class AttributeServiceImpl implements AttributeService {
 	
 	@Override
 	public Attribute save(Attribute attribute) {
+		System.out.println(attribute);
 		return attributeRepository.save(attribute);
 	}
 
 	@Override
-	public HashSet<Object> findAll() {
-		HashSet<Object> data = new HashSet<>();
-		return data;
+	public List<Attribute> findAll() {
+		return attributeRepository.findAll();
+//		HashSet<Object> data = new HashSet<>();
+//		return data;
+	}
+
+	@Override
+	public List<Attribute> findByCategory(Long categoryId) {
+		return attributeRepository.findByCategoriesId(categoryId);
 	}
 
 }
