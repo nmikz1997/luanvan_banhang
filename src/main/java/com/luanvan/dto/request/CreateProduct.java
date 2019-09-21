@@ -3,6 +3,7 @@ package com.luanvan.dto.request;
 import java.util.Set;
 
 import com.luanvan.model.AttributeValue;
+import com.luanvan.model.Price;
 import com.luanvan.model.Product;
 
 import lombok.Data;
@@ -36,5 +37,7 @@ public class CreateProduct {
 	public void setAttributeValues(Set<AttributeValue> attributeValues) {
 		this.attributeValues = attributeValues;
 	}
+	
+	
 	
 }

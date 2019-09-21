@@ -102,12 +102,12 @@ public class ProductServiceImpl implements ProductService{
 		//ánh xạ dữ liệu
 		ObjectMapper mapper = new ObjectMapper();
 		CreateProduct productDTO = mapper.readValue(productReq, CreateProduct.class);
-		
 		//new đối tượng product
 		Product product = new Product();
 		product = productDTO.getProduct();
 		product.setAttributeValues(productDTO.getAttributeValues());
 		product.setStore(storeRepository.getOne(Storeid));
+
 		
 		if(fileupload != null) {
 			//đường dẫn của ảnh
@@ -131,11 +131,16 @@ public class ProductServiceImpl implements ProductService{
 			fileupload.transferTo(file);
 		};
 		
-		productRepository.save(product);
+		Product productnew = productRepository.save(product);
+		
+		productDTO.getProduct().getPrices().forEach(price ->{
+			price.setProduct(productnew);
+			priceRepository.save(price);
+		});
 		
 		return "thêm và upload thành công";
+	
 	}
-
 	@Override
 	public List<Product> findByCategory(Long categoryId) {
 		return productRepository.findByCategory(categoryId);

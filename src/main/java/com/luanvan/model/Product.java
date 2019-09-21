@@ -1,5 +1,6 @@
 package com.luanvan.model;
 
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -17,6 +18,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -53,11 +55,6 @@ public class Product{
 	
 	@NotNull
 	private int status;
-	
-	@NotNull
-	private int price;
-	
-	private int priceNew;
 	
 	private int avgStar;
 	
@@ -99,7 +96,6 @@ public class Product{
 	@OneToMany(mappedBy="product")
 	private List<Picture> pictures;
 	
-	@JsonIgnore
 	@OneToMany(mappedBy="product")
 	private List<Price> prices;
 	
@@ -127,6 +123,38 @@ public class Product{
 	@ToString.Exclude
 	@EqualsAndHashCode.Exclude
     private List<Promotion> promotions;
+	
+//	public Price getPriceNew() {
+//		return getPrices().stream()
+//				.max(Comparator.comparing(Price::getId))
+//                .get(); 
+//	}
+	
+	@Transient
+	public Integer getPrice() {
+		Integer rs = 0;
+        List<Price> prices = getPrices();
+        for (Price pr : prices) {
+            if(pr.getRoot() == 1)
+            rs = pr.getUnitPrice();
+        }
+        return rs;  
+	}
+	
+	@Transient
+	public Integer getPriceNew() {
+		Integer rs = getPrice();
+		Long max = (long) 0;
+        List<Price> prices = getPrices();
+        
+        for (Price pr : prices) {
+            if(pr.getId() > max) {
+            	max = pr.getId();
+            	rs = pr.getUnitPrice();
+            }
+        }
+        return rs;    
+	}
 
 	
 //	@OneToMany(mappedBy = "product")

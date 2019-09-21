@@ -3,6 +3,16 @@ app.controller('ProductsController', function($scope, $http,$timeout, API){
 	var APIResource = API + 'products/';
 	
 	var method = null;
+
+	$scope.giagoc = {
+		id: null,
+		root: true
+	}
+
+	$scope.giaban = {
+		id: null,
+		root: false
+	}
 	
 	function AjaxRenderData(){
 		$http.get(APIResource)
@@ -13,6 +23,7 @@ app.controller('ProductsController', function($scope, $http,$timeout, API){
 	
 	AjaxRenderData();
 
+
 	$scope.modal = function (state, id) {
 		$scope.state = state;
 
@@ -22,7 +33,6 @@ app.controller('ProductsController', function($scope, $http,$timeout, API){
 				$scope.product = null;
 				$scope.anhAvatar = '';
 				console.log($scope.anhAvatar);
-				console.log("ok");
 				$scope.frmTitle = 'Thêm sản phẩm';
 				break;
 			case "edit":
@@ -53,10 +63,15 @@ app.controller('ProductsController', function($scope, $http,$timeout, API){
 	jQuery("#submit").on("click", function(event){
 		event.preventDefault();
 		$scope.product.status = 1;
+		$scope.product.prices = [
+			$scope.giagoc,
+			$scope.giaban
+		]
 		
 		var model = {
 			product: $scope.product
 		}
+
 		var formData = new FormData();
 
 		//nếu có ảnh thì append
@@ -158,6 +173,10 @@ app.controller('ProductsController', function($scope, $http,$timeout, API){
 	
 	$scope.dachon = function(){
 		console.log("đã chọn");
+	};
+	
+	$scope.quanlydongia = function(){
+		jQuery("#myModalDonGia").modal('show');
 	};
 	
 	

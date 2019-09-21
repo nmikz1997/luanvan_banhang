@@ -75,69 +75,107 @@
 				</button>
 			</div>
 			<div class="modal-body">
+				<ul class="nav nav-tabs">
+					<li class="nav-item">
+						<a class="nav-link active" data-toggle="tab" href="#home">Thông tin chính</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" data-toggle="tab" href="#menu1">Đơn giá</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" data-toggle="tab" href="#menu2">Mô tả</a>
+					</li>
+				</ul>
 				<form name="frmProduct" class="form-horizontal">
-					<div class="form-group">
-						<label for="name" class="col-form-label">Tên sản phẩm:</label>
-						<input type="text" class="form-control" id="name" name="name" ng-model="product.name" ng-required="true"/>
-						<span id="helpBlock2" class="help-block" ng-show="frmProduct.name.$error.required">Vui lòng nhập tên sản phẩm</span>
+					<div class="tab-content">
+						<div id="home" class="container tab-pane active"><br>
+							<div class="form-group">
+								<label for="name" class="col-form-label">Tên sản phẩm:</label>
+								<input type="text" class="form-control" id="name" name="name" ng-model="product.name" ng-required="true"/>
+								<span id="helpBlock2" class="help-block" ng-show="frmProduct.name.$error.required">*</span>
+							</div>
+							<div class="row">
+								<div class="form-group col-6">
+									<label class="col-form-label">Chọn danh mục</label>
+									<select name="category" id="category" class="form-control" ng-model="product.category.id">
+										<optgroup ng-repeat="cate in categories" label="{{ cate.name }}">
+											<option ng-repeat="ct in cate.categories" ng-value="ct.id">{{ ct.name }}</option>
+										</optgroup>
+									</select>
+								</div>
+								<div class="form-group col-6">
+									<label for="origin" class="col-form-label">Xuất xứ: </label>
+									<select name="origin" id="origin" ng-model="product.origin.id" class="form-control"  ng-options="origin.id as origin.name for origin in origins">
+									</select>
+									<span id="helpBlock2" class="help-block" ng-show="frmProduct.origin.$error.required">*</span>
+								</div>
+							</div>
+							<div class="row">
+								<div class="form-group col-6">
+									<label for="material" class="col-form-label">Vật liệu: </label><span id="helpBlock2" class="help-block" ng-show="frmProduct.material.$error.required">*</span>
+									<select name="material" id="material" ng-model="product.material.id" class="form-control" ng-options="material.id as material.name for material in materials">
+									</select>
+								</div>
+								<div class="form-group col-6">
+									<label for="producer" class="col-form-label">Nhà sản xuất <span id="helpBlock2" class="help-block" ng-show="frmProduct.producer.$error.required">*</span>: </label>
+									<select name="producer" id="producer" ng-model="product.producer.id" class="form-control" ng-options="producer.id as producer.name for producer in producers">
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="quantity" class="col-form-label">Số lượng:</label>
+								<input type="number" min="0" class="form-control" id="quantity" name="quantity" ng-model="product.quantity" ng-required="true" />
+								<span id="helpBlock2" class="help-block" ng-show="frmProduct.quantity.$error.required">*</span>
+							</div>
+							<div class="form-group">
+								<label for="image" class="col-form-label">Ảnh đại diện:</label>
+								<input type="file" id="image" name="image" ng-model="product.avatar" />
+								<img id="avatar" style="width:200px; height:200px" ng-src="{{anhAvatar}}" />
+							</div>
+						</div>
+						<div id="menu1" class="container tab-pane fade"><br>
+							<div class="form-group">
+								<label for="price" class="col-form-label">Giá gốc:</label>
+								<input type="number" min="{{giamoi.gia}}" step="500" ng-model="giagoc.unitPrice" class="form-control" id="price" name="price" ng-required="true" />
+								<span id="helpBlock2" class="help-block" ng-show="frmProduct.price.$error.required">*</span>
+							</div>
+							<div class="form-group">
+								<label for="price" class="col-form-label">Giá bán:</label>
+								<input type="number" min=0 max="{{giagoc.gia}}" step="500" ng-model="giaban.unitPrice" class="form-control" id="pricenew" name="pricenew" ng-required="true" />
+								<span id="helpBlock2" class="help-block" ng-show="frmProduct.price.$error.required">*</span>
+							</div>
+							<table class="table table-bordered">
+								<thead>
+									<tr>
+										<th scope="col">Giá</th>
+										<th scope="col">Ngày áp dụng</th>
+										<th scope="col">Ngày kết thúc</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Mark</td>
+										<td>Otto</td>
+										<td>@mdo</td>
+									</tr>
+									<tr>
+										<td>Jacob</td>
+										<td>Thornton</td>
+										<td>@fat</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div id="menu2" class="container tab-pane fade"><br>
+							<div class="form-group">
+								<label for="mota" class="col-form-label">Mô tả:</label>
+								<textarea class="form-control" id="derciption" name="derciption" ng-model="product.derciption" ng-required="true"></textarea>
+								<span id="helpBlock2" class="help-block" ng-show="frmProduct.derciption.$error.required">Vui lòng mô tả sản phẩm</span>
+							</div>
+						</div>
 					</div>
-					<div class="row">
-					<div class="form-group col-6">
-						<label class="col-form-label">Chọn danh mục</label>
-						<select name="category" id="category" class="form-control" ng-model="product.category.id">
-							<optgroup ng-repeat="cate in categories" label="{{ cate.name }}">
-								<option ng-repeat="ct in cate.categories" ng-value="ct.id">{{ ct.name }}</option>
-							</optgroup>
-						</select>
-					</div>
-					<div class="form-group col-6">
-						<label for="origin" class="col-form-label">Xuất xứ: </label>
-						<select name="origin" id="origin" ng-model="product.origin.id" class="form-control"  ng-options="origin.id as origin.name for origin in origins">
-						</select>
-						<span id="helpBlock2" class="help-block" ng-show="frmProduct.origin.$error.required">Vui lòng chọn </span>
-					</div>
-					</div>
-					<div class="row">
-					<div class="form-group col-6">
-						<label for="material" class="col-form-label">Vật liệu: </label><span id="helpBlock2" class="help-block" ng-show="frmProduct.material.$error.required">*</span>
-						<select name="material" id="material" ng-model="product.material.id" class="form-control" ng-options="material.id as material.name for material in materials">
-						</select>
-					</div>
-					<div class="form-group col-6">
-						<label for="producer" class="col-form-label">Nhà sản xuất <span id="helpBlock2" class="help-block" ng-show="frmProduct.producer.$error.required">*</span>: </label>
-						<select name="producer" id="producer" ng-model="product.producer.id" class="form-control" ng-options="producer.id as producer.name for producer in producers">
-						</select>
-					</div>
-					</div>
-					<div class="row">
-					<div class="col-4 form-group">
-						<label for="quantity" class="col-form-label">Số lượng:</label>
-						<input type="number" min="0" class="form-control" id="quantity" name="quantity" ng-model="product.quantity" ng-required="true" />
-						<span id="helpBlock2" class="help-block" ng-show="frmProduct.quantity.$error.required">Vui lòng nhập số lượng</span>
-					</div>
-					<div class="col-4 form-group">
-						<label for="price" class="col-form-label">Giá gốc:</label>
-						<input type="number" min="{{product.priceNew}}" step="500" class="form-control" id="price" name="price" ng-model="product.price" ng-required="true" />
-						<span id="helpBlock2" class="help-block" ng-show="frmProduct.price.$error.required">Vui lòng nhập giá gốc</span>
-					</div>
-					<div class="col-4 form-group">
-						<label for="price" class="col-form-label">Giá bán:</label>
-						<input type="number" min=0 max="{{product.price}}" step="500" class="form-control" id="pricenew" name="pricenew" ng-model="product.priceNew" ng-required="true" />
-						<span id="helpBlock2" class="help-block" ng-show="frmProduct.price.$error.required">Vui lòng nhập giá gốc</span>
-					</div>
-					</div>
-					<div class="form-group">
-						<label for="image" class="col-form-label">Ảnh đại diện:</label>
-						<input type="file" id="image" name="image" ng-model="product.avatar" />
-						<img id="avatar" style="width:200px; height:200px" ng-src="{{anhAvatar}}" />
-					</div>
-					<div class="form-group">
-						<label for="mota" class="col-form-label">Mô tả:</label>
-						<textarea class="form-control" id="derciption" name="derciption" ng-model="product.derciption" ng-required="true"></textarea>
-						<span id="helpBlock2" class="help-block" ng-show="frmProduct.derciption.$error.required">Vui lòng mô tả sản phẩm</span>
-					</div>	
-				</div>
-			</form>
+				</form>
+			</div>
 			<div class="modal-footer">
 				<button type="button" id="submit" class="btn btn-primary" ng-disabled="frmProduct.$invalid" ng-click="save()">Gửi</button>
 			</div>

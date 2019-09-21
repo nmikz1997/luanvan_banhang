@@ -3,35 +3,35 @@ app.controller('ComponentController', function($scope, $http,$timeout, API){
 	jQuery("#frmobj").on("submit", function(event){	
         event.preventDefault();
         
-        var file = $('#image').get(0).files[0];
-        //console.log(file);
-        var formData = new FormData();
-
-        formData.append('file', file);
-    	formData.append('model',JSON.stringify($scope.obj));
-    	
-         if(jQuery("#image").val() != ""){
-        	 jQuery.ajax({
-        		 url: "/upload/",
-        		 type: "POST",
-        		 data: formData,
-        		 enctype: 'multipart/form-data',
-        		 processData: false,
-        		 contentType: false,
-        		 cache: false,
-        		 success: function (res) {
-        		      //console.log(res);
-        		 },
-        		 error: function () {
-        			 console.log("not ok");
-        		 }
-
-          });
-        }
-        else
-        {
-         $scope.warning=true;
-        }     
+        var file = $('#image').get(0).files;
+        console.log(file);
+//        var formData = new FormData();
+//
+//        formData.append('file', file);
+//    	formData.append('model',JSON.stringify($scope.obj));
+//    	
+//         if(jQuery("#image").val() != ""){
+//        	 jQuery.ajax({
+//        		 url: "/upload/",
+//        		 type: "POST",
+//        		 data: formData,
+//        		 enctype: 'multipart/form-data',
+//        		 processData: false,
+//        		 contentType: false,
+//        		 cache: false,
+//        		 success: function (res) {
+//        		      //console.log(res);
+//        		 },
+//        		 error: function () {
+//        			 console.log("not ok");
+//        		 }
+//
+//          });
+//        }
+//        else
+//        {
+//         $scope.warning=true;
+//        }     
     });
 	
 	

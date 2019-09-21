@@ -26,7 +26,6 @@ public class OrderDTO {
 	public int getTotal() {
 		int total = 0;
 		for(OrderDetailDTO detail : ordersDetailDTO) {
-			System.out.println(detail.getAmount());
 			total += detail.getAmount();
 		}
 		return this.total = total;
