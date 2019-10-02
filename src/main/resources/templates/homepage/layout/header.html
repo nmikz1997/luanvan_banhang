@@ -4,14 +4,14 @@
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTop" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
-			<a class="navbar-brand" href="#"><img class="logo" th:src="@{/images/logos/java-spring.png}"></a>
+			<a class="navbar-brand" th:href="@{/}"><img class="logo" th:src="@{/images/logos/java-spring.png}"></a>
 			<div class="collapse navbar-collapse" id="navbarTop">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item active">
-						<a class="nav-link" href="#">Trang chủ</a>
+						<a class="nav-link" th:href="@{/}">Trang chủ</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="#">Trở thành nhà bán hàng</a>
+						<a class="nav-link" th:href="@{/tro-thanh-nha-ban-hang}">Trở thành nhà bán hàng</a>
 					</li>
 					<li class="menu-mobi nav-item dropdown"><a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Danh mục</a>
 						<ul class="dropdown-menu" >
@@ -19,7 +19,7 @@
 							<ul class="menu-category">
 								<li ng-repeat="category in categories" ng-include="'categoryTree'"></li>
 								<script type="text/ng-template" id="categoryTree">
-									<a href="#" ng-click="getCate(category.id)" >{{ category.name }}</a>
+									<a th:href="@{/tim-kiem/?pCate={{category.id}}}" ng-click="getCate(category.id)" >{{ category.name }}</a>
 									<ul ng-if="category.categories" class="submenu">
 										<li ng-repeat="category in category.categories" ng-include="'categoryTree'">     
 										</li>
@@ -31,9 +31,11 @@
 
 				</ul>
 				<ul class="navbar-nav">
-					<li><a href="#" class="nav-link"> Đăng nhập </a></li>
-					<li><a href="#" class="nav-link"> Đăng ký </a></li>
-					<li><a href="#" class="nav-link"> Chăm sóc khách hàng </a></li>
+					<li sec:authorize="!isAuthenticated()"><a th:href="@{/dang-nhap}" class="nav-link"> Đăng nhập </a></li>
+					<li sec:authorize="!isAuthenticated()"><a th:href="@{/dang-ky}" class="nav-link"> Đăng ký </a></li>
+					<li sec:authorize="isAuthenticated()"><a th:href="@{/logout}" class="nav-link"> Đăng xuất </a></li>
+					<li sec:authorize="isAuthenticated()"><a th:href="@{/quan-ly-tai-khoan}" class="nav-link"> Quản lý tài khoản </a></li>
+					<li><a th:href="@{/cham-soc-khach-hang}" class="nav-link">Chăm sóc khách hàng </a></li>
 				</ul> <!-- list-inline //  -->
 			</div> <!-- navbar-collapse .// -->
 		</div> <!-- container //  -->
@@ -44,29 +46,28 @@
 			<div class="row-sm align-items-center">
 				<div class="col-sm-2"></div>
 				<div class="col-sm-8 col-9">
-					<form action="#" class="py-1">
+					<form th:action="@{/tim-kiem}" th:object="${product}" method="get" class="py-1">
 						<div class="input-group w-100">
-							<input type="text" class="form-control" style="width:50%;" placeholder="Search">
+							<input type="text" name="pName" id="pName" th:value="${pName}" class="form-control" style="width:50%;" placeholder="Search">
 							<div class="input-group-append">
 								<button class="btn btn-success" type="submit">
 									<i class="fa fa-search"></i> 
 								</button>
 							</div>
 						</div>
-					</form> <!-- search-wrap .end// -->
+					</form>
 				</div> <!-- col.// -->
 				<div class="col-sm-2 col-3">
 					<div class="float-right row">
 						<div class="col">
-							<a href="#" class="widget-header">
+							<a th:href="@{/gio-hang}" class="widget-header">
 								<div class="icontext">
 									<div class="icon-wrap"><i class="text-success icon-sm fa fa-shopping-cart"></i></div>
 									<div class="text-wrap text-dark">
-										<span class="small round badge badge-secondary">10+</span>
+										<span id="countItems" class="small round badge badge-secondary">10+</span>
 									</div>
 								</div>
 							</a>
-							
 						</div> <!-- col.// -->
 					</div> <!-- widgets-wrap.// row.// -->
 				</div> <!-- col.// -->

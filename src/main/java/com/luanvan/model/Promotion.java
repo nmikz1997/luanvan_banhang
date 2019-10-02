@@ -2,7 +2,7 @@ package com.luanvan.model;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Future;
@@ -60,6 +61,7 @@ public class Promotion implements Serializable{
 	
 	@CreatedDate
 	@Temporal(TemporalType.TIMESTAMP)
+	@Column(nullable = false, updatable = false)
 	@JsonFormat(pattern="dd-MM-yyyy HH:mm:ss")
 	private Date createdAt;
 	
@@ -84,9 +86,10 @@ public class Promotion implements Serializable{
     )
 	@ToString.Exclude
 	@EqualsAndHashCode.Exclude
-    private Set<Product> products;
+    private List<Product> products;
 	
-//	@OneToMany(mappedBy = "promotion")
-//	private List<PromotionProduct> promotionProducts;
+	@JsonIgnore
+	@OneToMany(mappedBy = "promotion")
+	private List<OrderDetail> orderDetails;
 	
 }

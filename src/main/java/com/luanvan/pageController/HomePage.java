@@ -1,5 +1,7 @@
 package com.luanvan.pageController;
 
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +16,26 @@ public class HomePage {
 	@GetMapping
 	public String home() {
 		return "homepage/home";
+	}
+	
+	@GetMapping("/dang-nhap")
+	public String login() {
+		return "homepage/dangnhap";
+	}
+	
+	@GetMapping("/dang-ky")
+	public String register() {
+		return "homepage/dangky";
+	}
+	
+	@GetMapping("/quan-ly-tai-khoan")
+	public String userInfo() {
+		return "homepage/quanlytaikhoan";
+	}
+	
+	@GetMapping("/tro-thanh-nha-ban-hang")
+	public String registerStore() {
+		return "homepage/dangkybanhang";
 	}
 	
 	@GetMapping("/search")

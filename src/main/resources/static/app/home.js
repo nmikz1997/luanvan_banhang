@@ -6,6 +6,10 @@ homepage.controller('HomeController', function($scope, $http, API){
 		.then(function (response) {
 			$scope.listSPKM = response.data;
 		});
+		$http.get('products/san-pham-moi')
+		.then(function (response) {
+			$scope.listSPNEW = response.data;
+		});
 	}
 	
 	$http.get(API + 'categories')
@@ -36,18 +40,21 @@ homepage.controller('HomeController', function($scope, $http, API){
 	$scope.banners = [
 		{
 			id: 1,
-			image: "https://picsum.photos/id/200/598/366",
+			image: "/images/banners/1.jpg",
 			promotionId: "1"
 		},
 		{
 			id: 2,
-			image: "https://picsum.photos/id/128/598/366",
+			image: "/images/banners/2.jpg",
 			promotionId: "2"
-		},
-		{
-			id: 3,
-			image: "https://picsum.photos/id/384/598/366",
-			promotionId: "3"
 		}
 	];
+	var items = JSON.parse(localStorage.getItem("items"));
+	var countItems = 0;
+	if(items != null){
+		items.forEach(function(ele){
+			return countItems += ele.quantity;
+		})
+	}
+	$('#countItems').text(countItems);
 });

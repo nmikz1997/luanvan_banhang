@@ -87,7 +87,17 @@ public class ProductController {
 		req.forEach(product ->{
 			ids.add(product.getId());
 		});
+		
 		List<ProductDTO> dataCart = productService.productsInIds(ids);
+		
+		dataCart.forEach(product ->{
+			req.forEach(r -> {
+				if(r.getId() == product.getId()) {
+					product.setSoLuongMua(r.getQuantity());
+				};
+			});
+		});
+		
 		return dataCart;
 	}
 	

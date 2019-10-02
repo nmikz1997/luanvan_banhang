@@ -38,14 +38,21 @@ public class Order{
 	@NotNull 
 	private String address;
 	
-	@NotNull 
-	private int total;
-	
 	@CreatedDate 
 	private Date createdAt;
 	
 	@LastModifiedDate 
 	private Date updatedAt;
+	
+	public Integer getTotal() {
+		Integer total = 0;
+        List<OrderDetail> orderdetails = getOrdersDetail();
+        
+        for (OrderDetail dt : orderdetails) {
+        	total += dt.getAmount();
+        }
+        return total;    
+	}
 	
 	//OneToMany OrderDetail
 	@JsonIgnore
@@ -63,5 +70,9 @@ public class Order{
 	@ManyToOne
 	@JoinColumn(name = "store_id")
 	private Store store;
+	
+	@ManyToOne
+	@JoinColumn(name = "order_status_id")
+	private OrderStatus orderStatus;
 	
 }

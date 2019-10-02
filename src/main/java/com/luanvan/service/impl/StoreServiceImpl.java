@@ -2,9 +2,13 @@ package com.luanvan.service.impl;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.luanvan.dto.request.CreateStoreDTO;
 import com.luanvan.exception.NotFoundException;
 import com.luanvan.model.Store;
 import com.luanvan.repo.StoreRepository;
@@ -38,15 +42,18 @@ public class StoreServiceImpl implements StoreService{
 	}
 
 	@Override
-	public Store create(Store Store) {
-		return StoreRepository.save(Store);
+	@Transactional
+	public void create(CreateStoreDTO storeDTO) {
+		ModelMapper mapper = new ModelMapper();
+		Store store = mapper.map(storeDTO, Store.class);
+		StoreRepository.save(store);
 	}
 
 	@Override
 	public Store update(Store Store, Long id) {
-		StoreRepository.findById(id)
+		Store store = StoreRepository.findById(id)
 			.orElseThrow(NotFoundException::new);
-		return StoreRepository.save(Store);
+		return StoreRepository.save(store);
 	}
 
 	@Override

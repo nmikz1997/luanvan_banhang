@@ -20,7 +20,7 @@ public class StorePage {
 	
 	@GetMapping("order")
 	public String order() {
-		return "admin/order";
+		return "admin/order/order";
 	}
 	
 	@GetMapping("order-detail")

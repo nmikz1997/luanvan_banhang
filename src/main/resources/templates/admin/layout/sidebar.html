@@ -14,9 +14,9 @@
 
       <!-- Nav Item - Dashboard -->
       <li class="nav-item active">
-        <a class="nav-link" href="index.html">
+        <a class="nav-link" th:href="@{/store/thong-ke}">
           <i class="fas fa-fw fa-tachometer-alt"></i>
-          <span>Dashboard</span></a>
+          <span>Thống kê chung</span></a>
       </li>
 
       <!-- Divider -->
@@ -36,9 +36,9 @@
         <div id="danhMuc" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Danh mục:</h6>
-            <a class="collapse-item" href="buttons.html">Loại sản phẩm</a>
-            <a class="collapse-item" href="cards.html">Nhà sản xuất</a>
-            <a class="collapse-item" href="cards.html">Vật liệu sản phẩm</a>
+            <a class="collapse-item" th:href="@{/admin/category}">Loại sản phẩm</a>
+            <a class="collapse-item" th:href="@{/admin/producer}">Nhà sản xuất</a>
+            <a class="collapse-item" th:href="@{/admin/material}">Vật liệu sản phẩm</a>
           </div>
         </div>
       </li>
@@ -102,7 +102,7 @@
       </li>
       <!-- Nav Item - Tables -->
       <li class="nav-item">
-        <a class="nav-link" href="tables.html">
+        <a class="nav-link" th:href="@{/store/promotion}">
           <i class="fas fa-fw fa-table"></i>
           <span>Quản lý khuyến mãi</span></a>
       </li>

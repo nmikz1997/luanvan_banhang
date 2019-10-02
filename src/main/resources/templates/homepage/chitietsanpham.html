@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{homepage/layout/Layout}">
 <head>
-  <title>Cuộc sống xanh</title>
+  <title>Sống xanh</title>
   <section layout:fragment="css">
   	<link href="/plugins/fancybox/fancybox.min.css" type="text/css" rel="stylesheet">
   	<style type="text/css">
@@ -18,6 +18,9 @@
 		}
 		.less {
 			max-height: 63px;
+		}
+		.img-wrap img {
+			max-height:300px;
 		}
 	</style>
   </section>
@@ -71,14 +74,14 @@
 									<hr>
 									<div class="mb-3"> 
 										<var class="price h3 text-danger">
-											<span class="num" th:inline="text">{{product.priceNew | currency:"":0}} đ</span>
+											<span class="num">{{product.priceNew | currency:"":0}} đ</span>
 										</var><br>
-										<var class="price h6 text-dark">
+										<var ng-if="((product.price-product.priceNew)/product.price)*100" class="price h6 text-dark">
 											<del class="price-old" th:inline="text">{{product.price | currency:"":0}} đ</del>
 											<span class="discout">-{{ ((product.price-product.priceNew)/product.price)*100 | number:0 }}%</span>
 										</var>
 									</div>
-									<div>
+									<div ng-if="product.maxPromotion.saleOff">
 										<dl class="dlist-inline">
 											<dt>Khuyến mãi:</dt>
 											<dd>{{product.maxPromotion.saleOff}}% <a href="#">{{product.maxPromotion.name}}</a></dd>
@@ -105,22 +108,23 @@
 										<div class="label-rating">+154 đơn đặt hàng </div>
 									</div>
 									<hr>
-									<div class="row">
+									<div class="row" ng-show="product.quantity - product.sold">
 										<div class="col-sm-5">
 											<dl class="dlist-inline">
 												<dt>Số lượng: </dt>
 												<dd> 
-													<input type="number" min = 1 value = 1 ng-model="item.quantity" class="form-control" name="" style="width:100px;">
+													<input type="number" min="1" max="{{product.quantity - product.sold}}" ng-model="item.quantity" class="form-control" name="" style="width:100px;">
 												</dd>
 											</dl>
-										</div> 
+										</div>
+										<div>
+											<a href="#" class="btn btn-success"> Mua ngay</a>
+											<a href="#" class="btn btn-outline-success" ng-click="addToCart(product.id)"> <i class="fas fa-shopping-cart"></i> Thêm vào giỏ hàng </a>
+										</div>
 									</div>
+										<p ng-show="product.quantity - product.sold <= 0" class="alert alert-warning">Tạm hết hàng</p>
 									<hr>
-									<a href="#" class="btn btn-success"> Mua ngay </a>
-									<a href="#" class="btn btn-outline-success" ng-click="addToCart(product.id)"> <i class="fas fa-shopping-cart"></i> Thêm vào giỏ hàng </a>
-									<hr>
-
-									<a href="#"><i class="far fa-flag"></i> Phản ánh sản phẩm </a>
+									<!--<a href="#"><i class="far fa-flag"></i> Phản ánh sản phẩm </a> -->
 								</article> 
 							</aside>
 						</div>

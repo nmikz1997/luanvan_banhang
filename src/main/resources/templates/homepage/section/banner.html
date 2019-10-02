@@ -8,7 +8,7 @@
 						<ul class="menu-category">
 							<li ng-repeat="category in categories" ng-include="'categoryTree'"></li>
 							<script type="text/ng-template" id="categoryTree">
-								<a href="#" ng-click="getCate(category.id)" >{{ category.name }}</a>
+								<a th:href="@{/tim-kiem/?pCate={{category.id}}}" ng-click="getCate(category.id)" >{{ category.name }}</a>
 								<ul ng-if="category.categories" class="submenu">
 									<li ng-repeat="category in category.categories" ng-include="'categoryTree'">     
 									</li>
@@ -20,7 +20,7 @@
 						<div id="carousel2_indicator" class="carousel slide carousel-fade" data-ride="carousel">
 							<div class="carousel-inner">
 								<div class="carousel-item" ng-class='{active:$first}' ng-repeat="banner in banners">
-									<img class="d-block w-100" ng-src="{{ banner.image }}" alt="First slide">
+									<img class="d-block w-100" height="300px" ng-src="{{ banner.image }}" alt="First slide">
 								</div>
 							</div>
 							<a class="carousel-control-prev" href="#carousel2_indicator" role="button" data-slide="prev">
@@ -34,28 +34,28 @@
 						</div> 
 					</aside>
 					<aside class="col-lg-3 col-sm-12">
-						<h6 class="title-bg bg-secondary"> Qualified Suppliers</h6>
+						<h6 class="title-bg bg-secondary"> Nhà bán hàng tốt nhất</h6>
 						<div style="height:280px;">
 							<figure class="itemside has-bg border-bottom" style="height: 33%;">
 								<img class="img-bg" src="images/items/item-sm.png">
 								<figcaption class="p-2">
-									<h6 class="title">One request, many offers </h6>
-									<a href="#">Good link</a>
+									<h6 class="title">Tên nhà bán hàng</h6>
+									<a href="#">Xem cửa hàng</a>
 								</figcaption>
 							</figure>
 				
 							<figure class="itemside has-bg border-bottom" style="height: 33%;">
 								<img class="img-bg" src="images/items/1.jpg" height="80">
 								<figcaption class="p-2">
-									<h6 class="title">One request, many offers </h6>
-									<a href="#">Good link</a>
+									<h6 class="title">Tên nhà bán hàng</h6>
+									<a href="#">Xem cửa hàng</a>
 								</figcaption>
 							</figure>
 							<figure class="itemside has-bg border-bottom" style="height: 33%;">
 								<img class="img-bg" src="images/items/2.jpg" height="80">
 								<figcaption class="p-2">
-									<h6 class="title">One request, many offers </h6>
-									<a href="#">Good link</a>
+									<h6 class="title">Tên nhà bán hàng</h6>
+									<a href="#">Xem cửa hàng</a>
 								</figcaption>
 							</figure>
 						</div>

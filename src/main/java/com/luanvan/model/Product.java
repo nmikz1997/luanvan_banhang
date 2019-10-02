@@ -1,6 +1,5 @@
 package com.luanvan.model;
 
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -65,6 +64,7 @@ public class Product{
 	private Long quantity;
 	
 	@CreatedDate
+	@Column(nullable = false, updatable = false)
 	@JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 	private Date createdAt;
 	
@@ -107,6 +107,9 @@ public class Product{
 	@OneToMany(mappedBy="product")
 	private List<Review> reviews;
 	
+	@JsonIgnore
+	@OneToMany(mappedBy = "product")
+	private List<OrderDetail> ordersDetails;
 	
 	@ManyToMany
     @JoinTable(
@@ -122,13 +125,7 @@ public class Product{
 	@ManyToMany(mappedBy = "products",cascade = CascadeType.ALL)
 	@ToString.Exclude
 	@EqualsAndHashCode.Exclude
-    private List<Promotion> promotions;
-	
-//	public Price getPriceNew() {
-//		return getPrices().stream()
-//				.max(Comparator.comparing(Price::getId))
-//                .get(); 
-//	}
+    private Set<Promotion> promotions;
 	
 	@Transient
 	public Integer getPrice() {

@@ -40,8 +40,6 @@ public class ProductServiceImpl implements ProductService{
 	private PriceRepository priceRepository;
 	private StoreRepository storeRepository;
 	private PromotionRepository promotionRepository;
-	private List<Long> ids;
-	
 	@Autowired
 	public ProductServiceImpl(
 			ProductRepository productRepository,
@@ -196,7 +194,9 @@ public class ProductServiceImpl implements ProductService{
 		List<Product> products = productRepository.findAllByOrderByIdDesc();
 		ModelMapper mapper = new ModelMapper();
 		List<ProductDTO> productDTO = mapper.map(products,new TypeToken<List<ProductDTO>>(){}.getType());
-		return productDTO;//danh sách sản phẩm mới
+		return productDTO.stream().
+						limit(12)
+						.collect(Collectors.toList());//danh sách sản phẩm mới
 	}
 
 	@Override

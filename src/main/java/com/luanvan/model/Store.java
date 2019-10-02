@@ -51,24 +51,15 @@ public class Store{
 	@Size(min = 10, max = 10, message = "Số điện thoại phải 10 ký tự")
 	private String phoneNumber;
 	
-	@NotBlank
-	@Email(message = "Email không hợp lệ")
-	private String email;
-	
 	@NotNull
 	@Column(columnDefinition = "TEXT")
 	private String derciption;
-	
-	private boolean status;
 	
 	@CreatedDate
 	@JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 	private Date createdAt;
 	
-	@LastModifiedDate
-	@JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-	private Date updatedAt;
-	
+	@JsonIgnore
 	@NotNull
 	@OneToOne
 	@JoinColumn(name = "user_id")

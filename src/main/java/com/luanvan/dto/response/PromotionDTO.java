@@ -1,9 +1,11 @@
 package com.luanvan.dto.response;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.luanvan.model.Product;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

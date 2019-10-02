@@ -2,6 +2,7 @@ package com.luanvan.service;
 
 import java.util.List;
 
+import com.luanvan.dto.request.CreateStoreDTO;
 import com.luanvan.model.Store;
 public interface StoreService {
 	
@@ -11,7 +12,7 @@ public interface StoreService {
 	
 	Store findById(Long id);
 	
-	Store create(Store origin);
+	void create(CreateStoreDTO store);
 
 	Store update(Store origin, Long id);
 	

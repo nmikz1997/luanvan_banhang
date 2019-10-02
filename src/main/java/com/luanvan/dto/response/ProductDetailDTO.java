@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.luanvan.model.Category;
 import com.luanvan.model.Material;
+import com.luanvan.model.OrderDetail;
 import com.luanvan.model.Origin;
 import com.luanvan.model.Picture;
 import com.luanvan.model.Producer;
@@ -30,6 +31,7 @@ public class ProductDetailDTO {
 	@Setter @Getter private Category category;
 	@Setter 		private List<Promotion> promotions;
 	@Setter @Getter private List<Picture> pictures;
+	@Setter private List<OrderDetail> ordersDetails;
 	
 	public Promotion getMaxPromotion() {
 		Integer safeOffMax = 0;
@@ -48,6 +50,14 @@ public class ProductDetailDTO {
 			}
 		}
 		return promotionActive;//trả về thông tin khuyến mãi đang áp dụng
+	}
+	
+	public int getSold() {
+		int sold = 0;
+		for(OrderDetail detail : ordersDetails) {
+			sold += detail.getQuantity();
+		}
+		return sold;
 	}
 
 	public Integer getPriceNew() { //giá áp dụng

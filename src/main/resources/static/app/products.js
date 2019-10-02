@@ -6,12 +6,12 @@ app.controller('ProductsController', function($scope, $http,$timeout, API){
 
 	$scope.giagoc = {
 		id: null,
-		root: true
+		root: 1
 	}
 
 	$scope.giaban = {
 		id: null,
-		root: false
+		root: 0
 	}
 	
 	function AjaxRenderData(){
@@ -26,6 +26,7 @@ app.controller('ProductsController', function($scope, $http,$timeout, API){
 
 	$scope.modal = function (state, id) {
 		$scope.state = state;
+		$scope.product = null;
 
 		switch (state){
 			case "add":
@@ -42,10 +43,13 @@ app.controller('ProductsController', function($scope, $http,$timeout, API){
 				.then(function (res) {
 					//console.log(res.data.product.origin.id);
 					$scope.product = res.data.product;
+					$scope.giagoc.id = res.data.product.prices[0].id;
+					$scope.giagoc.unitPrice = res.data.product.prices[0].unitPrice;
+					$scope.giaban.id = res.data.product.prices[res.data.product.prices.length-1].id;
+					$scope.giaban.unitPrice = res.data.product.prices[res.data.product.prices.length-1].unitPrice;
 				})
 				.then(function(){
 					$scope.anhAvatar = '/picture/'+$scope.product.avatar;
-					//console.log($scope.product);
 				})
 				.catch(function (err) {
 					alert("Không tìm thấy");
@@ -62,6 +66,8 @@ app.controller('ProductsController', function($scope, $http,$timeout, API){
 	
 	jQuery("#submit").on("click", function(event){
 		event.preventDefault();
+		delete $scope.product["priceNew"];delete $scope.product["price"];delete $scope.product["createdAt"];
+		delete $scope.giaban["createdAt"];delete $scope.product["priceApply"];
 		$scope.product.status = 1;
 		$scope.product.prices = [
 			$scope.giagoc,
@@ -71,7 +77,7 @@ app.controller('ProductsController', function($scope, $http,$timeout, API){
 		var model = {
 			product: $scope.product
 		}
-
+		console.log(model);
 		var formData = new FormData();
 
 		//nếu có ảnh thì append
@@ -81,7 +87,6 @@ app.controller('ProductsController', function($scope, $http,$timeout, API){
 		formData.append('model',JSON.stringify(model));
 
 		if($('#image').val() != "" || $scope.state == "edit"){
-			
 		 	jQuery.ajax({
 		 		url: "/products",
 		 		type: "POST",
@@ -93,6 +98,8 @@ app.controller('ProductsController', function($scope, $http,$timeout, API){
 		 		success: function (res) {
 		 			jQuery("#myModal").modal('hide');
 		 			AjaxRenderData();
+		 			$scope.giagoc = {id: null,root: 1}
+	 				$scope.giaban = {id: null,root: 0}
 		 		},
 		 		error: function (err) {
 		 			console.log(err.responseText);
@@ -175,9 +182,9 @@ app.controller('ProductsController', function($scope, $http,$timeout, API){
 		console.log("đã chọn");
 	};
 	
-	$scope.quanlydongia = function(){
-		jQuery("#myModalDonGia").modal('show');
-	};
+	$scope.thayDoiGiaBan = function(){
+		$scope.giaban.id = null;
+	}
 	
 	
 });

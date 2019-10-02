@@ -136,32 +136,25 @@
 						<div id="menu1" class="container tab-pane fade"><br>
 							<div class="form-group">
 								<label for="price" class="col-form-label">Giá gốc:</label>
-								<input type="number" min="{{giamoi.gia}}" step="500" ng-model="giagoc.unitPrice" class="form-control" id="price" name="price" ng-required="true" />
+								<input type="number" min="{{giaban.unitPrice}}" step="500" ng-model="giagoc.unitPrice" class="form-control" id="price" name="price" ng-required="true" />
 								<span id="helpBlock2" class="help-block" ng-show="frmProduct.price.$error.required">*</span>
 							</div>
 							<div class="form-group">
 								<label for="price" class="col-form-label">Giá bán:</label>
-								<input type="number" min=0 max="{{giagoc.gia}}" step="500" ng-model="giaban.unitPrice" class="form-control" id="pricenew" name="pricenew" ng-required="true" />
+								<input type="number" min=0 max="{{giagoc.unitPrice}}" step="500" ng-model="giaban.unitPrice" ng-change="thayDoiGiaBan()" class="form-control" id="pricenew" name="pricenew" ng-required="true" />
 								<span id="helpBlock2" class="help-block" ng-show="frmProduct.price.$error.required">*</span>
 							</div>
 							<table class="table table-bordered">
 								<thead>
 									<tr>
-										<th scope="col">Giá</th>
-										<th scope="col">Ngày áp dụng</th>
-										<th scope="col">Ngày kết thúc</th>
+										<th scope="col">Giá bán</th>
+										<th scope="col">Ngày thêm</th>
 									</tr>
 								</thead>
 								<tbody>
-									<tr>
-										<td>Mark</td>
-										<td>Otto</td>
-										<td>@mdo</td>
-									</tr>
-									<tr>
-										<td>Jacob</td>
-										<td>Thornton</td>
-										<td>@fat</td>
+									<tr ng-repeat="price in product.prices | orderBy:'-id'" ng-if="price.root == 0" >
+										<td>{{price.unitPrice}}</td>
+										<td>{{price.createdAt | date:"MM/dd/yyyy 'at' h:mma"}}</td>
 									</tr>
 								</tbody>
 							</table>

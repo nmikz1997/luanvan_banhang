@@ -7,7 +7,7 @@
   <section layout:fragment="content">
     <div class="container-fluid" ng-controller="OrderDetailController">
           <!-- Page Heading -->
-          <h1 class="h3 mb-2 text-gray-800">Quản lý đơn đặt hàng</h1>
+          <h1 class="h3 mb-2 text-gray-800">Quản lý hóa đơn</h1>
           <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below. For more information about DataTables, please visit the <a target="_blank" href="https://datatables.net">official DataTables documentation</a>.</p>
           <!-- DataTales Example -->
           <div class="card shadow mb-4">
@@ -23,37 +23,28 @@
                       <th>Tổng giá trị</th>
                       <th>Tình trạng</th>
                       <th>Khách hàng</th>
-                      <th>Địa chỉ giao</th>
                       <th>Thời điểm</th>
                       <th>
-	                      <a href="#" class="btn btn-success" ng-click="modal('add')">
-	                      	Thêm sản phẩm
-	                      </a>
+                      	Chi tiết
                       </th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr ng-repeat = "product in products">
-                      <td>	{{ product.id }}	</td>
-                      <td>	{{ product.price }}	</td>
-                      <td>	{{ product.status }}</td>
-                      <td>	{{ product.name }}	</td>
-                      <td>	{{ product.name }}	</td>
-                      <td>	{{ product.createdAt }}	</td>
+                    <tr ng-repeat = "obj in data">
+                      <td>	{{ obj.id }}		</td>
+                      <td>	{{ obj.total }}		</td>
+                      <td>	{{ obj.orderStatus.name }}	</td>
+                      <td>
+                      	<b>Tên</b>: {{ obj.customer.name }}<br>
+                      	<b>Email</b>: {{ obj.customer.email }}<br>
+                      	<b>SĐT</b>: {{ obj.customer.phoneNumber }}<br>
+                      	<b>Địa chỉ</b>: {{ obj.address }}
+                      </td>
+                      <td>	{{ obj.createdAt | date:"MM/dd/yyyy 'at' h:mma" }}	</td>
                       
                       <td align="center">
-                      	  <a href="#" class="btn btn-info" title="Xem thông tin chi tiết sản phẩm" />
+	                      <a href="#" ng-click="modal('edit',obj.id)"  class="btn btn-info" title="Chỉnh sửa thông tin sản phẩm" />
 	                      <i class="fas fa-info-circle"></i>
-	                      </a>
-                      	  <a href="#" ng-click="modal('images',product.id)" class="btn btn-primary" title="Quản lý hình ảnh sản phẩm" />
-	                      <i class="fas fa-images"></i>
-	                      </a>
-	                      <a href="#" ng-click="modal('edit',product.id)" class="btn btn-warning" title="Chỉnh sửa thông tin sản phẩm" />
-	                      <i class="fas fa-edit"></i>
-	                      </a>
-	                      <a href="#" ng-click="confirmDelete(product.id)" class="btn btn-danger" title="Xóa sản phẩm">
-	                      <i class="fas fa-trash"></i>
-	                      </a>
                       </td>
                     </tr>
                   </tbody>
@@ -72,53 +63,54 @@
 						</button>
 					</div>
 					<div class="modal-body">
-						<form name="frmProduct" class="form-horizontal">
-							<div class="form-group">
-								<label for="name" class="col-form-label">Tên sản phẩm:</label>
-								<input type="text" class="form-control" id="name" name="name" ng-model="product.name" ng-required="true"/>
-								<span id="helpBlock2" class="help-block" ng-show="frmProduct.name.$error.required">Vui lòng nhập tên sản phẩm</span>
+						<div class="row">
+							<div class="col-6 card" style="padding: 0">
+								<div class="card-header">
+									<strong>Thông tin người đặt:</strong>
+								</div>
+								<div class="card-body">
+									<p>Tên: {{obj.customer.name}}</p>
+									<p>Địa chỉ: {{obj.address}}</p>
+									<p>SĐT: {{obj.customer.phoneNumber}}</p>
+								</div>
 							</div>
-							<div class="form-group">
-								<label for="category" class="col-form-label">Loại sản phẩm: </label>
-								<select name="category" id="category" ng-model="product.category.id" class="form-control" ng-options="category.id as category.name for category in arrCategory">
-                				<span id="helpBlock" class="help-block" ng-show="frmProduct.category.$error.required">Vui lòng chọn </span>
-								</select>
+							<div class="col-6 card" style="padding: 0">
+								<div class="card-header">
+									<strong>Số hóa đơn: {{obj.id}}</strong>
+								</div>
+								<div class="card-body">
+									<p>Trạng thái: {{obj.orderStatus.name}}</p>
+									<p>Tổng điền: {{obj.total}}</p>
+									<p>Hình thức thanh toán: {{obj.paymentType.name}}</p>
+								</div>
 							</div>
-							<div class="form-group">
-								<label for="origin" class="col-form-label">Nhà sản xuất: </label>
-								<select name="origin" id="origin" ng-model="product.origin.id" class="form-control" ng-options="origin.id as origin.name for origin in arrOrigin">
-								</select>
-								<span id="helpBlock2" class="help-block" ng-show="frmProduct.ten.$error.required">Vui lòng chọn </span>
+							<div class="col-12" style="padding: 0">
+								<div ng-repeat="dt in obj.ordersDetail" class="card">
+									<div class="card-header">
+										<strong>Sản phẩm: {{dt.product.name}}</strong>
+									</div>
+									<div class="card-body">
+										<div class="row">
+											<div class="col-md-3">
+												<img ng-src="/picture/{{dt.product.avatar}}" width="125px" height="125px">
+											</div>
+											<div class="col-md-9">
+												<p>Số lượng: {{dt.quantity}}</p>
+												<p>Đơn giá áp dụng: {{dt.price.unitPrice}}</p>
+												<p>Khuyến mãi: {{dt.promotion.saleOff}} %</p>
+												<p>Thành tiền: {{ dt.price.unitPrice*dt.quantity *(100-dt.promotion.saleOff)/100 }}</p>
+											</div>
+										</div>	
+									</div>
+								</div>
 							</div>
-							<div class="form-group">
-								<label for="material" class="col-form-label">Loại vật liệu <span id="helpBlock2" class="help-block" ng-show="frmProduct.material.$error.required">*</span>: </label>
-								<select name="material" id="material" ng-model="product.material.id" class="form-control" ng-options="material.id as material.name for material in arrMaterial">
-								</select>
-							</div>
-							<div class="form-group">
-								<label for="quantity" class="col-form-label">Số lượng:</label>
-								<input type="number" min="0" class="form-control" id="quantity" name="quantity" ng-model="product.quantity" ng-required="true" />
-								<span id="helpBlock2" class="help-block" ng-show="frmProduct.quantity.$error.required">Vui lòng nhập số lượng</span>
-							</div>
-							<div class="form-group">
-								<label for="price" class="col-form-label">Giá gốc:</label>
-								<input type="number" min="0" class="form-control" id="price" name="price" ng-model="product.price" ng-required="true" />
-								<span id="helpBlock2" class="help-block" ng-show="frmProduct.price.$error.required">Vui lòng nhập giá gốc</span>
-							</div>
-				            <div class="form-group">
-				                <label for="image" class="col-form-label">Ảnh đại diện:</label>
-				                <input type="file" min="0" id="image" name="image" ng-file-select="onFileSelect($files)" ng-model="product.image" />
-				                <img style="width:200px; height:200px" ng-src="{{product.image}}" />
-				            </div>
-							<div class="form-group">
-								<label for="mota" class="col-form-label">Mô tả:</label>
-								<textarea class="form-control" id="derciption" name="derciption" ng-model="product.derciption" ng-required="true"></textarea>
-								<span id="helpBlock2" class="help-block" ng-show="frmProduct.derciption.$error.required">Vui lòng mô tả sản phẩm</span>
-							</div>
-						</form>
+						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-primary" ng-disabled="frmProduct.$invalid" ng-click="save(state,product.id)">Gửi</button>
+						<button ng-if="obj.orderStatus.id == 1" class="btn btn-primary" ng-click="save('xác nhận',obj.id,2)">Xác nhận hóa đơn</button>
+						<button ng-if="obj.orderStatus.id == 2" class="btn btn-primary" ng-click="save('vận chuyển',obj.id,3)">Vận chuyển</button>
+						<button ng-if="obj.orderStatus.id == 3 || obj.orderStatus.id == 4" class="btn btn-primary" ng-click="save('giao',obj.id,5)">Đã giao</button>
+						<button ng-if="obj.orderStatus.id != 7" class="btn btn-warning" ng-click="save('hủy',obj.id,7)">Hủy hóa đơn</button>
 					</div>
 				</div>
 			</div>

@@ -38,6 +38,23 @@ public class OrderDetail {
 	//so luong
     @Column(nullable = false) private int quantity;
     
-	//thanh tien
-    @Column(nullable = false) private int amount;
+	//don gia
+	@ManyToOne
+	@JoinColumn(nullable = false)
+    private Price price;
+	
+	//khuyen mai neu co
+	@ManyToOne
+	@JoinColumn
+    private Promotion promotion;
+	
+	public int getAmount() {
+		return quantity*getPriceNew();
+	}
+	
+	public Integer getPriceNew() {
+		if(promotion != null) return (price.getUnitPrice()*(100 - promotion.getSaleOff() ))/100;
+		return price.getUnitPrice();
+		
+	}
 }

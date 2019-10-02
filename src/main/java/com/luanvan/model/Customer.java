@@ -34,6 +34,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Customer {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long Id;
@@ -53,10 +54,6 @@ public class Customer {
 	//sdt
 	@Size(min = 10, max = 10)
 	private String phoneNumber;
-	
-	//email
-	@Email
-	private String email;
 	
 	//OneToOne user
 	@JsonIgnore

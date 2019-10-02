@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{homepage/layout/Layout}">
+<head>
+  <title>Sống xanh</title>
+  <section layout:fragment="css">
+	<link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+	<link href="css/sb-admin-2.min.css" rel="stylesheet">
+  </section>
+</head>
+<body>
+  <section ng-controller="RegisterController" layout:fragment="content">
+  <div class="container">
+    <div class="card o-hidden border-0 shadow-lg my-5">
+      <div class="card-body p-0">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="p-5">
+           	  <div ng-if="errors.length" class="alert alert-warning">
+				  <strong>Có lỗi xảy ra!</strong>
+				   <ul ng-repeat = "err in errors">
+				   	<li>{{err}}</li>
+				    </ul>
+			  </div>
+              <div class="text-center">
+                <h3 class="h4 text-gray-900 mb-2">Tạo tài khoản</h3>
+              </div>
+              <form name="frmobj" id="frmobj" class="user" ng-class="validate" autocomplete="off">
+                <div class="form-group row">
+                </div>
+                <div class="form-group">
+                  <label for="hoTen">Họ tên</label>
+                  <input type="text" class="form-control form-control-user" ng-model="obj.customer.name" id="hoTen" required="true" ng-required="true" placeholder="Họ tên" autocomplete="off" />
+                </div>
+                <div class="form-group">
+                	<label for="">Giới tính</label><br>
+	                <div class="custom-control custom-radio custom-control-inline">
+					  <input type="radio" class="custom-control-input" id="gender1" ng-model="obj.customer.gender" ng-value="0" name="radio-stacked" required />
+					  <label class="custom-control-label" for="gender1">Nam</label>
+					</div>
+					<div class="custom-control custom-radio custom-control-inline">
+					  <input type="radio" class="custom-control-input" id="gender0" ng-model="obj.customer.gender" ng-value="1" name="radio-stacked" required />
+					  <label class="custom-control-label" for="gender0">Nữ</label>
+					</div>
+				</div>
+				<div class="form-group">
+                  <label for="birthDate">Ngày sinh</label>
+                  <input type="date" ng-model="obj.customer.birthDate" max="today | date:'dd/MM/yyyy' " class="form-control" id="birthDate" required="true" ng-required="true" />
+                </div>
+                <div class="form-group">
+                  <label for="SDT">Số điện thoại</label>
+                  <input type="text" ng-model="obj.customer.phoneNumber" class="form-control form-control-user" id="SDT" required="true" ng-required="true" pattern="(03[2-9]|05[6|8|9]|07[0|6-9]|08[1-9]|09[^5])+([0-9]{7})\b" placeholder="0946730447" />
+                </div>
+                <div class="form-group">
+                  <label for="Email">Email</label>
+                  <input type="email" ng-model="obj.user.email" class="form-control form-control-user" id="Email" required="true" ng-required="true" placeholder="Email" />
+                </div>
+                <div class="form-group row">
+                  <div class="col-sm-6 mb-3 mb-sm-0">
+                    <label for="password">Mật khẩu</label>
+                    <input type="password" ng-model="obj.user.password" maxlength="32" minlength="8"class="form-control form-control-user" id="password" required="true" ng-required="true" placeholder="mật khẩu" />
+                    <small id="passwordHelpInline" class="text-muted">
+				      Mật khẩu phải từ 8-32 ký tự.
+				    </small>
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="Repassword">Nhập lại mật khẩu</label>
+                    <input type="password" class="form-control form-control-user" maxlength="32" minlength="8" ng-model="rePass" pattern="{{obj.user.password}}\b" id="Repassword" ng-required="true" placeholder="Nhập lại mật khẩu" />
+                  </div>
+                </div>
+                <button type="submit" ng-disabled="frmobj.$invalid" ng-click="submit()" class="btn btn-primary btn-user btn-block">
+                  Tạo tài khoản
+                </button>
+              </form>
+              <hr>
+              <div class="text-center">
+                <a class="small" href="@{/dang-nhap}">Bạn đã có tài khoản? Đăng nhập!</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </section>
+  <section layout:fragment="script">
+  <script th:src="@{/app/user.js}"></script>
+  <script src="js/sb-admin-2.min.js"></script>
+  </section>
+</body>
+</html>

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.luanvan.dto.request.CreateStoreDTO;
 import com.luanvan.model.Store;
 import com.luanvan.service.StoreService;
 
@@ -41,8 +42,8 @@ public class StoreController {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Store create(@Valid @RequestBody Store Store){
-		return StoreService.create(Store);
+	public void create(@RequestBody CreateStoreDTO store){
+		StoreService.create(store);
 	}
 
 	@PutMapping("/{id}")
