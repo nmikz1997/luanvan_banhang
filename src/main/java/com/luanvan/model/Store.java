@@ -77,5 +77,4 @@ public class Store{
 	@JsonIgnore
 	@OneToMany(mappedBy = "store")
 	private List<Order> orders;
-	//OneToMany order
 }

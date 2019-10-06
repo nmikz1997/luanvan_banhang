@@ -9,7 +9,7 @@ import com.luanvan.model.Category;
 
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long>{
-	List<Category> findByParentId (Long parentid);
+	List<Category> findByParentId(Long parentid);
 	
 	List<Category> findByNameContaining(String name);
 	

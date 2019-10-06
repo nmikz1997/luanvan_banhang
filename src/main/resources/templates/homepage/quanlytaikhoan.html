@@ -1,44 +1,90 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{homepage/layout/Layout}">
 <head>
-  <title>Sống xanh</title>
-  <section layout:fragment="css">
-  </section>
+	<title>Sống xanh</title>
+	<section layout:fragment="css">
+	<link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+	<link href="css/sb-admin-2.min.css" rel="stylesheet">
+	</section>
 </head>
 <body>
-  <section layout:fragment="content">
+<section ng-controller="UpdateInfoController" layout:fragment="content">
 	<section class="section-content bg padding-y-sm">
 		<div class="container">
 			<div class="row">
-				<aside class="col-md-3">					
-					<div class="card">
-						<article class="card-group-item">
-							<header class="card-header"><h6 class="title">Quản lý tài khoản </h6></header>
-							<div class="filter-content">
-								<div class="list-group list-group-flush">
-								  <a href="#" class="list-group-item">Thông tin cá nhân</a>
-								  <a href="#" class="list-group-item">Quản lý đơn hàng</a>
-								  <a href="#" class="list-group-item">Nhận xét của tôi </a>
-								  <a href="#" class="list-group-item">Câu hỏi của tôi </a>
-								</div>
-							</div>
-						</article>
-					</div>
-				</aside>
+				<section layout:replace="homepage/section/sidebar-user :: sidebar-user" >
+				</section>
 				<main class="col-md-9">
 					<div class="card">
-						<div class="card-body">
-							<div class="row">
-								
-							</div>
+						<div class="card-body col-12">
+							<div class="text-center">
+				                <h3 class="h4 text-gray-900 mb-2">Cập nhật thông tin</h3>
+				            </div>
+							<form name="frmobj" id="frmobj" class="user" ng-class="validate" autocomplete="off">
+								<div class="form-group">
+									<label for="hoTen">Họ tên</label>
+									<input type="text" class="form-control form-control-user" ng-model="obj.name" id="hoTen" required="true" ng-required="true" placeholder="Họ tên" autocomplete="off" />
+								</div>
+								<div class="form-group">
+									<label for="">Giới tính</label><br>
+									<div class="custom-control custom-radio custom-control-inline">
+										<input type="radio" class="custom-control-input" id="gender1" ng-model="obj.gender" ng-value="false" name="radio-stacked" required />
+										<label class="custom-control-label" for="gender1">Nam</label>
+									</div>
+									<div class="custom-control custom-radio custom-control-inline">
+										<input type="radio" class="custom-control-input" id="gender0" ng-model="obj.gender" ng-value="true" name="radio-stacked" required />
+										<label class="custom-control-label" for="gender0">Nữ</label>
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="birthDate">Ngày sinh</label>
+									<input type="date" ng-model="obj.birthDate" max="{{today | date:'yyyy-MM-dd'}}" class="form-control" id="birthDate" required="true" ng-required="true" />
+								</div>
+								<div class="form-group">
+									<label for="SDT">Số điện thoại</label>
+									<input type="text" readonly class="form-control form-control-user" id="SDT" required="true" ng-required="true" pattern="(03[2-9]|05[6|8|9]|07[0|6-9]|08[1-9]|09[^5])+([0-9]{7})\b" placeholder="0946730447" />
+								</div>
+								<div class="form-group">
+									<label for="Email">Email</label>
+									<input type="email" class="form-control form-control-user" id="Email" readonly required="true" ng-required="true" placeholder="Email" th:value="${thongtin}" />
+								</div>
+								<button type="submit" ng-disabled="frmobj.$invalid" ng-click="submit()" class="btn btn-primary btn-user btn-block">
+									Cập nhật thông tin
+								</button>
+							</form>
+						 </div>
 						</div>
 					</div>
 				</main>
 			</div>
 		</div>
 	</section>
-  </section>
-  <section layout:fragment="script">
-  </section>
+</section>
+<section layout:fragment="script">
+<script>
+	
+homepage.controller('UpdateInfoController', function($scope,$http,API){
+	
+	$scope.today = new Date();
+	var data = {
+		name:null,
+		gender:null,
+		birthDate:null
+	}
+	
+	$scope.submit = function(){
+		console.log($scope.obj);
+	}
+	
+	$http.get('/users/customer/thong-tin').then(function(res){
+		$scope.obj = res.data;
+		$scope.obj.birthDate = new Date(res.data.birthDate);
+	})
+	
+});
+	
+</script>
+<script src="js/sb-admin-2.min.js"></script>
+</section>
 </body>
 </html>

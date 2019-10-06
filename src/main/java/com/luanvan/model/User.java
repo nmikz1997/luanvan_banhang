@@ -42,6 +42,7 @@ public class User implements Serializable{
 	private String password;
 	
 //	OneToOne Custommer
+	@JsonIgnore
 	@OneToOne(mappedBy = "user")
 	private Customer customer;
 	
@@ -49,6 +50,7 @@ public class User implements Serializable{
 	@OneToOne(mappedBy = "user")
 	private Store store;
 	
+	@JsonIgnore
 	@ManyToMany
 	@JoinTable(
 			name = "user_role",

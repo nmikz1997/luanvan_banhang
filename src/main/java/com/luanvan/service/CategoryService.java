@@ -18,4 +18,6 @@ public interface CategoryService {
 	Category update(Category category, Long id);
 	
 	void delete(Long id);
+
+	List<Category> findByParent(Long parentid);
 }

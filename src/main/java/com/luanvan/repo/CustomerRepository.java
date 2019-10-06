@@ -7,5 +7,7 @@ import com.luanvan.model.Customer;
 
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long>{
-
+	
+	Customer findByUserEmail(String email);
+	
 }

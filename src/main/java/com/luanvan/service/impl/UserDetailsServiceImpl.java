@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.luanvan.model.CustomUserDetails;
 import com.luanvan.model.Role;
 import com.luanvan.model.User;
 import com.luanvan.repo.UserRepository;
@@ -31,13 +32,24 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
 		
 		Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
+		
 		Set<Role> roles = user.getRoles();
 		for (Role role : roles) {
 			grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
 		}
 		
-		return new org.springframework.security.core.userdetails.User(
-				user.getEmail(), user.getPassword(), grantedAuthorities);
+		return new CustomUserDetails(user,grantedAuthorities,getStoreId(user),getCustomerId(user));		
+
+	}
+	
+	private Long getStoreId(User user) {
+		if(user.getStore() != null) return user.getStore().getId();
+		return null;
+	}
+	
+	private Long getCustomerId(User user) {
+		if(user.getCustomer() != null) return user.getCustomer().getId();
+		return null;
 	}
 
 }

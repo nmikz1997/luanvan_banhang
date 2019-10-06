@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import javax.transaction.Transactional;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -41,6 +42,11 @@ public class UploadingController {
 		File file = new File(uploadingDir + fileupload.getOriginalFilename());
 		fileupload.transferTo(file);
 		return "upload thành công";
+	}
+
+	@GetMapping("testInterceptor/{number}")
+	public String testInterceptor() {
+		return "OK";
 	}
 	
 

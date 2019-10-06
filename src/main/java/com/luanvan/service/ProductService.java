@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.luanvan.dto.response.ProductDTO;
@@ -26,9 +27,9 @@ public interface ProductService {
 	
 	ProductDTO findDTOById(Long id);
 	
-	String save(String productReq, MultipartFile fileupload) throws IOException;
+	String save(String productReq, MultipartFile fileupload, Authentication auth) throws IOException;
 	
-	List<Product> findByCategory(Long categoryId);
+	List<ProductDTO> findByCategory(Long categoryId);
 	
 	void delete(Long id);
 	
@@ -48,4 +49,6 @@ public interface ProductService {
 	ProductDetailDTO chiTietSanPham(Long id);
 
 	List<ProductDTO> productsInIds(List<Long> ids);
+
+	List<Product> findByStore(Authentication auth);
 }

@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -76,6 +77,9 @@ public class Promotion implements Serializable{
 	@Future
 	@JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 	private Date dayEnd;
+	
+	@NotNull
+	private Long storeId;
 	
 	@JsonIgnore
 	@ManyToMany()

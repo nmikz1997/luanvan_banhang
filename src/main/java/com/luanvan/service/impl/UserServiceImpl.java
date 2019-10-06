@@ -6,6 +6,7 @@ import javax.transaction.Transactional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -57,6 +58,10 @@ public class UserServiceImpl implements UserService{
 		User user = mapper.map(req.getUser(),User.class);
 		Store store = mapper.map(req.getStore(),Store.class);
 		
+		Customer customer = new Customer();
+		customer.setName(store.getName());
+		customer.setPhoneNumber(store.getPhoneNumber());
+		
 		HashSet<Role> roles = new HashSet<>();
 		roles.add( roleRepo.findByName("ROLE_STORE") );
 		roles.add( roleRepo.findByName("ROLE_USER") );
@@ -65,6 +70,7 @@ public class UserServiceImpl implements UserService{
 		
 		store.setUser( userRepo.save(user) );
 		storeRepository.save(store);
+		customerRepository.save(customer);
 	}
 	
 	@Override
@@ -99,5 +105,19 @@ public class UserServiceImpl implements UserService{
 	public User findByEmail(String email) {
 		return userRepo.findByEmail(email);
 	}
+
+
+	@Override
+	public Customer getCustomer(Authentication auth) {
+		return customerRepository.findByUserEmail(auth.getName());
+	}
+
+
+	@Override
+	public Store getStore(Authentication auth) {
+		return storeRepository.findByUserEmail(auth.getName());
+	}
+	
+	
 	
 }

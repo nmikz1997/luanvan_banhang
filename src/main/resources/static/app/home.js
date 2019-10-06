@@ -18,11 +18,6 @@ homepage.controller('HomeController', function($scope, $http, API){
 		$scope.categories = getNestedChildren(response.data, 0);
 	});
 
-	$http.get(API + 'products').then(function (response) { 
-		$scope.products = response.data; 
-	});
-
-
 	function getNestedChildren(arr, parent) {
 		var out = [];
 		for(var i in arr) {

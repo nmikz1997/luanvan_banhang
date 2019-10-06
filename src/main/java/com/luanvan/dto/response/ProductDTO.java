@@ -4,10 +4,10 @@ package com.luanvan.dto.response;
 import java.util.Date;
 import java.util.List;
 
+import com.luanvan.model.OrderDetail;
 import com.luanvan.model.Price;
 import com.luanvan.model.Promotion;
 import com.luanvan.model.Store;
-import com.luanvan.model.OrderDetail;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -21,7 +21,7 @@ public class ProductDTO {
 	@Setter private Integer priceNew;//giá mới
 	@Getter @Setter private Integer quantity;//số lượng gốc
 	@Getter @Setter private int soLuongMua;//số lượng mua
-	@Setter @Getter private Store store;//giá mới
+	@Setter @Getter private Store store;
 	@Setter private List<Promotion> promotions;//danh sách khuyến mãi
 	@Setter private List<Price> prices;//danh sách giá
 	@Setter private List<OrderDetail> ordersDetails;

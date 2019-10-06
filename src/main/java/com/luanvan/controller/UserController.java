@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.luanvan.dto.request.CreateRegisterStoreDTO;
 import com.luanvan.dto.request.RegisterDTO;
+import com.luanvan.model.Customer;
+import com.luanvan.model.Store;
 import com.luanvan.service.UserService;
 
 @RestController
@@ -35,9 +37,18 @@ public class UserController{
 		userService.RegisterStore(req);
 	}
 	
-	@GetMapping("/ai")
-	public Authentication currentUser(Authentication auth) {
-		//UserDetails principal = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	@GetMapping("customer/thong-tin")
+	public Customer customerInfo(Authentication auth) {
+		return userService.getCustomer(auth);	
+	}
+	
+	@GetMapping("store/thong-tin")
+	public Store storeInfo(Authentication auth) {
+		return userService.getStore(auth);
+	}
+	
+	@GetMapping("testAuth")
+	public Authentication getUser(Authentication auth) {
 		return auth;
 	}
 }

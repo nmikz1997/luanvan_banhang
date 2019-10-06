@@ -85,7 +85,7 @@ public class Product{
 	private Origin origin;
 	
 	@ManyToOne
-	@JoinColumn(nullable = false)
+	@JoinColumn(nullable = false, updatable = false)
 	private Store store;
 	
 	@ManyToOne

@@ -15,4 +15,5 @@ public interface PromotionRepository extends JpaRepository<Promotion, Long> {
 	//List<Product> findByPromotionsDayStartBeforeAndPromotionsDayEndAfter(Date today,Date today);
 	List<Promotion> findByProductsIdAndDayStartBeforeAndDayEndAfter(Long productId,Date day1,Date day2);
 	
+	List<Promotion> findByStoreId(Long id);
 }

@@ -44,7 +44,7 @@
 				</div>
 				<div class="form-group">
                   <label for="birthDate">Ngày sinh</label>
-                  <input type="date" ng-model="obj.customer.birthDate" max="today | date:'dd/MM/yyyy' " class="form-control" id="birthDate" required="true" ng-required="true" />
+                  <input type="date" ng-model="obj.customer.birthDate" max="{{today | date:'yyyy-MM-dd'}}" class="form-control" id="birthDate" required="true" ng-required="true" />
                 </div>
                 <div class="form-group">
                   <label for="SDT">Số điện thoại</label>

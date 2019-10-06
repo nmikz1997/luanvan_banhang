@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,7 +27,6 @@ import com.luanvan.service.PromotionService;
 @RequestMapping("promotions")
 public class PromotionController {
 	private PromotionService promotionService;
-	private ProductRepository productRepository;
 	
 	@Autowired
 	public PromotionController (PromotionService promotionService) {
@@ -34,8 +34,8 @@ public class PromotionController {
 	}
 	
 	@GetMapping
-	public List<Promotion> findAll() {
-		return promotionService.findAll();
+	public List<Promotion> findbyStore(Authentication auth) {
+		return promotionService.findByStore(auth);
 	}
 	
 	@GetMapping("{id}")
@@ -45,12 +45,12 @@ public class PromotionController {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Promotion create(@RequestBody PromotionDTO req){
+	public Promotion create(@RequestBody PromotionDTO req,Authentication auth){
 		
 		ModelMapper modelMapper = new ModelMapper();
  		Promotion promotion = modelMapper.map(req, Promotion.class);
  		
-		return promotionService.create(promotion);
+		return promotionService.create(promotion,auth);
 	}
 	
 	

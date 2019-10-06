@@ -13,10 +13,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import com.luanvan.dto.request.CreateOrderDTO;
+import com.luanvan.dto.response.OrderCustomerDTO;
 import com.luanvan.dto.response.OrderDTO;
 import com.luanvan.dto.response.ProductDTO;
 import com.luanvan.exception.NotFoundException;
 import com.luanvan.exception.RollbackException;
+import com.luanvan.model.Customer;
 import com.luanvan.model.Order;
 import com.luanvan.model.OrderDetail;
 import com.luanvan.model.OrderStatus;
@@ -35,7 +37,6 @@ public class OrderServiceImpl implements OrderService{
 	private StoreRepository storeRepository;
 	private CustomerRepository customerRepository;
 	private ProductRepository productRepository;
-	private OrderStatus status = new OrderStatus();
 	
 	@Autowired
 	public OrderServiceImpl(OrderRepository orderRepository,
@@ -52,14 +53,22 @@ public class OrderServiceImpl implements OrderService{
 	
 	@Override
 	@Transactional(rollbackOn=RollbackException.class)
-	public synchronized Map<String, String> save(List<CreateOrderDTO> req) throws Exception {
+	public synchronized Map<String, String> save(List<CreateOrderDTO> req, Authentication auth) throws Exception {
 		Map<String, String> message = new HashMap<String, String>();
 		ModelMapper modelMapper = new ModelMapper();
+		
 		List<Order> orders = modelMapper.map(req,new TypeToken<List<Order>>(){}.getType());
+		
+		Customer customer = customerRepository.findByUserEmail(auth.getName());
+		OrderStatus status = new OrderStatus();
+		status.setId((long)1);
+		
 		for(Order order : orders) {
-			status.setId((long)1);
-			order.setOrderStatus(status);
+			
+			order.setOrderStatus( status );
+			order.setCustomer( customer );
 			Long orderId = orderRepository.save(order).getId();
+			
 			for( OrderDetail detail : order.getOrdersDetail() ){
 				
 				ProductDTO productDTO = modelMapper.map(productRepository.getOne(detail.getProduct().getId()), ProductDTO.class);
@@ -70,9 +79,9 @@ public class OrderServiceImpl implements OrderService{
 				detail.getId().setOrderId(orderId);
 				orderDetailRepository.save(detail);
 				
-				message.put("Success", "Thành công");
 			}
 		}
+		message.put("Success", "Thành công");
 		return message;
 	}
 
@@ -102,4 +111,16 @@ public class OrderServiceImpl implements OrderService{
 		orderRepository.save(order);
 	}
 
+	@Override
+	public List<OrderCustomerDTO> findByCustomer(Authentication auth) {
+		
+		Customer customer = customerRepository.findByUserEmail(auth.getName());
+		
+		List<Order> orders = orderRepository.findByCustomer(customer);
+		ModelMapper modelMapper = new ModelMapper();
+		List<OrderCustomerDTO> orderDTO = modelMapper.map(orders,new TypeToken<List<OrderCustomerDTO>>(){}.getType());
+		
+		return orderDTO;
+	}
+	
 }

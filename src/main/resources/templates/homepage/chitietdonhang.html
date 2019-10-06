@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{homepage/layout/Layout}">
+<head>
+	<title>Sống xanh</title>
+	<section layout:fragment="css">
+	<link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+	<link th:href="@{../css/sb-admin-2.min.css}" rel="stylesheet">
+	
+	<style>
+		th{
+			text-align: inherit;
+		}
+	</style>
+	
+	</section>
+</head>
+<body>
+<section ng-controller="OrderDetailCustomerController" layout:fragment="content">
+	<section class="section-content bg padding-y-sm">
+		<div class="container">
+			<div class="row">
+				<section layout:replace="homepage/section/sidebar-user :: sidebar-user" >
+				</section>
+				<div class="col-md-9">
+					<div class="row">
+						<div class="col-6 card" style="padding: 0">
+							<div class="card-header">
+								<strong>Thông tin người đặt:</strong>
+							</div>
+							<div class="card-body">
+								<p>Tên: {{obj.customer.name}}</p>
+								<p>Địa chỉ: {{obj.address}}</p>
+								<p>SĐT: {{obj.customer.phoneNumber}}</p>
+							</div>
+						</div>
+						<div class="col-6 card" style="padding: 0">
+							<div class="card-header">
+								<strong>Số hóa đơn: {{obj.id}}</strong>
+							</div>
+							<div class="card-body">
+								<p>Trạng thái: {{obj.orderStatus.name}}</p>
+								<p>Tổng điền: {{obj.total}}</p>
+								<p>Hình thức thanh toán: {{obj.paymentType.name}}</p>
+							</div>
+						</div>
+						<div class="col-12" style="padding: 0">
+							<div ng-repeat="dt in obj.ordersDetail" class="card">
+								<div class="card-header">
+									<strong>Sản phẩm: {{dt.product.name}}</strong>
+								</div>
+								<div class="card-body">
+									<div class="row">
+										<div class="col-md-3">
+											<img ng-src="/picture/{{dt.product.avatar}}" width="125px" height="125px">
+										</div>
+										<div class="col-md-9">
+											<p>Số lượng: {{dt.quantity}}</p>
+											<p>Đơn giá áp dụng: {{dt.price.unitPrice}}</p>
+											<p>Khuyến mãi: {{dt.promotion.saleOff}} %</p>
+											<p>Thành tiền: {{ dt.price.unitPrice*dt.quantity *(100-dt.promotion.saleOff)/100 }}</p>
+										</div>
+									</div>	
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>		
+			</div>
+		</div>
+	</section>
+</section>
+<section layout:fragment="script">
+<script>
+	
+homepage.controller('OrderDetailCustomerController', function($scope,$http,API){
+	
+	var thisPath = window.location.pathname;
+	var id = thisPath.substring(thisPath.lastIndexOf("/")+1);
+	
+	$http.get('/orders/order-detail/'+id)
+	.then(function (res) {
+		console.log(res);
+		$scope.obj = res.data;
+	})
+	.catch(function (err) {
+		console.log(err);
+	});
+	
+});
+</script>
+<script th:src="@{../js/sb-admin-2.min.js}"></script>
+</section>
+</body>
+</html>

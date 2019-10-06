@@ -39,10 +39,10 @@ public class CategoryServiceImpl implements CategoryService{
 				.orElseThrow(NotFoundException::new);
 	}
 
-//	@Override
-//	public List<Category> getByParent(Long parentid) {
-//		return categoryRepository.findByParentId(parentid);
-//	}
+	@Override
+	public List<Category> findByParent(Long parentid) {
+		return categoryRepository.findByParentId(parentid);
+	}
 
 	@Override
 	public List<Category> findByName(String name) {

@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,8 +39,8 @@ public class ProductController {
 	}
 	
 	@GetMapping
-	public List<Product> findAll() {
-		return productService.findAll();
+	public List<Product> findByStore(Authentication auth) {
+		return productService.findByStore(auth);
 	}
 	
 	@GetMapping("test")
@@ -58,7 +59,7 @@ public class ProductController {
 	}
 	
 	@GetMapping("/category/{id}")
-	public List<Product> findByCategory(@PathVariable("id") Long categoryId) {
+	public List<ProductDTO> findByCategory(@PathVariable("id") Long categoryId) {
 		return productService.findByCategory(categoryId);
 	}
 	
@@ -67,8 +68,9 @@ public class ProductController {
 	@ResponseStatus(HttpStatus.OK)
 	public void save(
 			@RequestParam(value = "model") String productReq,
-			@RequestParam(value = "file", required = false) MultipartFile fileupload) throws IOException {
-		productService.save(productReq, fileupload);
+			@RequestParam(value = "file", required = false) MultipartFile fileupload,
+			Authentication auth) throws IOException {
+		productService.save(productReq, fileupload, auth);
 	}
 	
 	@GetMapping("/san-pham-dang-khuyen-mai/{id}")

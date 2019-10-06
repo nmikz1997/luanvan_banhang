@@ -13,15 +13,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
-import javax.validation.constraints.Size;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -48,11 +46,9 @@ public class Customer {
 	
 	//ngaysinh
 	@Past
-	@JsonFormat(pattern="dd-MM-yyyy")
 	private Date birthDate;
 	
 	//sdt
-	@Size(min = 10, max = 10)
 	private String phoneNumber;
 	
 	//OneToOne user

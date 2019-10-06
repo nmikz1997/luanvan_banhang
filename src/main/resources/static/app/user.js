@@ -4,12 +4,12 @@ homepage.controller('RegisterController', function($scope,$http,API){
 	$scope.errors = [];
 	
 	$scope.submit = function(){
-		$http.post('http://localhost:8080/users', $scope.obj)
+		$http.post('/users', $scope.obj)
 		.then(function (res) {
 			if(res.data.code != 10002){
 				console.log(res);
-				//alert('Đăng ký thành công');
-				//window.location.href = "/";
+				alert('Đăng ký thành công');
+				window.location.href = "/";
 			}else if(res.data.code == 10002){
 				$scope.validate = "was-validated";
 				let theString = '^(?!'+ $scope.obj.user.email +'$).*';
@@ -20,5 +20,5 @@ homepage.controller('RegisterController', function($scope,$http,API){
 	 		$scope.errors.concat(err.data.errors);
 	 	});
 	}
-
+	
 });

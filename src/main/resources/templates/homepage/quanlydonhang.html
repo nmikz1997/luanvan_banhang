@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{homepage/layout/Layout}">
+<head>
+	<title>Sống xanh</title>
+	<section layout:fragment="css">
+	<link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+	<link th:href="@{css/sb-admin-2.min.css}" rel="stylesheet">
+	
+	<style>
+		th{
+			text-align: inherit;
+		}
+	</style>
+	
+	</section>
+</head>
+<body>
+<section ng-controller="OrderCustomerController" layout:fragment="content">
+	<section class="section-content bg padding-y-sm">
+		<div class="container">
+			<div class="row">
+				<section layout:replace="homepage/section/sidebar-user :: sidebar-user" >
+				</section>
+				<div class="col-md-9">
+					<div class="card">
+						<div class="card-body col-12">
+			                <h3 class="h4 text-gray-900 mb-2">Đơn hàng của tôi</h3>
+			            <div class="table-responsive">
+		                <table class="table table-borderless" id="dataTable" width="100%" cellspacing="0">
+		                  <thead>
+		                    <tr>
+		                      <th>Mã đơn hàng</th>
+		                      <th>Ngày mua</th>
+		                      <th>Tổng giá trị</th>
+		                      <th>Trạng thái đơn hàng</th>
+		                      <th></th>
+		                    </tr>
+		                  </thead>
+		                  <tbody>
+		                    <tr ng-repeat = "obj in data">
+		                      <td><a th:href="@{chi-tiet-don-hang/{{obj.id}} }">{{ obj.id }}	</a></td>
+		                      <td>	{{ obj.createdAt | date:"MM/dd/yyyy HH:mm" :'UTC'}}	</td>
+		                      <td>	{{ obj.total }}		</td>
+		                      <td>	{{ obj.orderStatus.name }}	</td>
+		                      <td ng-if="obj.orderStatus.id == 1">	<button class="btn btn-outline-danger"> Hủy </button>	</td>
+		                    </tr>
+		                  </tbody>
+		                </table>
+				        </div>
+				       </div>
+					</div>
+				</div>		
+			</div>
+		</div>
+	</section>
+</section>
+<section layout:fragment="script">
+<script>
+	
+homepage.controller('OrderCustomerController', function($scope,$http,API){
+	
+	$http.get('/orders/quan-ly-don-hang').then(function(res){
+		console.log(res.data);
+		$scope.data = res.data;
+	})
+	
+});
+</script>
+<script th:src="@{js/sb-admin-2.min.js}"></script>
+</section>
+</body>
+</html>

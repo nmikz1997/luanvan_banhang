@@ -7,5 +7,5 @@ import com.luanvan.model.Store;
 
 @Repository
 public interface StoreRepository extends JpaRepository<Store, Long>{
-	
+	Store findByUserEmail(String email);
 }

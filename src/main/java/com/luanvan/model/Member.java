@@ -36,11 +36,9 @@ public class Member {
 	private Date createAt;
 	
 	//ngay ap dung
-	@FutureOrPresent
 	private Date dateStart;
 	
 	//ngay ket thuc
-	@FutureOrPresent
 	private Date dateEnd;
 	
 	//tinh trang

@@ -1,13 +1,14 @@
 package com.luanvan.pageController;
 
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import com.luanvan.service.UserService;
 
 @Controller
 @RequestMapping("/")
@@ -29,13 +30,19 @@ public class HomePage {
 	}
 	
 	@GetMapping("/quan-ly-tai-khoan")
-	public String userInfo() {
+	public String userInfo(Model model, Authentication auth, UserService user) {
+		model.addAttribute("thongtin", auth.getName());
 		return "homepage/quanlytaikhoan";
 	}
 	
 	@GetMapping("/tro-thanh-nha-ban-hang")
 	public String registerStore() {
 		return "homepage/dangkybanhang";
+	}
+	
+	@GetMapping("/store/dang-ky-thanh-vien")
+	public String BuyMember() {
+		return "homepage/thethanhvien";
 	}
 	
 	@GetMapping("/search")
@@ -60,4 +67,15 @@ public class HomePage {
 	public String shoppingCart() {
 		return "homepage/giohang";
 	}
+	
+	@GetMapping("/quan-ly-don-hang")
+	public String quanlydonhang() {
+		return "homepage/quanlydonhang";
+	}
+	
+	@GetMapping("/chi-tiet-don-hang/{id}")
+	public String chitietdonhang() {
+		return "homepage/chitietdonhang";
+	}
+	
 }

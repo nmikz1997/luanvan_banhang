@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.luanvan.dto.response.ProductDTO;
+import com.luanvan.model.Category;
 import com.luanvan.model.Product;
 
 @Repository
@@ -18,8 +19,8 @@ public interface ProductRepository extends JpaRepository<Product, Long>{
 	@Query(value ="SELECT * FROM PRODUCT", nativeQuery = true)
 	List<ProductDTO> selectAll();
 	
-	@Query(value = "SELECT * FROM product WHERE category_id = ?1", nativeQuery = true)
-	List<Product> findByCategory(Long categoryId);
+//	@Query(value = "SELECT * FROM product WHERE category_id = ?1", nativeQuery = true)
+//	List<Product> findByCategory(Long categoryId);
 	
 	@Query(value = "SELECT * FROM product WHERE category_id = ?1", nativeQuery = true)
 	List<Product> findByMaterial(Long MaterialId);
@@ -61,6 +62,9 @@ public interface ProductRepository extends JpaRepository<Product, Long>{
 	
 	//sản pham moi nhat
 	List<Product> findAllByOrderByIdDesc();
+	
+	//Sản phẩm theo category
+	List<Product> findByCategoryIn(List<Category> categories);
 	
 	//sản phẩm theo của hàng
 	List<Product> findByStoreId(Long storeId);
