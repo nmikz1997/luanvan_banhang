@@ -70,19 +70,28 @@ homepage.controller('ShoppingCartController', function($scope, $http, API){
 			});
 			listOrders.push(order);
 		}
-		console.log(listOrders);
-		$http.post('/orders',listOrders)
+		
+		let request = {
+				orderGroup:{
+					address:"116A, Mạc thiên tích",
+					paymentType: {id: 1}
+				},
+				orders:listOrders
+			};
+		
+		$http.post('/orders/v2',request)
 		.then(function(res){
-			if(res.data.Success){
-				alert("Đặt hàng thành công");
-				localStorage.removeItem("items");
-				$scope.items = null;
-				$scope.total = 0;
-				resetCart();
-			}else{
-				alert("Số lượng không đủ đáp ứng");
-				refreshData();
-			}
+			console.log(res);
+//			if(res.data.Success){
+//				alert("Đặt hàng thành công");
+//				localStorage.removeItem("items");
+//				$scope.items = null;
+//				$scope.total = 0;
+//				resetCart();
+//			}else{
+//				alert("Số lượng không đủ đáp ứng");
+//				refreshData();
+//			}
 		})
 	}
 	

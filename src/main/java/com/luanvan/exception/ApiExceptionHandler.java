@@ -29,7 +29,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
     }
 	
 	@ExceptionHandler(NotFoundException.class)
-	@ResponseStatus(value = HttpStatus.NOT_FOUND)
+	@ResponseStatus(value = HttpStatus.OK)
 	protected ErrorMessage handleNotFound(Exception ex, WebRequest request){
 		return new ErrorMessage(10001,"không tồn tại");
 	}

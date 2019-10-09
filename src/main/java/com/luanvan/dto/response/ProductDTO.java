@@ -16,6 +16,7 @@ public class ProductDTO {
 	
 	@Getter @Setter private Long id;
 	@Getter @Setter private String name;
+	@Getter @Setter private float avgStar;
 	@Getter @Setter private String avatar;//ảnh đại diện
 	@Getter @Setter private Integer price;//giá gốc
 	@Setter private Integer priceNew;//giá mới

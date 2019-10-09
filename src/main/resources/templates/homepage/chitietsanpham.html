@@ -17,7 +17,7 @@
 			word-wrap: break-word;
 		}
 		.less {
-			max-height: 63px;
+			max-height: 287.5px;
 		}
 		.img-wrap img {
 			max-height:300px;
@@ -84,7 +84,7 @@
 									<div ng-if="product.maxPromotion.saleOff">
 										<dl class="dlist-inline">
 											<dt>Khuyến mãi:</dt>
-											<dd>{{product.maxPromotion.saleOff}}% <a href="#">{{product.maxPromotion.name}}</a></dd>
+											<dd>{{product.maxPromotion.saleOff}}%</dd>
 										</dl>
 									</div>
 									<hr>
@@ -95,18 +95,8 @@
 										</dl>
 									</div>
 									<hr>
-									<div class="rating-wrap">
-										<div>
-											<label>Đánh giá:</label>
-											<span class="fa fa-star checked"></span>
-											<span class="fa fa-star checked"></span>
-											<span class="fa fa-star checked"></span>
-											<span class="fa fa-star"></span>
-											<span class="fa fa-star"></span>
-										</div>
-										<div class="label-rating">+132 lượt đánh giá</div>
-										<div class="label-rating">+154 đơn đặt hàng </div>
-									</div>
+	                                <span>Đánh giá : </span>
+	                                <span id="rateYoProduct"></span>
 									<hr>
 									<div class="row" ng-show="product.quantity - product.sold">
 										<div class="col-sm-5">
@@ -118,7 +108,6 @@
 											</dl>
 										</div>
 										<div>
-											<a href="#" class="btn btn-success"> Mua ngay</a>
 											<a href="#" class="btn btn-outline-success" ng-click="addToCart(product.id)"> <i class="fas fa-shopping-cart"></i> Thêm vào giỏ hàng </a>
 										</div>
 									</div>
@@ -188,61 +177,66 @@
 		</div>
 		<div class="container">
 			<header class="section-heading">
-				<h4 class="title-section text-uppercase">Đánh giá</h4>
+				<h4 class="title-section text-uppercase">Câu hỏi về sản phẩm</h4>
 			</header>
 			<div class="card">
 				<div class="card-body">
-					<div class="row">
-						<div class="col-3">
-							<p>Tên khách hàng</p>
-							<p>Thời điểm đánh giá:</p>
+					<div ng-repeat="question in questions">
+						<div class="row">
+							<div class="col-2 text-center">
+								<br>
+								<dt>{{question.customer.name}}</dt>
+								<dd>{{question.createdAt | date:"MM/dd/yyyy" :'UTC' }}</dd>
+							</div>
+							<div class="col-10">
+								<dt style="margin-bottom: 7px;" >{{question.topic}}</dt>
+								<dd>{{question.replyFirst}}</dd>
+							</div>
 						</div>
-						<div class="col-9">
-							<p>Đánh giá:</p>
-							<p>Nội dung:</p>
-						</div>
-					</div>
 					<br>
-					<div class="row">
-						<div class="col-3">
-							<p>Tên khách hàng</p>
-							<p>Thời điểm đánh giá:</p>
-						</div>
-						<div class="col-9">
-							<p>Đánh giá:</p>
-							<p>Nội dung:</p>
-						</div>
 					</div>
+					<hr>
+					<a href="#" style="font-size:13px;">Xem tất cả câu hỏi đã được trả lời...</a>
+					<hr>
+					<div class="row col-12">
+					<div class="col-11">
+						<input type="text" placeholder="Đặt câu hỏi về sản phẩm..." ng-model="topic" class="form-control" />
+					</div>
+					<div class="col-1">
+						<button class="btn btn-outline-warning" ng-click="question()">Gửi câu hỏi</button>
+					</div>
+				</div>
 				</div>
 			</div>
 		</div>
 		<div class="container">
 			<header class="section-heading">
-				<h4 class="title-section text-uppercase">Câu hỏi</h4>
+				<h4 class="title-section text-uppercase">Đánh giá và nhận xét</h4>
 			</header>
 			<div class="card">
 				<div class="card-body">
-					<div class="row">
-						<div class="col-3">
-							<p>Tên khách hàng</p>
-							<p>Thời điểm đánh giá:</p>
+					<div ng-repeat="review in reviews">
+						<div class="row">
+							<div class="col-2 text-center">
+								<br>
+								<dt>{{review.customer.name}}</dt>
+								<dd>{{review.createdAt | date:"MM/dd/yyyy" :'UTC' }}</dd>
+							</div>
+							<div class="col-10">
+								Đánh giá: <rate-yo rating="review.star"></rate-yo>
+								<div style="color: #4caf50; margin-bottom:15px;">
+									<img width="15" height="16" 
+									src="https://laz-img-cdn.alicdn.com/tfs/TB1bOqBeb_I8KJjy1XaXXbsxpXa-30-32.png">
+									<span>Chứng nhận đã mua hàng</span>
+								</div>
+								<dd>{{review.content}}</dd>
+							</div>
 						</div>
-						<div class="col-9">
-							<p>Đánh giá:</p>
-							<p>Nội dung:</p>
-						</div>
-					</div>
 					<br>
-					<div class="row">
-						<div class="col-3">
-							<p>Tên khách hàng</p>
-							<p>Thời điểm đánh giá:</p>
-						</div>
-						<div class="col-9">
-							<p>Đánh giá:</p>
-							<p>Nội dung:</p>
-						</div>
 					</div>
+					<hr>
+					<a href="#" style="font-size:13px;">Xem tất cả đánh giá...</a>
+					<hr>
 				</div>
 			</div>
 		</div>

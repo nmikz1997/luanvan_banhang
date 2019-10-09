@@ -19,6 +19,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -46,6 +48,7 @@ public class Review {
 	private int star;
 	
 	@CreatedDate
+	@Column(nullable = false, updatable = false)
 	private Date createdAt;
 	
 	@LastModifiedDate
@@ -54,9 +57,13 @@ public class Review {
 	@ManyToOne
 	@JoinColumn(nullable = false)
 	private Product product;
-
+	
 	@ManyToOne
 	@JoinColumn(nullable = false)
 	private Customer customer;
+	
+	@ManyToOne
+	@JoinColumn(nullable = false)
+	private Order order;
 	
 }

@@ -38,9 +38,9 @@
 		                  </thead>
 		                  <tbody>
 		                    <tr ng-repeat = "obj in data">
-		                      <td><a th:href="@{chi-tiet-don-hang/{{obj.id}} }">{{ obj.id }}	</a></td>
-		                      <td>	{{ obj.createdAt | date:"MM/dd/yyyy HH:mm" :'UTC'}}	</td>
-		                      <td>	{{ obj.total }}		</td>
+		                      <td><a th:href="@{chi-tiet-don-hang/{{obj.id}} }"> HD-{{ obj.id }}	</a></td>
+		                      <td>	{{ obj.createdAt | date:"MM/dd/yyyy HH:mm" :'UTC' }}	</td>
+		                      <td>	{{ obj.totalGroup }}		</td>
 		                      <td>	{{ obj.orderStatus.name }}	</td>
 		                      <td ng-if="obj.orderStatus.id == 1">	<button class="btn btn-outline-danger"> Hủy </button>	</td>
 		                    </tr>

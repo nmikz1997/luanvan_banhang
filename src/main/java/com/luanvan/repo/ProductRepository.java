@@ -1,8 +1,9 @@
 package com.luanvan.repo;
 
-import java.util.Collection;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -75,5 +76,6 @@ public interface ProductRepository extends JpaRepository<Product, Long>{
 	//tất cả sản phẩm còn hàng và có khuyến mãi sẽ bị lặp record do join
 	//findProductsByQuantityGreaterThanAndPromotionsIdNotNull
 	//List<Product> findProductsByQuantityGreaterThanAndPromotionsIdNotNull(Long soluong);
+
 	
 }

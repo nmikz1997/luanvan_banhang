@@ -28,6 +28,11 @@ public class StorePage {
 		return "admin/orderDetail";
 	}
 	
+	@GetMapping("question-management")
+	public String questionManagement() {
+		return "admin/question/question";
+	}
+	
 	@GetMapping("dashboard")
 	public String dashboard() {
 		return "admin/dashboard";

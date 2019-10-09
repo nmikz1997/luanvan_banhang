@@ -16,7 +16,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -25,13 +24,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
 @Entity
-@Table(name = "Orders")
+@Table
 @EntityListeners(AuditingEntityListener.class)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Order{
+public class OrderGroup {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -43,41 +44,15 @@ public class Order{
 	@Column(updatable = false)
 	private Date createdAt;
 	
-	@LastModifiedDate 
-	private Date updatedAt;
-	
-	public Integer getTotal() {
-		Integer total = 0;
-        List<OrderDetail> orderdetails = getOrdersDetail();
-        
-        for (OrderDetail dt : orderdetails) {
-        	total += dt.getAmount();
-        }
-        return total;    
-	}
-	
-	//OneToMany OrderDetail
-	@JsonIgnore
-	@OneToMany(mappedBy = "order")
-	private List<OrderDetail> ordersDetail;
-	
-	@ManyToOne
-	@JoinColumn(name = "customer_id")
-	private Customer customer;
-	
 	@ManyToOne
 	@JoinColumn(name = "payment_type_id")
 	private PaymentType paymentType;
 	
 	@ManyToOne
-	@JoinColumn(name = "store_id")
-	private Store store;
+	@JoinColumn(name = "customer_id")
+	private Customer customer;
 	
-	@ManyToOne
-	@JoinColumn(name = "order_status_id")
-	private OrderStatus orderStatus;
-	
-	@ManyToOne
-	@JoinColumn(name = "order_group_id")
-	private OrderGroup orderGroup;
+	@JsonIgnore
+	@OneToMany(mappedBy = "orderGroup")
+	private List<Order> orders;
 }

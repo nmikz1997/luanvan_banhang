@@ -55,7 +55,9 @@ public class Product{
 	@NotNull
 	private int status;
 	
-	private int avgStar;
+	private float avgStar;
+	
+	private String plug;
 	
 	@NotNull
 	private String avatar;

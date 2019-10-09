@@ -20,7 +20,7 @@ public class ProductDetailDTO {
 	@Getter @Setter private String name;
 	@Getter @Setter private String avatar;
 	@Getter @Setter private String derciption;
-	@Getter @Setter private int avgStar;
+	@Getter @Setter private float avgStar;
 	@Getter @Setter private Integer price;
 	@Setter 		private Integer priceNew;
 	@Getter @Setter private Integer quantity;

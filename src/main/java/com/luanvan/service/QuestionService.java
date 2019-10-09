@@ -2,19 +2,23 @@ package com.luanvan.service;
 
 import java.util.List;
 
-import com.luanvan.model.Question;
+import com.luanvan.dto.request.CreateQuestion;
+import com.luanvan.dto.response.QuestionDTO;
+import com.luanvan.model.CustomUserDetails;
 
 public interface QuestionService {
 	//tim 1 theo id
-	Question findById(Long id);
+	QuestionDTO findById(Long id);
 	
 	//tim list theo product id
-	List<Question> findByProductId(Long id);
+	List<QuestionDTO> findByProductId(Long id);
 	
 	//them va sua
-	Question save(Question question);
+	void save(CreateQuestion question, CustomUserDetails user);
 	
 	//xoa
 	void delete(Long id);
+
+	List<QuestionDTO> findByStore(Long storeId);
 	
 }

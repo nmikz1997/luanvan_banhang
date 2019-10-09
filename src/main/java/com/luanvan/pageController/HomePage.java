@@ -1,5 +1,6 @@
 package com.luanvan.pageController;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,11 +9,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.luanvan.service.ProductService;
 import com.luanvan.service.UserService;
 
 @Controller
 @RequestMapping("/")
 public class HomePage {
+	
+	@Autowired
+	private ProductService productService;
 	
 	@GetMapping
 	public String home() {
@@ -48,13 +53,15 @@ public class HomePage {
 	@GetMapping("/search")
 	public String search(
 			@RequestParam(value = "name",required = false) String name,
-			@RequestParam(value = "sort",required = false) String sort,
+			@RequestParam(value = "cate",required = false) Long categoryId,
 			@RequestParam(value = "page") Integer page,
 			@RequestParam(value = "ratting",required = false) String ratting,
 			@RequestParam(value = "min-price",required = false) Integer minPrice,
 			@RequestParam(value = "max-price",required = false) Integer maxPrice,
 			Model model) {
-		model.addAttribute("name", name);
+		
+		productService.searchBy(name,categoryId);
+		
 		return "homepage/search";
 	}
 	

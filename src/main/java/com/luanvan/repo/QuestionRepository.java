@@ -9,5 +9,7 @@ import com.luanvan.model.Question;
 
 @Repository
 public interface QuestionRepository extends JpaRepository<Question, Long>{
-	List<Question> findQuestionByProductId(Long productId);
+	List<Question> findQuestionByProductIdAndStatus(Long productId,boolean status);
+
+	List<Question> findQuestionByProductStoreId(Long storeId);
 }

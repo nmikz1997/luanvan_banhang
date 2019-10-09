@@ -10,6 +10,9 @@
 		th{
 			text-align: inherit;
 		}
+		body{
+			color:black;
+			}
 	</style>
 	
 	</section>
@@ -22,51 +25,114 @@
 				<section layout:replace="homepage/section/sidebar-user :: sidebar-user" >
 				</section>
 				<div class="col-md-9">
-					<div class="row">
-						<div class="col-6 card" style="padding: 0">
+					<div class="row card-deck">
+						<div class="col-6 card border-light mb-3" style="padding: 0">
 							<div class="card-header">
-								<strong>Thông tin người đặt:</strong>
+								<strong>Thông tin khách hàng:</strong>
 							</div>
 							<div class="card-body">
-								<p>Tên: {{obj.customer.name}}</p>
+								<p>Khách hàng: {{obj.customer.name}}</p>
 								<p>Địa chỉ: {{obj.address}}</p>
 								<p>SĐT: {{obj.customer.phoneNumber}}</p>
 							</div>
 						</div>
-						<div class="col-6 card" style="padding: 0">
+						<div class="col-6 card border-light mb-3" style="padding: 0">
 							<div class="card-header">
-								<strong>Số hóa đơn: {{obj.id}}</strong>
+								<strong>Đơn hàng: HD-{{obj.id}}</strong>
 							</div>
 							<div class="card-body">
-								<p>Trạng thái: {{obj.orderStatus.name}}</p>
-								<p>Tổng điền: {{obj.total}}</p>
+								<p>Tổng giá trị: {{obj.totalGroup  | currency:"":0}} đ</p>
 								<p>Hình thức thanh toán: {{obj.paymentType.name}}</p>
+								<p>Chưa thanh toán</p>
 							</div>
 						</div>
 						<div class="col-12" style="padding: 0">
-							<div ng-repeat="dt in obj.ordersDetail" class="card">
+							<div ng-repeat="order in obj.orders" class="card border-light mb-3">
 								<div class="card-header">
-									<strong>Sản phẩm: {{dt.product.name}}</strong>
+									<strong>Kiện hàng #{{$index+1}}</strong>
+									<strong class="float-right">Cung cấp bởi:<a href="#"> {{order.store.name}}</a></strong>
 								</div>
-								<div class="card-body">
+								<div ng-repeat="dt in order.ordersDetail" class="card-body">
 									<div class="row">
-										<div class="col-md-3">
+										<div class="col-md-3 d-flex justify-content-center align-items-center">
 											<img ng-src="/picture/{{dt.product.avatar}}" width="125px" height="125px">
 										</div>
-										<div class="col-md-9">
+										<div class="col-md-4">
+											<strong>{{dt.product.name}}</strong>
+										</div>
+										<div class="col-md-3">
 											<p>Số lượng: {{dt.quantity}}</p>
-											<p>Đơn giá áp dụng: {{dt.price.unitPrice}}</p>
-											<p>Khuyến mãi: {{dt.promotion.saleOff}} %</p>
-											<p>Thành tiền: {{ dt.price.unitPrice*dt.quantity *(100-dt.promotion.saleOff)/100 }}</p>
+											<p ng-if="!dt.promotion">Giá bán: {{dt.price.unitPrice  | currency:"":0}}đ</p>
+											<p ng-if="dt.promotion">Giá bán: {{dt.price.unitPrice*(dt.promotion.saleOff/100)  | currency:"":0 }}đ</p>
+											<p>Thành tiền: {{ dt.quantity*dt.price.unitPrice }}đ</p>
+										</div>
+										<div class="col-md-2 d-flex justify-content-center align-items-center">
+											<button class="btn btn-outline-success" ng-click="modal(order.id,dt)" >Đánh giá</button>
 										</div>
 									</div>	
 								</div>
+								<div class="card-footer">
+								  <strong>Tình trạng: {{order.orderStatus.name}}</strong>
+							      <strong class="float-right">Tổng: {{order.total | currency:"":0}}đ</strong>
+							    </div>
 							</div>
 						</div>
 					</div>
 				</div>		
 			</div>
 		</div>
+		
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Đánh giá sản phẩm</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<form name="frmobj" class="form-horizontal">
+							<div class="form-group">
+								<div class="card">
+								<div class="card-header">
+									<strong>Sản phẩm: {{detail.product.name}}</strong>
+								</div>
+								<div class="card-body">
+									<div class="row">
+										<div class="col-md-3 d-flex justify-content-center align-items-center">
+											<img ng-src="/picture/{{detail.product.avatar}}" width="125px" height="125px">
+										</div>
+										<div class="col-md-6">
+											<p>Số lượng: {{detail.quantity}}</p>
+											<p ng-if="!detail.promotion">Giá bán: {{detail.price.unitPrice | currency:"":0}}đ</p>
+											<p ng-if="detail.promotion">Giá bán: {{detail.price.unitPrice*(detail.promotion.saleOff/100) | currency:"":0}}đ</p>
+											<p>Thành tiền: {{ detail.price.unitPrice*detail.quantity *(100-detail.promotion.saleOff)/100 | currency:"":0 }}</p>
+										</div>
+									</div>	
+								</div>
+							</div>
+								
+							</div>
+							<div class="form-group">
+								<label for="name" class="col-form-label">Đánh giá của bạn về sản phẩm này:</label>
+								<div class="ratting">
+									<div id="rateYo"></div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="name" class="col-form-label">Nội dung đánh giá:</label>
+								<textarea type="text" contenteditable="true" spellcheck="true" class="form-control" id="name" name="name" ng-model="review.content" ng-required="true"></textarea>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" ng-disabled="frmobj.$invalid" ng-click="save(detail.product.id)">Gửi</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
 	</section>
 </section>
 <section layout:fragment="script">
@@ -77,7 +143,7 @@ homepage.controller('OrderDetailCustomerController', function($scope,$http,API){
 	var thisPath = window.location.pathname;
 	var id = thisPath.substring(thisPath.lastIndexOf("/")+1);
 	
-	$http.get('/orders/order-detail/'+id)
+	$http.get('/orders/order-group/'+id)
 	.then(function (res) {
 		console.log(res);
 		$scope.obj = res.data;
@@ -85,6 +151,46 @@ homepage.controller('OrderDetailCustomerController', function($scope,$http,API){
 	.catch(function (err) {
 		console.log(err);
 	});
+	
+	var order = null;
+	var reviewId = null;
+	$scope.modal = function(orderId,detail){
+		order = orderId;
+		let getReviewURL = '/reviews/getReview/'+detail.product.id+'/'+orderId;
+		
+		$http.get(getReviewURL).then(function(res){
+			$scope.review = res.data;
+			$("#rateYo").remove();
+			$(".ratting").html( "<div id='rateYo'></div>" );
+			
+		}).then(function(){
+			jQuery(function () {
+		        jQuery("#rateYo").rateYo({
+		            starWidth: "20px",
+		            rating: $scope.review.star,
+		            fullStar: true
+		        });
+		    });
+		})
+		$scope.detail = detail;
+		jQuery("#myModal").modal('show');
+	}
+	
+	$scope.save = function(id){
+		var rateYo = jQuery("#rateYo").rateYo();
+		var data = {
+			id: $scope.review.id,
+			product: {id:id},
+			order:{id:order},
+			content: $scope.review.content,
+			star: rateYo.rateYo("rating")
+		}
+		
+		$http.post('/reviews',data).then(function(res){
+			console.log(res);
+		})
+		
+	}
 	
 });
 </script>

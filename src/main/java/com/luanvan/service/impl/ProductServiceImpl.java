@@ -5,11 +5,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.Normalizer;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
@@ -97,6 +99,7 @@ public class ProductServiceImpl implements ProductService{
 		Product product = new Product();
 		product = productDTO.getProduct();
 		product.setAttributeValues(productDTO.getAttributeValues());
+		product.setPlug(covertToString(product.getName()));
 		
 		Store store = storeRepository.findByUserEmail(auth.getName());
 		
@@ -224,6 +227,29 @@ public class ProductServiceImpl implements ProductService{
 		ModelMapper mapper = new ModelMapper();
 		List<ProductDTO> productDTO = mapper.map(productRepository.findByIdIn(ids),new TypeToken<List<ProductDTO>>(){}.getType());
 		return productDTO;
+	}
+	
+	
+	private static String covertToString(String value) {
+	      try {
+	            String temp = Normalizer.normalize(value, Normalizer.Form.NFD);
+	            Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+	            return pattern.matcher(temp).replaceAll("").toLowerCase().replaceAll(" ", "-").replaceAll("đ", "d");
+	      } catch (Exception ex) {
+	            ex.printStackTrace();
+	      }
+	      return null;
+	}
+	
+	//tìm tất cả sản phẩm hợp lệ
+	//sản phẩm mà cửa hàng còn thời hạn member
+
+	@Override
+	public List<ProductDTO> searchBy(String name, Long categoryId) {
+		List<Product> products = productRepository.findAll();
+		ModelMapper mapper = new ModelMapper();
+		List<ProductDTO> productdto = mapper.map(products, new TypeToken<List<ProductDTO>>(){}.getType());
+		return productdto;
 	}
 
 }

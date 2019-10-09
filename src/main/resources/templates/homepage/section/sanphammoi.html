@@ -1,4 +1,4 @@
-<section layout:fragment="sectionSPNEW" class="section-request bg-white padding-y-sm">
+<section layout:fragment="sectionSPNEW" class="section-request bg padding-y-sm">
 	<div class="container">
 			<header class="section-heading heading-line">
 				<h4 class="title-section bg-white text-uppercase">Sản phẩm mới cập nhật</h4>
@@ -15,9 +15,12 @@
 							<div class="action-wrap">
 								<div class="price-wrap">
 									<span class="price-new">{{ sp.priceNew | currency:"":0}} đ</span><br>
-									<div ng-if="((product.price-product.priceNew)/product.price)*100"><del class="price-old">{{ sp.price | currency:"":0}} đ</del> <span class="discout">-{{ ((product.price-product.priceNew)/product.price)*100 | number:0 }}%</span></div>
+									<div ng-if="sp.price != sp.priceNew"><del class="price-old">{{ sp.price | currency:"":0}} đ</del> <span class="discout">-{{ ((sp.price-sp.priceNew)/sp.price)*100 | number:0 }}%</span></div>
+									<div ng-if="spkm.avgStar">
+										<rate-yo-home rating="spkm.avgStar"></rate-yo-home>
+									</div>
 								</div>
-							</div> 
+							</div>
 						</figcaption>
 					</figure>
 				</a>

@@ -2,7 +2,9 @@ package com.luanvan.service;
 
 import java.util.List;
 
+import com.luanvan.dto.request.CreateReply;
 import com.luanvan.model.Reply;
+import com.luanvan.model.Store;
 
 public interface ReplyService {
 	//tim 1 theo id
@@ -12,7 +14,7 @@ public interface ReplyService {
 	List<Reply> findByQuestion(Long questionId);
 	
 	//them va sua
-	Reply save(Reply reply);
+	void save(CreateReply reply, Store store);
 	
 	//xoa
 	void delete(Long id);

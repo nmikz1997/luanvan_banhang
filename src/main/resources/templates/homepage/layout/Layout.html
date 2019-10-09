@@ -23,6 +23,7 @@
 	<script th:src="@{/plugins/owlcarousel/owl.carousel.min.js}"></script>
 
 	<!-- custom style -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
 	<link th:href="@{/css/ui.css}" rel="stylesheet" type="text/css"/>
 	<link th:href="@{/css/responsive.css}" rel="stylesheet"/>
 	<link th:href="@{/css/custom-home.css}" rel="stylesheet" type="text/css" />
@@ -39,6 +40,12 @@
 				font-size: 14px;
     			color: #000;
     			height: 42px;
+    		}
+    		.text-uppercase{
+    			color: #4caf50;
+    		}
+    		.jq-ry-container{
+    			padding:0;
     		}
 	</style>
 	<section layout:fragment="css"></section>
@@ -57,6 +64,7 @@
   <script th:src="@{/js/ngCart.js}"></script>
   <script th:src="@{/js/script.js}" type="text/javascript"></script>
   <script th:src="@{/app/app.js}"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
   <section layout:fragment="script"></section>
 </body>
 </html>

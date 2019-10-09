@@ -1,6 +1,6 @@
 homepage.controller('ProductDetailController', function($scope,$timeout, $http, API){
 	var thisURL = window.location.pathname;
-	
+	var productId = thisURL.substring(thisURL.lastIndexOf("/")+1);
 	$scope.item = {
 		id: null,
 		quantity: 1
@@ -10,6 +10,17 @@ homepage.controller('ProductDetailController', function($scope,$timeout, $http, 
 		$scope.product = res.data;
 	}).then(function(){
 		document.getElementById('show').style.display= "block";
+		
+		jQuery(function () {
+		 	jQuery("#rateYoProduct").rateYo({
+		 		starWidth: "20px",
+		    	rating: $scope.product.avgStar,
+		    	fullStar: true,
+		    	readOnly: true
+		  	});
+		 
+		});
+		
 	});
 	
 	$scope.changeAvatar = function(avatar){
@@ -48,5 +59,30 @@ homepage.controller('ProductDetailController', function($scope,$timeout, $http, 
 		}
 		$('#countItems').text(countItems);
 	}
+	
+	$scope.question = function(){
+		
+		let question = {
+			topic: $scope.topic,
+			product: {id: productId}
+		}
+		
+		$http.post('/questions',question).then(function(res){
+			console.log(res);
+		}).catch(function(err){
+			console.log(err)
+		})
+		
+	}
+	
+	$http.get('/questions/product/'+productId).then(function(res){
+		console.log(res);
+		$scope.questions = res.data;
+	})
+	
+	$http.get('/reviews/product/'+productId).then(function(res){
+		console.log(res);
+		$scope.reviews = res.data;
+	})
 	
 });

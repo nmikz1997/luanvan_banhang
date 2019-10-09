@@ -51,4 +51,6 @@ public interface ProductService {
 	List<ProductDTO> productsInIds(List<Long> ids);
 
 	List<Product> findByStore(Authentication auth);
+
+	List<ProductDTO> searchBy(String name, Long categoryId);
 }

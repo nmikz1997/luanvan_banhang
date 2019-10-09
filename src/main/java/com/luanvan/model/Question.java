@@ -3,6 +3,8 @@ package com.luanvan.model;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
@@ -39,10 +41,10 @@ public class Question{
 	@NotNull
 	private String topic;
 	
-	@NotNull
 	private boolean status;
 	
 	@CreatedDate
+	@Column(updatable = false)
 	private Date createdAt;
 	
 	@LastModifiedDate
@@ -58,6 +60,6 @@ public class Question{
 	private Customer customer;
 	
 	@JsonIgnore
-	@OneToMany(mappedBy="question")
+	@OneToMany(mappedBy="question",cascade = CascadeType.REMOVE)
 	private List<Reply> replies;
 }

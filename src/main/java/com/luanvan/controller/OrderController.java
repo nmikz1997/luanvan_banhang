@@ -6,8 +6,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,10 +17,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.luanvan.dto.request.CreateGroupOrder;
 import com.luanvan.dto.request.CreateOrderDTO;
 import com.luanvan.dto.response.OrderCustomerDTO;
 import com.luanvan.dto.response.OrderDTO;
-import com.luanvan.model.Order;
+import com.luanvan.dto.response.OrderGroupCustomerDTO;
+import com.luanvan.dto.response.OrderGroupDTO;
+import com.luanvan.model.CustomUserDetails;
 import com.luanvan.model.OrderStatus;
 import com.luanvan.service.OrderDetailService;
 import com.luanvan.service.OrderService;
@@ -44,15 +47,22 @@ public class OrderController {
 		return orderService.save(req,auth);
 	}
 	
-	@GetMapping("store/{storeId}")
-	public List<Order> findByStore(){
-		return null;
+	
+	@PostMapping("v2")
+	@ResponseStatus(HttpStatus.OK)
+	public Map<String,String> save(@RequestBody CreateGroupOrder req,Authentication auth) throws Exception {
+		return orderService.save(req,auth);
 	}
 	
-	@GetMapping()
-	public List<Order> findAll(){
-		return orderService.findAll();
+	@GetMapping
+	public List<OrderDTO> findByStore(@AuthenticationPrincipal CustomUserDetails user){
+		return orderService.findByStoreId(user.getStoreId());
 	}
+	
+//	@GetMapping()
+//	public List<Order> findAll(){
+//		return orderService.findAll();
+//	}
 	
 	@PostAuthorize("returnObject.customer.id == authentication.principal.customerId "
 			+ "or returnObject.store.id == authentication.principal.storeId")
@@ -67,7 +77,14 @@ public class OrderController {
 	}
 	
 	@GetMapping("quan-ly-don-hang")
-	public List<OrderCustomerDTO> findByCustomer(Authentication auth) {
+	public List<OrderGroupDTO> findByCustomer(Authentication auth) {
 		return orderService.findByCustomer(auth);
+	}
+	
+	
+	@PostAuthorize("returnObject.customer.id == authentication.principal.customerId")
+	@GetMapping("order-group/{id}")
+	public OrderGroupCustomerDTO findByOrderGroup(@PathVariable Long id){
+		return orderService.findByOrderGroup(id);
 	}
 }
