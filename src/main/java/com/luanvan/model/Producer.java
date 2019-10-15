@@ -33,6 +33,8 @@ public class Producer {
 	@NotNull
 	private String name;
 	
+	private String plug;
+	
 	@NotNull
 	private Boolean status;
 	

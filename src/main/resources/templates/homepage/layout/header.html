@@ -19,7 +19,7 @@
 							<ul class="menu-category">
 								<li ng-repeat="category in categories" ng-include="'categoryTree'"></li>
 								<script type="text/ng-template" id="categoryTree">
-									<a th:href="@{/tim-kiem/?pCate={{category.id}}}" ng-click="getCate(category.id)" >{{ category.name }}</a>
+									<a th:href="@{/tim-kiem/?pCate={{category.plug}}}" ng-click="getCate(category.id)" >{{ category.name }}</a>
 									<ul ng-if="category.categories" class="submenu">
 										<li ng-repeat="category in category.categories" ng-include="'categoryTree'">     
 										</li>
@@ -48,7 +48,7 @@
 				<div class="col-sm-8 col-9">
 					<form th:action="@{/tim-kiem}" th:object="${product}" method="get" class="py-1">
 						<div class="input-group w-100">
-							<input type="text" name="pName" id="pName" th:value="${pName}" class="form-control" style="width:50%;" placeholder="Search">
+							<input type="text" name="name" id="name" th:value="${name}" class="form-control" style="width:50%;" placeholder="Search">
 							<div class="input-group-append">
 								<button class="btn btn-success" type="submit">
 									<i class="fa fa-search"></i> 

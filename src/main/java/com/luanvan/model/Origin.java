@@ -30,6 +30,8 @@ public class Origin {
 	@NotNull
 	private String name;
 	
+	private String plug;
+	
 	private boolean status;
 	
 	@JsonIgnore

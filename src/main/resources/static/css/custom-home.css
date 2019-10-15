@@ -1,6 +1,7 @@
 .card .img-wrap{
 	height: 100%;
 	width: 100%;
+	margin-top:5px;
 }
 .card-img-top {
 	height: 160px;
@@ -15,6 +16,9 @@
 }
 .dropdown-menu{
 	width: 300px;
+}
+.bg {
+    background-color: rgb(239, 239, 239) !important;
 }
 @media screen and (max-width: 768px){
 	.card-img-top {

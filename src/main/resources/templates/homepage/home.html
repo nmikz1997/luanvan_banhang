@@ -2,7 +2,23 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{homepage/layout/Layout}">
 <head>
   <title>Cuộc sống xanh</title>
-  <section layout:fragment="css"></section>
+  <section layout:fragment="css">
+  	
+  	<style>
+  		.headerh {
+			display: flex;
+		    -webkit-box-align: center;
+		    align-items: center;
+		    padding: 16px;
+		    border-bottom: 1px solid rgb(244, 244, 244);
+		}
+		.card-body {
+			padding-left:0;
+			padding-right:0;
+		}
+  	</style>
+  	
+  </section>
 </head>
 <body ng-controller="HomeController">
   <section layout:fragment="content">

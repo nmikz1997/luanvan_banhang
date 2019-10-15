@@ -68,24 +68,33 @@
 		}
 		.shopping-cart {
 			margin-top: 20px;
+			margin-bottom: 20px;
 		}
 		.hetHang {
 			color: red;
+		}
+		.header-main{
+			z-index:10;
+		}
+		.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+		    color: #fff;
+		    background-color: #9eacd9;
 		}
 	</style>
   </section>
 </head>
 <body ng-controller="ShoppingCartController">
-  <section layout:fragment="content">
+  <section layout:fragment="content" class="bg">
   	<div class="container">
-		<div class="card shopping-cart">
+  	<div class="row">
+		<div class="card shopping-cart col-md-7">
 			<div class="card-body">
 				<div ng-repeat="item in items">
 				<div class="row">
 					<div class="col-12 col-sm-12 col-md-2 text-center">
 						<img class="img-responsive" ng-src="/picture/{{item.avatar}}" alt="prewiew" width="120" height="80">
 					</div>
-					<div class="col-12 text-sm-center col-sm-12 text-md-left col-md-6">
+					<div class="col-12 text-sm-center col-sm-12 text-md-left col-md-3">
 						<h5 class="product-name"><strong>{{item.name}}</strong></h5>
 						<h5>
 							<small>Cung cấp bởi: <a href="#">{{item.store.name}}</a></small><br>
@@ -94,7 +103,7 @@
 							<small ng-if="(item.quantity - item.sold) < 0" class="hetHang">Hết hàng</small>
 						</h5>
 					</div>
-					<div class="col-12 col-sm-12 text-sm-center col-md-4 text-md-right row">
+					<div class="col-12 col-sm-12 text-sm-center col-md-7 text-md-right row">
 						<div class="col-6 col-sm-6 col-md-6 text-md-right" style="padding-top: 5px">
 							<h6> <del>{{item.price | currency:"":0}}đ</del> <strong>{{item.priceNew | currency:"":0}}đ <span class="text-muted">x</span></strong></h6>
 							<h6><strong ng-init="item.price * item.soLuongMua" >{{item.priceNew * item.soLuongMua | currency:"":0}}đ</strong></h6>
@@ -114,18 +123,110 @@
 						</div>
 					</div>
 				</div>
-				<hr>
-				</div>
-			</div>
-			<div class="card-footer">
-				<div class="row" style="margin: 10px">
-					<a href="" class="btn btn-success" ng-click="thanhToan()">Thanh toán</a>
-					<div class="pull-right" style="margin: 5px">
-						Tổng: <b>{{total  | currency:"":0}} vnđ</b>
-					</div>
 				</div>
 			</div>
 		</div>
+		<div class="col-md-5 shopping-cart">
+			<!--<a href="" class="btn btn-success" ng-click="thanhToan()">Thanh toán</a>
+			<div class="pull-right" style="margin: 5px">
+				Tổng: <b>{{total  | currency:"":0}} vnđ</b>
+			</div>-->
+			<article class="card">
+			<div class="card-body">
+			<p 	 sec:authorize="!isAuthenticated()" class="alert alert-success">Bạn cần đăng nhập để thanh toán</p>	
+			
+			<div class="col-md-8">
+				<dl class="dlist-align">
+				  <dt>Tạm tính: </dt>
+				  <dd class="text-right h5 b">{{total  | currency:"":0}} vnđ </dd>
+				</dl>
+				<dl class="dlist-align">
+				  <dt>Tổng tiền: </dt>
+				  <dd class="text-right h5 b"> {{total  | currency:"":0}} vnđ </dd>
+				</dl>
+			</div>
+			
+			<div sec:authorize="isAuthenticated()">
+			<ul class="nav bg radius nav-pills nav-fill mb-3" role="tablist">
+				<li class="nav-item">
+					<a class="nav-link active show" data-toggle="pill" href="#nav-tab-card">
+					<i class="fa fa-credit-card"></i> Credit Card</a></li>
+				<li class="nav-item">
+					<a class="nav-link" data-toggle="pill" href="#nav-tab-paypal">
+					<i class="fab fa-paypal"></i>  Paypal</a></li>
+			</ul>
+			<div class="tab-content">
+			<div class="tab-pane fade active show" id="nav-tab-card">
+				<form role="form">
+				<div class="form-group">
+					<label for="username">Địa chỉ:</label>
+					<input type="text" class="form-control" name="username" placeholder="" required="">
+				</div> <!-- form-group.// -->
+			
+				<div class="form-group">
+					<label for="cardNumber">Địa chỉ</label>
+					<div class="input-group">
+						<div class="input-group-append">
+							<span class="input-group-text text-muted">
+								+84
+							</span>
+						</div>
+						<input type="text" class="form-control" name="cardNumber" placeholder="">
+					</div>
+				</div> <!-- form-group.// -->
+			
+				<div class="row">
+				    <div class="col-sm-8">
+				        <div class="form-group">
+				            <label><span class="hidden-xs">Expiration</span> </label>
+				        	<div class="input-group">
+				        		<input type="number" class="form-control" placeholder="MM" name="">
+					            <input type="number" class="form-control" placeholder="YY" name="">
+				        	</div>
+				        </div>
+				    </div>
+				    <div class="col-sm-4">
+				        <div class="form-group">
+				            <label data-toggle="tooltip" title="" data-original-title="3 digits code on back side of the card">CVV <i class="fa fa-question-circle"></i></label>
+				            <input type="number" class="form-control" required="">
+				        </div> <!-- form-group.// -->
+				    </div>
+				</div> <!-- row.// -->
+					<button class="subscribe btn btn-primary btn-block" type="button"> Confirm  </button>
+				</form>
+			</div> <!-- tab-pane.// -->
+			<div class="tab-pane fade" id="nav-tab-paypal">
+			<p>Paypal is easiest way to pay online</p>
+			<p>
+			<script src="https://www.paypalobjects.com/api/checkout.js"></script>
+            <div id="paypal-button" class="hidden"></div>
+			</p>
+			<p><strong>Note:</strong> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+			tempor incididunt ut labore et dolore magna aliqua. </p>
+			</div>
+			<div class="tab-pane fade" id="nav-tab-bank">
+			<p>Bank accaunt details</p>
+			<dl class="param">
+			  <dt>BANK: </dt>
+			  <dd> THE WORLD BANK</dd>
+			</dl>
+			<dl class="param">
+			  <dt>Accaunt number: </dt>
+			  <dd> 12345678912345</dd>
+			</dl>
+			<dl class="param">
+			  <dt>IBAN: </dt>
+			  <dd> 123456789</dd>
+			</dl>
+			<p><strong>Note:</strong> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+			tempor incididunt ut labore et dolore magna aliqua. </p>
+			</div> <!-- tab-pane.// -->
+			</div> <!-- tab-content .// -->
+			</div>
+			</div> <!-- card-body.// -->
+			</article> <!-- card.// -->
+		</div>
+	</div>
 	</div>
   </section>
   <section layout:fragment="script">

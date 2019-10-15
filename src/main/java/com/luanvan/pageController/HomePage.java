@@ -1,5 +1,7 @@
 package com.luanvan.pageController;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -8,7 +10,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.luanvan.service.ProductService;
 import com.luanvan.service.UserService;
 
@@ -50,17 +56,32 @@ public class HomePage {
 		return "homepage/thethanhvien";
 	}
 	
-	@GetMapping("/search")
+	@GetMapping("/tim-kiem")
 	public String search(
-			@RequestParam(value = "name",required = false) String name,
-			@RequestParam(value = "cate",required = false) Long categoryId,
-			@RequestParam(value = "page") Integer page,
-			@RequestParam(value = "ratting",required = false) String ratting,
-			@RequestParam(value = "min-price",required = false) Integer minPrice,
-			@RequestParam(value = "max-price",required = false) Integer maxPrice,
+			@RequestParam(value = "name",		required = false, defaultValue = "") String name,
+			@RequestParam(value = "cate",		required = false, defaultValue = "") String cate,
+			@RequestParam(value = "material",	required = false, defaultValue = "") String material,
+			@RequestParam(value = "origin",		required = false, defaultValue = "") String origin,
+			@RequestParam(value = "producer",	required = false, defaultValue = "") String producer,
+			@RequestParam(value = "page",		required = false, defaultValue = "1") int page,
+			@RequestParam(value = "ratting",	required = false, defaultValue = "0") int ratting,
+			@RequestParam(value = "min-price",	required = false, defaultValue = "0") int minPrice,
+			@RequestParam(value = "max-price",	required = false, defaultValue = "0") int maxPrice,
 			Model model) {
 		
-		productService.searchBy(name,categoryId);
+		page -= 1;
+		
+		model.addAttribute("result",productService.findbyPlugName(
+				name,
+				cate,
+				material,
+				origin,
+				producer,
+				ratting,
+				minPrice,
+				maxPrice,
+				page)
+				);
 		
 		return "homepage/search";
 	}

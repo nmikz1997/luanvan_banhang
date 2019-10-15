@@ -1,15 +1,15 @@
-<section layout:fragment="banner" class="section-main bg-white padding-y-sm">
-	<div class="container">
+<section layout:fragment="banner" class="section-main bg padding-y-sm">
+	<div class="container bg-white">
 		<div class="card">
 			<div class="card-body">
-				<div class="row row-sm row row-eq-height">
+				<div class="row row-sm row-eq-height">
 					<aside class="aside-menu col-lg-3 col-sm-0">
-						<h5 class="text-uppercase">Danh mục loại sản phẩm</h5>
+						<h5 style="padding-left: 14px;" class="text-uppercase">Danh mục loại sản phẩm</h5>
 						<ul class="menu-category">
 							<li ng-repeat="category in categories" ng-include="'categoryTree'"></li>
 							<script type="text/ng-template" id="categoryTree">
-								<a th:href="@{/tim-kiem/?pCate={{category.id}}}" ng-click="getCate(category.id)" >{{ category.name }}</a>
-								<ul ng-if="category.categories" class="submenu">
+								<a style="color:#777;font-size:17.29px" th:href="@{/tim-kiem/?cate={{category.plug}}}" ng-click="getCate(category.id)" >{{ category.name }}</a>
+								<ul ng-if="category.categories" class="submenu" style="width: 100%;">
 									<li ng-repeat="category in category.categories" ng-include="'categoryTree'">     
 									</li>
 								</ul>

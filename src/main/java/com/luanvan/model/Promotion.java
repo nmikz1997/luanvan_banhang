@@ -35,7 +35,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@Entity
+@Entity(name="promotion")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

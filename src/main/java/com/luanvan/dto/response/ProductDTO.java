@@ -23,9 +23,31 @@ public class ProductDTO {
 	@Getter @Setter private Integer quantity;//số lượng gốc
 	@Getter @Setter private int soLuongMua;//số lượng mua
 	@Setter @Getter private Store store;
+	@Setter @Getter private Category category;
+	@Setter @Getter private Producer producer;
+	@Setter @Getter private Origin origin;
 	@Setter private List<Promotion> promotions;//danh sách khuyến mãi
 	@Setter private List<Price> prices;//danh sách giá
 	@Setter private List<OrderDetail> ordersDetails;
+	
+	@Getter @Setter
+	public static class Category {
+		private Long id;
+		private String name;
+		private String plug;
+	}
+	@Getter @Setter
+	public static class Producer {
+		private Long id;
+		private String name;
+		private String plug;
+	}
+	@Getter @Setter
+	public static class Origin {
+		private Long id;
+		private String name;
+		private String plug;
+	}
 	
 	public int getSold() {
 		int sold = 0;

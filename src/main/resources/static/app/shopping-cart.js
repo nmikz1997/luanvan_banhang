@@ -44,6 +44,9 @@ homepage.controller('ShoppingCartController', function($scope, $http, API){
 	}
 	$scope.thanhtoan = false;
 	$scope.thanhToan = function(){
+		paid(1);
+	}
+	function paid(type){
 		//luu don hang
 		$scope.thanhtoan = true;
 		//console.log($scope.items);
@@ -54,7 +57,7 @@ homepage.controller('ShoppingCartController', function($scope, $http, API){
 			var order = {
 				address:"116A, Mạc thiên tích",
 				customer: {id: 1},
-				paymentType: {id: 1},
+				paymentType: {id: type},
 				store: {id: Number(property)},
 				ordersDetailDTO: []
 			}
@@ -116,4 +119,83 @@ homepage.controller('ShoppingCartController', function($scope, $http, API){
 			return acc;
 		}, {});
 	}
+	
+	
+	
+	//paypal
+	
+	paypal.Button.render({
+        env: 'sandbox',
+        style: {
+            color:  'gold',
+            shape:  'rect',
+            label:  'paypal',
+            height: 44,
+            tagline : false,
+            size:'responsive',
+        },
+
+        funding: {
+            allowed: [
+            paypal.FUNDING.CARD,
+            paypal.FUNDING.CREDIT
+            ],
+            disallowed: []
+        },
+
+        client: {
+            sandbox: 'AcY_RqiSajU7n4gcqvWS4wtQNRU2vYG1WZwi7rIpcf1U1-PXyPogoQ6rTBUPuNE6qfLOAkX4iRrlaQH8',
+            production: ''
+        },
+
+        
+        payment: function(data, actions) {
+            return actions.payment.create({
+                "transactions": [
+                   {
+                     "amount": {
+                       "total": "1.00",
+                       "currency": "USD",
+                     },
+                     "description": "The payment transaction description.",
+                     "payment_options": {
+                       "allowed_payment_method": "INSTANT_FUNDING_SOURCE"
+                     },
+                     "soft_descriptor": "ECHI5786786",
+                     "item_list": {
+                       "items": [
+                         {
+                           "name": "hat",
+                           "quantity": "1",
+                           "price": "1.00",
+                           "currency": "USD"
+                         },
+                       ],
+                       "shipping_address": {
+                         "recipient_name": "Brian Robinson",
+                         "line1": "4th Floor",
+                         "line2": "Unit #34",
+                         "city": "San Jose",
+                         "country_code": "US",
+                         "postal_code": "95131",
+                         "phone": "011862212345678",
+                         "state": "CA"
+                       }
+                     }
+                   }
+                 ]
+            });
+        },
+
+
+        onAuthorize: function (data, actions) {
+            return actions.payment.execute()
+            .then(function () {
+            	paid(2);
+            });
+        }
+    }, '#paypal-button');
+	
+	
+	
 });

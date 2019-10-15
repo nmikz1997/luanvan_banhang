@@ -42,6 +42,11 @@ homepage.controller('HomeController', function($scope, $http, API){
 			id: 2,
 			image: "/images/banners/2.jpg",
 			promotionId: "2"
+		},
+		{
+			id:3,
+			image: "https://image.freepik.com/free-photo/web-banner-with-eco-natural-products_107592-676.jpg",
+			promotionId: "2"
 		}
 	];
 	var items = JSON.parse(localStorage.getItem("items"));

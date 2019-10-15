@@ -58,22 +58,22 @@
 										<dl class="dlist-inline">
 											<span class="border-right">
 												<dt>Cửa hàng:</dt>
-												<dd><a href="#">{{product.store.name}}</a></dd>
+												<dd><a ng-href="/tim-kiem?store={{product.store.plug}}">{{product.store.name}}</a></dd>
 											</span>
 											<span class="border-right" style="margin:5px;">
 												<dt>Nhà sản xuất:</dt>
-												<dd><a href="#">{{product.producer.name}}</a></dd>
+												<dd><a ng-href="/tim-kiem?producer={{product.producer.plug}}">{{product.producer.name}}</a></dd>
 											</span>
 											<span style="margin:5px;">
 												<dt>Quốc gia:</dt>
-												<dd><a href="#">{{product.origin.name}}</a></dd>
+												<dd><a ng-href="/tim-kiem?origin={{product.origin.plug}}">{{product.origin.name}}</a></dd>
 											</span>
 											
 										</dl>
 									</div>
 									<hr>
 									<div class="mb-3"> 
-										<var class="price h3 text-danger">
+										<var class="price h3 text-success">
 											<span class="num">{{product.priceNew | currency:"":0}} đ</span>
 										</var><br>
 										<var ng-if="((product.price-product.priceNew)/product.price)*100" class="price h6 text-dark">

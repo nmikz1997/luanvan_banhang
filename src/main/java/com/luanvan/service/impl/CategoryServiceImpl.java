@@ -1,6 +1,8 @@
 package com.luanvan.service.impl;
 
+import java.text.Normalizer;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.transaction.Transactional;
 
@@ -51,6 +53,7 @@ public class CategoryServiceImpl implements CategoryService{
 
 	@Override
 	public Category create(Category category) {
+		category.setPlug(covertToString(category.getName()));
 		return categoryRepository.save(category);
 	}
 
@@ -61,7 +64,7 @@ public class CategoryServiceImpl implements CategoryService{
 //		}
 		categoryRepository.findById(id)
 			.orElseThrow(NotFoundException::new);
-		
+		category.setPlug(covertToString(category.getName()));
 		return categoryRepository.save(category);
 	}
 
@@ -79,4 +82,15 @@ public class CategoryServiceImpl implements CategoryService{
 
 	}
 	
+	
+	public String covertToString(String value) {
+		try {
+			String temp = Normalizer.normalize(value, Normalizer.Form.NFD);
+	        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+	        return pattern.matcher(temp).replaceAll("").toLowerCase().replaceAll(" ", "-").replaceAll("đ", "d");
+	    } catch (Exception ex) {
+	        ex.printStackTrace();
+	    }
+	    return null;
+	}
 }

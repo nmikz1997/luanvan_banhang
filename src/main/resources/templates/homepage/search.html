@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{homepage/layout/Layout}">
+<head>
+<title>Sống xanh</title>
+<section layout:fragment="css">
+	<style type="text/css">
+		.checked {
+			color: orange;
+		}
+		.form-row a, .form-row a:hover {
+			color: #777;
+		}
+		a {
+			color: black;
+		}
+		a:hover {
+			color: #57b846;
+		}
+		.page-item.active .page-link{
+			background-color:#57b846;
+			border-color:#57b846;
+		}
+		.page-link{
+			color:#57b846;
+		}
+	</style>
+</section>
+
+</head>
+<body>
+<section layout:fragment="content">
+<section ng-controller="SearchController" class="section-content bg padding-y-sm">
+	<div class="container bg-white shadow-lg">
+		<div class="card">
+			<div class="card-body">
+				<div class="row">
+					<div class="col-md-3-24"> <strong>Kết quả: </strong> </div> <!-- col.// -->
+					<div class="col-md-21-24"> 
+						<ul class="list-inline">
+							<li class="list-inline-item"><h5>{{data.totalElements}} kết quả được tìm thấy</h5></li>	
+							<div class="float-right">
+								<li class="list-inline-item">
+									<div class="form-inline">
+										<select class="form-control" id="select1">
+											<option>Giá từ thấp đến cao</option>
+											<option>Giá từ cao đến thấp</option>
+										</select>
+									</div>
+								</li>
+							</div>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="padding-y-sm">
+			
+		</div>
+		<div class="row">
+			<aside class="col-md-3">
+				<div class="card card-filter">
+					<article class="card-group-item">
+						<header class="card-header">
+						<h6 class="title">Khoảng Giá  </h6>
+						</header>
+						
+							<div class="card-body">
+								<div class="form-row">
+									<div class="form-group col-md-6">
+										<input class="form-control" min="0" placeholder="tối thiểu" type="number">
+									</div>
+									<div class="form-group text-right col-md-6">
+										<input class="form-control" max="0" placeholder="tối đa" type="number">
+									</div>
+								</div> <!-- form-row.// -->
+								<button class="btn btn-block btn-outline-primary">Apply</button>
+							</div> <!-- card-body.// -->
+					</article> <!-- card-group-item.// -->
+					<article class="card-group-item">
+						<header class="card-header">
+						<h6 class="title">Đánh giá  </h6>
+						</header>
+						
+							<div class="card-body">
+								<div class="form-row">
+									<a href="#" ng-click="redirect('ratting',5)">
+										<span class="fa fa-star checked"></span>
+										<span class="fa fa-star checked"></span>
+										<span class="fa fa-star checked"></span>
+										<span class="fa fa-star checked"></span>
+										<span class="fa fa-star checked"></span>
+									</a>
+								</div> <!-- form-row.// -->
+								<div class="form-row">
+									<a href="" ng-click="redirect('ratting',4)">
+										<span class="fa fa-star checked"></span>
+										<span class="fa fa-star checked"></span>
+										<span class="fa fa-star checked"></span>
+										<span class="fa fa-star checked"></span>
+										<span class="fa fa-star"></span>
+										Trở lên
+									</a>
+								</div> <!-- form-row.// -->
+								<div class="form-row">
+									<a href="" ng-click="redirect('ratting',3)">
+										<span class="fa fa-star checked"></span>
+										<span class="fa fa-star checked"></span>
+										<span class="fa fa-star checked"></span>
+										<span class="fa fa-star"></span>
+										<span class="fa fa-star"></span>
+										Trở lên
+									</a>
+								</div> <!-- form-row.// -->
+								<div class="form-row">
+									<a href="" ng-click="redirect('ratting',2)">
+										<span class="fa fa-star checked"></span>
+										<span class="fa fa-star checked"></span>
+										<span class="fa fa-star"></span>
+										<span class="fa fa-star"></span>
+										<span class="fa fa-star"></span>
+										Trở lên
+									</a>
+								</div> <!-- form-row.// -->
+								<div class="form-row">
+									<a href="" ng-click="redirect('ratting',1)">
+										<span class="fa fa-star checked"></span>
+										<span class="fa fa-star"></span>
+										<span class="fa fa-star"></span>
+										<span class="fa fa-star"></span>
+										<span class="fa fa-star"></span>
+										Trở lên
+									</a>
+								</div> <!-- form-row.// -->
+							</div> <!-- card-body.// -->
+
+					</article> <!-- card-group-item.// -->
+					<article class="card-group-item">
+						<header class="card-header">
+							<h6 class="title">Vật liệu  </h6>
+						</header>
+						<div class="filter-content">
+							<div class="list-group list-group-flush">
+							  <a href="#" ng-repeat="material in materials" ng-click="redirect('material',material.plug)" class="list-group-item">{{material.name}}</a>
+							</div>
+						</div>
+					</article>
+					<article class="card-group-item">
+						<header class="card-header">
+							<h6 class="title">Xuất xứ  </h6>
+						</header>
+						<div class="filter-content">
+							<div class="list-group list-group-flush">
+							  <a href="#" ng-repeat="origin in origins" ng-click="redirect('origin',origin.plug)" class="list-group-item">{{origin.name}}</a>
+							</div>
+						</div>
+					</article>
+					<article class="card-group-item">
+						<header class="card-header">
+							<h6 class="title">Nhà cung cấp  </h6>
+						</header>
+						<div class="filter-content">
+							<div class="list-group list-group-flush">
+							  <a href="#" ng-repeat="producer in producers" ng-click="redirect('producer',producer.plug)" class="list-group-item">{{producer.name}}</a>
+							</div>
+						</div>
+					</article>
+				</div>
+
+
+			</aside>
+			<main class="col-md-9">
+				<div class="row">
+					<div ng-repeat="sp in data.content" class="col-6 col-md-4 col-xl-3">						
+						<a ng-href="/chi-tiet-san-pham/{{sp.id}}" title="{{sp.name}}">
+								<figure class="card card-product">
+								<div class="img-wrap"> <img class="card-img-top img-fluid" ng-src="/picture/{{sp.avatar}}" /></div>
+								<figcaption class="info-wrap">
+									<div class="title" ng-if="sp.name.length > 40">{{ sp.name | limitTo: 35 }} ... </div>
+									<div class="title" ng-if="sp.name.length <= 40">{{ sp.name }}</div>
+									<div class="action-wrap">
+										<div class="price-wrap">
+											<span class="price-new">{{ sp.priceNew | currency:"":0}} đ</span><br>
+											<div ng-if="sp.price != sp.priceNew"><del class="price-old">{{ sp.price | currency:"":0}} đ</del> <span class="discout">-{{ ((sp.price-sp.priceNew)/sp.price)*100 | number:0 }}%</span></div>
+											<div ng-if="sp.avgStar">
+												<rate-yo-home rating="sp.avgStar"></rate-yo-home>
+											</div>
+										</div>
+									</div>
+								</figcaption>
+							</figure>
+						</a>	
+					</div>
+				</div>
+				<div class="d-flex justify-content-end">
+				    <ul id="pagination-demo" class="pagination-md"></ul>
+				</div>
+			</main>
+		</div>
+	</section>
+</section>
+<section layout:fragment="script">
+<script th:src="@{https://www.solodev.com/assets/pagination/jquery.twbsPagination.js}"></script>
+<script th:inline="javascript">
+homepage.controller('SearchController', function($scope,$http,API){
+	$scope.data = /*[[${result}]]*/;
+	
+	console.log($scope.data);
+	var searchParams = new URLSearchParams(window.location.search);
+	
+	$scope.redirect = function(param, value){
+		if(param != "page"){
+			searchParams.delete("page");
+		}
+		if(searchParams.has(param)){
+			searchParams.set(param, value);
+		}else{
+			searchParams.append(param, value);
+		}
+		window.location.href = "http://localhost:8080/tim-kiem?"+searchParams;
+	}
+	if($scope.data.content.length){
+		$('#pagination-demo').twbsPagination({
+	        totalPages: $scope.data.totalPages,
+	        startPage: $scope.data.number+1,
+	        visiblePages: 4,
+	        initiateStartPageClick: false,
+	        first: 'Trang đầu',
+			prev: '<<',
+			next: '>>',
+			last: 'Trang cuối',
+	        onPageClick: function (event, page) {
+	        	$scope.redirect("page", page);
+	        }
+	    });
+	}
+	
+	$http.get('/materials').then(function(res){
+		$scope.materials = res.data;
+	});
+	$http.get('/origins').then(function(res){
+		$scope.origins = res.data;
+	});
+	$http.get('/producers').then(function(res){
+		$scope.producers = res.data;
+	});
+	
+	
+	/*$('#pagination-demo').twbsPagination({
+		totalPages: 5,
+		startPage: 1,
+		visiblePages: 2,
+		initiateStartPageClick: true,
+		href: true,
+		hrefVariable: '{{number}}',
+		first: 'First',
+		prev: 'Previous',
+		next: 'Next',
+		last: 'Last',
+		loop: false,
+		onPageClick: function (event, page) {
+			$('.page-active').removeClass('page-active');
+		 	$('#page'+page).addClass('page-active');
+		},
+		paginationClass: 'pagination',
+		nextClass: 'next',
+		prevClass: 'prev',
+		lastClass: 'last',
+		firstClass: 'first',
+		pageClass: 'page',
+		activeClass: 'active',
+		disabledClass: 'disabled'
+		});*/
+});
+
+</script>
+</section>
+</body>
+</html>

@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.luanvan.dto.response.CartItemsDTO;
 import com.luanvan.dto.response.ProductDTO;
 import com.luanvan.dto.response.ProductDetailDTO;
+import com.luanvan.dto.response.ProductSearchDTO;
 import com.luanvan.model.Product;
 import com.luanvan.service.ProductService;
 

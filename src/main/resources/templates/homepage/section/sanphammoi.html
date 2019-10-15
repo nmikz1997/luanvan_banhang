@@ -1,8 +1,8 @@
 <section layout:fragment="sectionSPNEW" class="section-request bg padding-y-sm">
-	<div class="container">
-			<header class="section-heading heading-line">
-				<h4 class="title-section bg-white text-uppercase">Sản phẩm mới cập nhật</h4>
-			</header>
+	<div class="container bg-white">
+			<div class="headerh">
+				<h4 class="title-section bg-white text-uppercase">Sản phẩm mới</h4>
+			</div>
 			<div class="row-sm">
 				<div class="col-6 col-xs-6 col-sm-6 col-md-4 col-lg-3 col-xl-2" ng-repeat="sp in listSPNEW">
 					<a ng-href="/chi-tiet-san-pham/{{sp.id}}" title="{{sp.name}}">
@@ -10,14 +10,14 @@
 							<!--<span class="badge-new"> NEW </span> -->
 						<div class="img-wrap"> <img class="card-img-top img-fluid" ng-src="picture/{{sp.avatar}}" /></div>
 						<figcaption class="info-wrap">
-							<div class="title" ng-if="sp.name.length > 48">{{ sp.name | limitTo: 43 }} ... </div>
-							<div class="title" ng-if="sp.name.length <= 48">{{ sp.name }}</div>
+							<div class="title" ng-if="sp.name.length > 40">{{ sp.name | limitTo: 35 }} ... </div>
+							<div class="title" ng-if="sp.name.length <= 40">{{ sp.name }}</div>
 							<div class="action-wrap">
 								<div class="price-wrap">
 									<span class="price-new">{{ sp.priceNew | currency:"":0}} đ</span><br>
 									<div ng-if="sp.price != sp.priceNew"><del class="price-old">{{ sp.price | currency:"":0}} đ</del> <span class="discout">-{{ ((sp.price-sp.priceNew)/sp.price)*100 | number:0 }}%</span></div>
-									<div ng-if="spkm.avgStar">
-										<rate-yo-home rating="spkm.avgStar"></rate-yo-home>
+									<div ng-if="sp.avgStar">
+										<rate-yo-home rating="sp.avgStar"></rate-yo-home>
 									</div>
 								</div>
 							</div>

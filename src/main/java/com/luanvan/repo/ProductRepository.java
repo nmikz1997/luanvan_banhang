@@ -3,18 +3,37 @@ package com.luanvan.repo;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.luanvan.dto.response.ProductDTO;
+import com.luanvan.dto.response.ProductSearchDTO;
 import com.luanvan.model.Category;
 import com.luanvan.model.Product;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long>{
+	
+	/*@Query(value ="SELECT * FROM PRODUCT INNER JOIN PRICE ON PRODUCT.id = PRICE.product_id GROUP BY PRODUCT.id HAVING MAX(PRICE.created_at)",
+			countQuery = "SELECT count(*) FROM PRODUCT INNER JOIN PRICE ON PRODUCT.id = PRICE.product_id GROUP BY PRODUCT.id",
+			nativeQuery = true)*/
+	@Query(value = "SELECT pro FROM product pro INNER JOIN pro.prices pri GROUP BY pro.id")
+	Page<Product> findByPlugContainingAndCategoryPlugContainingAndMaterialPlugContainingAndOriginPlugContainingAndProducerPlugContainingAndAvgStarGreaterThanEqual(
+			String name, 
+			String cate, 
+			String material,
+			String origin, 
+			String producer,
+			float ratting,
+			Pageable pageable
+			);
+	
+	Page<ProductSearchDTO> findByPlug(String plug, Pageable pageable);
 	
 	//select
 	@Query(value ="SELECT * FROM PRODUCT", nativeQuery = true)
@@ -34,8 +53,6 @@ public interface ProductRepository extends JpaRepository<Product, Long>{
 
 	List<Product> findByNameIgnoreCaseContaining(String name); //tìm theo tên
 	
-	
-	// Soft Delete
 	
 	@Modifying
 	@Query(value = "UPDATE product SET status = 0 WHERE category_id = ?1", nativeQuery = true)
@@ -72,6 +89,8 @@ public interface ProductRepository extends JpaRepository<Product, Long>{
 	
 	//tìm sản phẩm theo mảng id sản phẩm
 	List<Product> findByIdIn(List<Long> ids);
+	
+	//tim san pham theo ten khong dau
 	
 	//tất cả sản phẩm còn hàng và có khuyến mãi sẽ bị lặp record do join
 	//findProductsByQuantityGreaterThanAndPromotionsIdNotNull

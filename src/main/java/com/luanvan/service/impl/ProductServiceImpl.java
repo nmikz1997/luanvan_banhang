@@ -11,6 +11,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -19,6 +22,11 @@ import javax.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.JpaSort;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -230,7 +238,7 @@ public class ProductServiceImpl implements ProductService{
 	}
 	
 	
-	private static String covertToString(String value) {
+	public String covertToString(String value) {
 	      try {
 	            String temp = Normalizer.normalize(value, Normalizer.Form.NFD);
 	            Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
@@ -251,5 +259,58 @@ public class ProductServiceImpl implements ProductService{
 		List<ProductDTO> productdto = mapper.map(products, new TypeToken<List<ProductDTO>>(){}.getType());
 		return productdto;
 	}
+
+	@Override
+	public Page<ProductDTO>findbyPlugName(
+			String name, 
+			String cate, 
+			String material,
+			String origin, 
+			String producer, 
+			float ratting,
+			int minPrice, 
+			int maxPrice, 
+			int page)
+	{
+		
+		Sort sort = new Sort(Sort.Direction.DESC, "pri.unitPrice");
+		
+		Page<Product> products = productRepository.findByPlugContainingAndCategoryPlugContainingAndMaterialPlugContainingAndOriginPlugContainingAndProducerPlugContainingAndAvgStarGreaterThanEqual(
+				name,
+				cate,
+				material,
+				origin,
+				producer,
+				ratting, 
+				PageRequest.of(page,4,sort)
+				);
+		
+		
+		Page<ProductDTO> productdto = products
+			.map(new Function<Product, ProductDTO>() {
+				@Override
+			    public ProductDTO apply(Product entity) {
+					ModelMapper mapper = new ModelMapper();
+			    	ProductDTO productDTO = mapper.map(entity,ProductDTO.class);
+			        return productDTO;
+			    }
+		});
+		
+		return productdto;
+	}
+	
+	public static <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor)
+	{
+	    Map<Object, Boolean> map = new ConcurrentHashMap<>();
+	    return t -> map.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
+	}
+	
+	@Override
+	public Page<Product> testSearch(){
+		Sort sort = Sort.by("createdAt").descending();
+		Page<Product> products = productRepository.findAll(PageRequest.of(1,4,sort));
+		return products;
+	}
+	
 
 }
