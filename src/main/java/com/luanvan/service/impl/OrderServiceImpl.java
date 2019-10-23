@@ -1,8 +1,14 @@
 package com.luanvan.service.impl;
 
+import java.time.MonthDay;
+import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -14,7 +20,8 @@ import org.springframework.stereotype.Service;
 
 import com.luanvan.dto.request.CreateGroupOrder;
 import com.luanvan.dto.request.CreateOrderDTO;
-import com.luanvan.dto.response.OrderCustomerDTO;
+import com.luanvan.dto.response.ChartOrderInf;
+import com.luanvan.dto.response.ChartOrderStore;
 import com.luanvan.dto.response.OrderDTO;
 import com.luanvan.dto.response.OrderGroupCustomerDTO;
 import com.luanvan.dto.response.OrderGroupDTO;
@@ -30,6 +37,7 @@ import com.luanvan.repo.CustomerRepository;
 import com.luanvan.repo.OrderDetailRepository;
 import com.luanvan.repo.OrderGroupRepository;
 import com.luanvan.repo.OrderRepository;
+import com.luanvan.repo.OrderStatusRepository;
 import com.luanvan.repo.ProductRepository;
 import com.luanvan.repo.StoreRepository;
 import com.luanvan.service.OrderService;
@@ -43,6 +51,7 @@ public class OrderServiceImpl implements OrderService{
 	private CustomerRepository customerRepository;
 	private ProductRepository productRepository;
 	private OrderGroupRepository orderGroupRepository;
+	private OrderStatusRepository orderStatus;
 	
 	@Autowired
 	public OrderServiceImpl(OrderRepository orderRepository,
@@ -50,13 +59,15 @@ public class OrderServiceImpl implements OrderService{
 			StoreRepository storeRepository,
 			CustomerRepository customerRepository,
 			ProductRepository productRepository,
-			OrderGroupRepository orderGroupRepository) {
+			OrderGroupRepository orderGroupRepository,
+			OrderStatusRepository orderStatus) {
 		this.orderRepository 		= orderRepository;
 		this.orderDetailRepository 	= orderDetailRepository;
 		this.customerRepository 	= customerRepository;
 		this.storeRepository		= storeRepository;
 		this.productRepository		= productRepository;
 		this.orderGroupRepository	= orderGroupRepository;
+		this.orderStatus			= orderStatus;
 	}
 	
 	@Override
@@ -183,5 +194,61 @@ public class OrderServiceImpl implements OrderService{
 		OrderGroupCustomerDTO dto = modelMapper.map(orderGroup, OrderGroupCustomerDTO.class);
 
 		return dto;
+	}
+
+	@Override
+	public List<Entry<YearMonth, Integer>> chartByStoreId(Long storeId, int year) {
+		List<Order> orders = orderRepository.findOrderOfYear(storeId,(long) 5, year);
+		
+		ModelMapper modelMapper = new ModelMapper();
+		List<ChartOrderStore> orderDTO = modelMapper.map(orders,new TypeToken<List<ChartOrderStore>>(){}.getType());
+		
+		Map<YearMonth, Integer> caloriesByMonth = orderDTO.stream()
+		        .collect(Collectors.groupingBy(o -> YearMonth.from( o.getCreatedAt() ),
+		                                       TreeMap::new,
+		                                       Collectors.summingInt( o -> o.getTotal() )));
+		
+		List<Entry<YearMonth, Integer>> rs = caloriesByMonth
+				.entrySet()
+				.stream()
+				.collect(Collectors.toList());
+		
+		return rs;
+	}
+
+	@Override
+	public List<Entry<MonthDay, Integer>> chartByStoreIdForMonth(Long storeId, int year, int month) {
+		List<Order> orders = orderRepository.findOrderOfMonth(storeId,(long) 5, year, month);
+		
+		ModelMapper modelMapper = new ModelMapper();
+		List<ChartOrderStore> orderDTO = modelMapper.map(orders,new TypeToken<List<ChartOrderStore>>(){}.getType());
+		
+		Map<MonthDay, Integer> caloriesByMonth = orderDTO.stream()
+		        .collect(Collectors.groupingBy(o -> MonthDay.from( o.getCreatedAt() ),
+		                                       TreeMap::new,
+		                                       Collectors.summingInt( o -> o.getTotal() )));		
+	
+		List<Entry<MonthDay, Integer>> rs = caloriesByMonth
+				.entrySet()
+				.stream()
+				.collect(Collectors.toList());
+	
+		return rs;
+	}
+
+	@Override
+	public List<ChartOrderInf> chartCircle(Long storeId) {
+		return orderRepository.chartCircle(storeId);
+	}
+
+	@Override
+	@Transactional
+	public void deleteGroup(Long groupId) {
+		List<Order> orders = orderRepository.findByOrderGroupId(groupId);
+		OrderStatus status = orderStatus.getOne((long)6);
+		orders.stream().forEach(order ->{
+			order.setOrderStatus(status);
+		});
+		orderRepository.saveAll(orders);
 	}
 }

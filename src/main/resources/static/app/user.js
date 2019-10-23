@@ -3,6 +3,15 @@ homepage.controller('RegisterController', function($scope,$http,API){
 	$scope.today = new Date();
 	$scope.errors = [];
 	
+	var items = JSON.parse(localStorage.getItem("items"));
+	var countItems = 0;
+	if(items != null){
+		items.forEach(function(ele){
+			return countItems += ele.quantity;
+		})
+	}
+	$('#countItems').text(countItems);
+	
 	$scope.submit = function(){
 		$http.post('/users', $scope.obj)
 		.then(function (res) {
@@ -20,5 +29,6 @@ homepage.controller('RegisterController', function($scope,$http,API){
 	 		$scope.errors.concat(err.data.errors);
 	 	});
 	}
+	
 	
 });

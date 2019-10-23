@@ -16,7 +16,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
@@ -154,6 +153,16 @@ public class Product{
             }
         }
         return rs;    
+	}
+	
+	@Transient
+	public int getSold() {
+		int sold = 0;
+		for(OrderDetail detail : ordersDetails) {
+			if(detail.getOrder().getOrderStatus().getId() < 6)
+				sold += detail.getQuantity();
+		}
+		return sold;
 	}
 
 	

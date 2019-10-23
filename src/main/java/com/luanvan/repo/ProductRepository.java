@@ -3,9 +3,7 @@ package com.luanvan.repo;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -19,16 +17,44 @@ import com.luanvan.model.Product;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long>{
 	
+	
 	/*@Query(value ="SELECT * FROM PRODUCT INNER JOIN PRICE ON PRODUCT.id = PRICE.product_id GROUP BY PRODUCT.id HAVING MAX(PRICE.created_at)",
 			countQuery = "SELECT count(*) FROM PRODUCT INNER JOIN PRICE ON PRODUCT.id = PRICE.product_id GROUP BY PRODUCT.id",
 			nativeQuery = true)*/
-	@Query(value = "SELECT pro FROM product pro INNER JOIN pro.prices pri GROUP BY pro.id")
-	Page<Product> findByPlugContainingAndCategoryPlugContainingAndMaterialPlugContainingAndOriginPlugContainingAndProducerPlugContainingAndAvgStarGreaterThanEqual(
-			String name, 
-			String cate, 
+	@Query(value = "SELECT pro FROM product pro JOIN pro.prices pri "+
+			"WHERE pro.plug LIKE ?1 "		+
+			"AND CAST( pro.material.id AS string )  LIKE ?2 " 	+ 
+			"AND CAST( pro.origin.id AS string ) 	LIKE ?3 " 	+ 
+			"AND CAST( pro.producer.id AS string ) 	LIKE ?4 " 	+
+			"AND CAST( pro.store.id AS string ) 	LIKE ?5 " 	+
+			"AND pro.avgStar >= ?6 "		+
+			"AND pro.category.id IN (SELECT cate.id FROM category cate where cate.parentId = ?7 or cate.id = ?7) "+
+			"GROUP BY pro.id")
+	Page<Product> pageProducts(
+			String name,
 			String material,
 			String origin, 
 			String producer,
+			String store,
+			float ratting,
+			Long cate,
+			Pageable pageable
+			);
+	
+	@Query(value = "SELECT pro FROM product pro JOIN pro.prices pri "+
+			"WHERE pro.plug LIKE ?1 "		+
+			"AND CAST( pro.material.id AS string )  LIKE ?2 " 	+ 
+			"AND CAST( pro.origin.id AS string ) 	LIKE ?3 " 	+ 
+			"AND CAST( pro.producer.id AS string ) 	LIKE ?4 " 	+
+			"AND CAST( pro.store.id AS string ) 	LIKE ?5 " 	+
+			"AND pro.avgStar >= ?6 "		+
+			"GROUP BY pro.id")
+	Page<Product> pageProducts(
+			String name,
+			String material,
+			String origin, 
+			String producer,
+			String store,
 			float ratting,
 			Pageable pageable
 			);

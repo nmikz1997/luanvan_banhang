@@ -26,7 +26,7 @@
 						<div class="card-body col-12">
 			                <h3 class="h4 text-gray-900 mb-2">Đơn hàng của tôi</h3>
 			            <div class="table-responsive">
-		                <table class="table table-borderless" id="dataTable" width="100%" cellspacing="0">
+		                <table class="table table-hover table-borderless" id="dataTable" width="100%" cellspacing="0">
 		                  <thead>
 		                    <tr>
 		                      <th>Mã đơn hàng</th>
@@ -41,8 +41,10 @@
 		                      <td><a th:href="@{chi-tiet-don-hang/{{obj.id}} }"> HD-{{ obj.id }}	</a></td>
 		                      <td>	{{ obj.createdAt | date:"MM/dd/yyyy HH:mm" :'UTC' }}	</td>
 		                      <td>	{{ obj.totalGroup }}		</td>
-		                      <td>	{{ obj.orderStatus.name }}	</td>
-		                      <td ng-if="obj.orderStatus.id == 1">	<button class="btn btn-outline-danger"> Hủy </button>	</td>
+		                      <td>
+		                      	<p ng-repeat="status in obj.orderStatus">Kiện {{$index+1}}: {{status.name}}</p>
+		                      </td>
+		                      <td>	<button class="btn btn-outline-danger" ng-click="huy(obj.id)"> Hủy </button>	</td>
 		                    </tr>
 		                  </tbody>
 		                </table>
@@ -59,11 +61,26 @@
 	
 homepage.controller('OrderCustomerController', function($scope,$http,API){
 	
+	var items = JSON.parse(localStorage.getItem("items"));
+	var countItems = 0;
+	if(items != null){
+		items.forEach(function(ele){
+			return countItems += ele.quantity;
+		})
+	}
+	$('#countItems').text(countItems);
+	
 	$http.get('/orders/quan-ly-don-hang').then(function(res){
 		console.log(res.data);
 		$scope.data = res.data;
 	})
+	$(".bg-loadding").css("display","none");
 	
+	$scope.huy = function(id){
+		$http.delete(`/orders/khach-hang-huy/${id}`).then(function(res){
+			console.log(res);
+		})
+	}
 });
 </script>
 <script th:src="@{js/sb-admin-2.min.js}"></script>

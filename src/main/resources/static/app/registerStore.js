@@ -16,5 +16,13 @@ homepage.controller('RegisterStoreController', function($scope,$http){
 	 		$scope.errors.concat(err.data.errors);
 	 	});
 	}
+	var items = JSON.parse(localStorage.getItem("items"));
+	var countItems = 0;
+	if(items != null){
+		items.forEach(function(ele){
+			return countItems += ele.quantity;
+		})
+	}
+	$('#countItems').text(countItems);
 	
 });

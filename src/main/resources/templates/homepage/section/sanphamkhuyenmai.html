@@ -1,4 +1,4 @@
-<section layout:fragment="sectionSPKM" class="section-request bg padding-y-sm">
+<section layout:fragment="sectionSPKM" class="section-request bg">
 	<div class="container bg-white">
 		<div class="headerh">
 			<h4 class="title-section bg-white text-uppercase">Sản phẩm khuyến mãi</h4>
@@ -8,14 +8,16 @@
 				<a ng-href="/chi-tiet-san-pham/{{spkm.id}}" title="{{spkm.name}}">
 					<figure class="card card-product">
 						<!--<span class="badge-new"> NEW </span> -->
+					<span class="badge-offer"><b>-{{ ((spkm.price-spkm.priceNew)/spkm.price)*100 | number:0 }}%</b></span>
 					<div class="img-wrap"> <img class="card-img-top img-fluid" ng-src="picture/{{spkm.avatar}}" /></div>
 						<figcaption class="info-wrap">
-							<div class="title" ng-if="spkm.name.length > 48">{{ spkm.name | limitTo: 43 }} ... </div>
-							<div class="title" ng-if="spkm.name.length <= 48">{{ spkm.name }}</div>
+							<div class="title" ng-if="spkm.name.length > 40">{{ spkm.name | limitTo: 35 }} ... </div>
+							<div class="title" ng-if="spkm.name.length <= 40">{{ spkm.name }}</div>
 							<div class="action-wrap">
 								<div class="price-wrap">
 									<span class="price-new">{{ spkm.priceNew | currency:"":0}} đ</span><br>
-									<del class="price-old">{{ spkm.price | currency:"":0}} đ</del> <span class="discout">-{{ spkm.priceNew*100/spkm.price | number:0 }}%</span>
+									<del class="price-old">{{ spkm.price | currency:"":0}} đ</del> 
+									<!-- <del class="price-old">{{ spkm.price | currency:"":0}} đ</del> <span class="discout">-{{ ((spkm.price-spkm.priceNew)/spkm.price)*100 | number:0 }}%</span> -->
 									<div ng-if="spkm.avgStar">
 										<rate-yo-home rating="spkm.avgStar"></rate-yo-home>
 									</div>

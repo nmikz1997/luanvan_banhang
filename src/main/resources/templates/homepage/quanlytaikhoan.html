@@ -65,6 +65,15 @@
 	
 homepage.controller('UpdateInfoController', function($scope,$http,API){
 	
+	var items = JSON.parse(localStorage.getItem("items"));
+	var countItems = 0;
+	if(items != null){
+		items.forEach(function(ele){
+			return countItems += ele.quantity;
+		})
+	}
+	$('#countItems').text(countItems);
+	
 	$scope.today = new Date();
 	var data = {
 		name:null,
@@ -80,7 +89,7 @@ homepage.controller('UpdateInfoController', function($scope,$http,API){
 		$scope.obj = res.data;
 		$scope.obj.birthDate = new Date(res.data.birthDate);
 	})
-	
+	$(".bg-loadding").css("display","none");
 });
 	
 </script>

@@ -9,12 +9,13 @@ homepage.controller('HomeController', function($scope, $http, API){
 		$http.get('products/san-pham-moi')
 		.then(function (response) {
 			$scope.listSPNEW = response.data;
+		}).then(function(){
+			$(".bg-loadding").css("display","none");
 		});
 	}
 	
 	$http.get(API + 'categories')
 	.then(function (response) {
-		console.log(response.data);
 		$scope.categories = getNestedChildren(response.data, 0);
 	});
 

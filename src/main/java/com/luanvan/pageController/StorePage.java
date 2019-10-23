@@ -35,6 +35,11 @@ public class StorePage {
 	
 	@GetMapping("dashboard")
 	public String dashboard() {
-		return "admin/dashboard";
+		return "admin/dashboard/dashboard";
+	}
+	
+	@GetMapping("thong-ke")
+	public String thongKe() {
+		return "admin/index/index";
 	}
 }

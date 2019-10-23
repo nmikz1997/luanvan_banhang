@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -56,18 +57,12 @@ public interface ProductService {
 
 	List<ProductDTO> searchBy(String name, Long categoryId);
 
-	//Page<ProductDTO> findbyPlugName(String name, String cate, String material, String origin, String producer, int minPrice, int maxPrice, int page);
-
-	Page<ProductDTO> findbyPlugName(
-			String name, 
-			String cate, 
-			String material,
-			String origin, 
-			String producer, 
-			float ratting,
-			int minPrice, 
-			int maxPrice, 
-			int page);
-
 	Page<Product> testSearch();
+
+	Page<ProductDTO> findbyPlugName(String name, Long cate, String material, String origin, String producer,
+			String store, float ratting, String filter, int page);
+
+	ResponseEntity<?> uploadImage(Long storeId,int productId, MultipartFile[] uploadfiles);
+
+	void doiGia(Product product);
 }

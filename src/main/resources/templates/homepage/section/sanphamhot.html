@@ -1,0 +1,30 @@
+<section layout:fragment="sectionHot" class="section-request bg">
+	<div class="container bg-white">
+		<div class="headerh">
+			<h4 class="title-section bg-white text-uppercase">Bán chạy</h4>
+		</div>
+		<div class="row-sm">
+			<div class="col-6 col-xs-6 col-sm-6 col-md-4 col-lg-3 col-xl-2" ng-repeat="sphot in listsphot">
+				<a ng-href="/chi-tiet-san-pham/{{sphot.id}}" title="{{sphot.name}}">
+					<figure class="card card-product">
+						<!--<span class="badge-new"> NEW </span> -->
+					<div class="img-wrap"> <img class="card-img-top img-fluid" ng-src="picture/{{sphot.avatar}}" /></div>
+						<figcaption class="info-wrap">
+							<div class="title" ng-if="sphot.name.length > 40">{{ sphot.name | limitTo: 35 }} ... </div>
+							<div class="title" ng-if="sphot.name.length <= 40">{{ sphot.name }}</div>
+							<div class="action-wrap">
+								<div class="price-wrap">
+									<span class="price-new">{{ sphot.priceNew | currency:"":0}} đ</span><br>
+									<del class="price-old">{{ sphot.price | currency:"":0}} đ</del> <span class="discout">-{{ sphot.priceNew*100/sphot.price | number:0 }}%</span>
+									<div ng-if="sphot.avgStar">
+										<rate-yo-home rating="sphot.avgStar"></rate-yo-home>
+									</div>
+								</div>
+							</div> 
+						</figcaption>
+					</figure>
+				</a>
+			</div>
+		</div>
+	</div>
+</section>

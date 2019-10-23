@@ -1,6 +1,8 @@
 package com.luanvan.service.impl;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,9 +26,10 @@ import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.JpaSort;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,13 +40,16 @@ import com.luanvan.dto.response.ProductDTO;
 import com.luanvan.dto.response.ProductDetailDTO;
 import com.luanvan.exception.RollbackException;
 import com.luanvan.model.Category;
+import com.luanvan.model.Picture;
 import com.luanvan.model.Product;
 import com.luanvan.model.Store;
 import com.luanvan.repo.CategoryRepository;
+import com.luanvan.repo.PictureRepository;
 import com.luanvan.repo.PriceRepository;
 import com.luanvan.repo.ProductRepository;
 import com.luanvan.repo.StoreRepository;
 import com.luanvan.service.ProductService;
+
 
 @Service
 public class ProductServiceImpl implements ProductService{
@@ -52,18 +58,21 @@ public class ProductServiceImpl implements ProductService{
 	private PriceRepository priceRepository;
 	private StoreRepository storeRepository;
 	private CategoryRepository categoryRepository;
+	private PictureRepository pictureRepository;
 	
 	@Autowired
 	public ProductServiceImpl(
 			ProductRepository productRepository,
 			PriceRepository priceRepository,
 			StoreRepository storeRepository,
-			CategoryRepository categoryRepository
+			CategoryRepository categoryRepository,
+			PictureRepository pictureRepository
 			) {
 		this.productRepository 	= productRepository;
 		this.priceRepository	= priceRepository;
 		this.storeRepository	= storeRepository;
 		this.categoryRepository	= categoryRepository;
+		this.pictureRepository	= pictureRepository;
 	}
 	
 	@Override
@@ -263,27 +272,57 @@ public class ProductServiceImpl implements ProductService{
 	@Override
 	public Page<ProductDTO>findbyPlugName(
 			String name, 
-			String cate, 
+			Long cate, 
 			String material,
 			String origin, 
-			String producer, 
+			String producer,
+			String store,
 			float ratting,
-			int minPrice, 
-			int maxPrice, 
+			String filter,
 			int page)
 	{
+		name = covertToString("%"+name+"%");
 		
-		Sort sort = new Sort(Sort.Direction.DESC, "pri.unitPrice");
+		Pageable pageable = PageRequest.of(page,4);
 		
-		Page<Product> products = productRepository.findByPlugContainingAndCategoryPlugContainingAndMaterialPlugContainingAndOriginPlugContainingAndProducerPlugContainingAndAvgStarGreaterThanEqual(
-				name,
-				cate,
-				material,
-				origin,
-				producer,
-				ratting, 
-				PageRequest.of(page,4,sort)
-				);
+		if(filter.equalsIgnoreCase("priceAsc")) {
+			Sort sort = new Sort(Sort.Direction.ASC, "pri.unitPrice");
+			pageable = PageRequest.of(page,4, sort);
+		}else if(filter.equalsIgnoreCase("priceDesc")) {
+			Sort sort = new Sort(Sort.Direction.DESC, "pri.unitPrice");
+			pageable = PageRequest.of(page,4, sort);
+		}else if(filter.equalsIgnoreCase("newest")) {
+			Sort sort = new Sort(Sort.Direction.DESC, "createdAt");
+			pageable = PageRequest.of(page,4, sort);
+		}else if(filter.equalsIgnoreCase("bestStar")) {
+			Sort sort = new Sort(Sort.Direction.DESC, "avgStar");
+			pageable = PageRequest.of(page,4, sort);
+		}
+		
+		Page<Product> products;
+		if(cate != null) {
+			products = productRepository.pageProducts(
+					name,
+					material,
+					origin, 
+					producer,
+					store,
+					ratting,
+					cate,
+					pageable
+					);
+		}else {
+			products = productRepository.pageProducts(
+					name,
+					material,
+					origin, 
+					producer,
+					store,
+					ratting,
+					pageable
+					);
+		}
+		
 		
 		
 		Page<ProductDTO> productdto = products
@@ -310,6 +349,43 @@ public class ProductServiceImpl implements ProductService{
 		Sort sort = Sort.by("createdAt").descending();
 		Page<Product> products = productRepository.findAll(PageRequest.of(1,4,sort));
 		return products;
+	}
+
+	@Override
+	public ResponseEntity<?> uploadImage(Long storeId,int productId, MultipartFile[] uploadfiles) {
+		try {
+			Product productmap = productRepository.getOne((long) productId);
+			for(MultipartFile uploadedFile : uploadfiles) {
+				String file = uploadedFile.getOriginalFilename();
+
+			    String filename = storeId +"_"+System.currentTimeMillis()+"_"+file;
+			    String directory = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\picture\\";
+			    String filepath = directory+filename;
+
+			    Picture image = new Picture();
+			    image.setPath(filename);
+			    image.setProduct(productmap);
+			    pictureRepository.save(image);
+			 
+			    BufferedOutputStream stream =
+			        new BufferedOutputStream(new FileOutputStream(new File(filepath)));
+			    stream.write(uploadedFile.getBytes());
+			    stream.close();
+	        }
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+		catch (Exception e) {
+		    System.out.println(e.getMessage());
+		    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@Override
+	public void doiGia(Product product) {
+		Product capnhat = productRepository.getOne(product.getId());
+		capnhat.setQuantity(product.getQuantity());
+		
+		productRepository.save(capnhat);
 	}
 	
 

@@ -5,6 +5,8 @@
 </head>
 <section layout:fragment="css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.10/css/bootstrap-select.min.css" />
+	<link rel="stylesheet" th:href="@{/css/fileinput.css}">
+	
 </section>
 <body>
 	<section layout:fragment="content">
@@ -23,7 +25,8 @@
 							<thead>
 								<tr>
 									<th>Tên sản phẩm</th>
-									<th>Số lượng</th>
+									<th ng-hide="true">Số lượng gốc</th>
+									<th>Số lượng tồn</th>
 									<th>Đơn giá gốc</th>
 									<th>Đơn giá bán</th>
 									<th>
@@ -35,19 +38,23 @@
 							</thead>
 							<tbody>
 								<tr ng-repeat = "product in products">
-									<td>
+									<td style="width:200px">
 										<a href="#">
 											{{ product.name }}
 										</a>
 									</td>
-									<td>	{{ product.quantity }}</td>
+									<td  ng-hide="true">{{ product.quantity }}</td>
+									<td>	
+										<input type="number" style="width:auto;" min="0" ng-model="moi" class="form-control d-inline" width="10" ng-value="product.quantity - product.sold">
+										<button class="btn btn-primary float-right d-inline" ng-click="thayDoiSL(product.id,$index,moi)">Lưu</button>
+									</td>
 									<td>	{{ product.price | currency:"":0}} đ</td>
 									<td>	{{ product.priceNew | currency:"":0}} đ</td>
 									<td align="center">
 										<a href="#" class="btn btn-info" title="Xem thông tin chi tiết sản phẩm" />
 										<i class="fas fa-info-circle"></i>
 									</a>
-									<a href="#" ng-click="modal('images',product.id)" class="btn btn-primary" title="Quản lý hình ảnh sản phẩm" />
+									<a href="#" ng-click="modalImg('images',product.id)" class="btn btn-primary" title="Quản lý hình ảnh sản phẩm" />
 									<i class="fas fa-images"></i>
 								</a>
 								<a href="#" ng-click="modal('edit',product.id)" class="btn btn-warning" title="Chỉnh sửa thông tin sản phẩm" />
@@ -123,8 +130,8 @@
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="quantity" class="col-form-label">Số lượng:</label>
-								<input type="number" min="0" class="form-control" id="quantity" name="quantity" ng-model="product.quantity" ng-required="true" />
+								<label for="quantity" class="col-form-label">Số lượng gốc:</label>
+								<input type="number" min="0" class="form-control" id="quantity" name="quantity" ng-readonly="!anGiaBan" ng-model="product.quantity" ng-required="true" />
 								<span id="helpBlock2" class="help-block" ng-show="frmProduct.quantity.$error.required">*</span>
 							</div>
 							<div class="form-group">
@@ -136,12 +143,12 @@
 						<div id="menu1" class="container tab-pane fade"><br>
 							<div class="form-group">
 								<label for="price" class="col-form-label">Giá gốc:</label>
-								<input type="number" min="{{giaban.unitPrice}}" step="500" ng-model="giagoc.unitPrice" class="form-control" id="price" name="price" ng-required="true" />
+								<input type="number" min="{{giaban.unitPrice}}" step="500" ng-model="giagoc.unitPrice" class="form-control" id="price" name="price" ng-required="!anGiaBan" />
 								<span id="helpBlock2" class="help-block" ng-show="frmProduct.price.$error.required">*</span>
 							</div>
-							<div class="form-group">
+							<div class="form-group" ng-hide="anGiaBan">
 								<label for="price" class="col-form-label">Giá bán:</label>
-								<input type="number" min=0 max="{{giagoc.unitPrice}}" step="500" ng-model="giaban.unitPrice" ng-change="thayDoiGiaBan()" class="form-control" id="pricenew" name="pricenew" ng-required="true" />
+								<input type="number" min=0 max="{{giagoc.unitPrice}}" step="500" ng-model="giaban.unitPrice" ng-change="thayDoiGiaBan()" class="form-control" id="pricenew" name="pricenew" ng-required="!anGiaBan" />
 								<span id="helpBlock2" class="help-block" ng-show="frmProduct.price.$error.required">*</span>
 							</div>
 							<table class="table table-bordered">
@@ -162,7 +169,8 @@
 						<div id="menu2" class="container tab-pane fade"><br>
 							<div class="form-group">
 								<label for="mota" class="col-form-label">Mô tả:</label>
-								<textarea class="form-control" id="derciption" name="derciption" ng-model="product.derciption" ng-required="true"></textarea>
+								<textarea class="form-control" id="derciption" name="derciption" ng-model="product.derciption" ng-required="true" ckeditor="editorOptions"></textarea>
+								<!--<textarea ng-model="product.derciption" class="form-control" name="description" id="description" ckeditor="editorOptions"></textarea>-->
 								<span id="helpBlock2" class="help-block" ng-show="frmProduct.derciption.$error.required">Vui lòng mô tả sản phẩm</span>
 							</div>
 						</div>
@@ -175,12 +183,59 @@
 		</div>
 	</div>
 </div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="modalImg">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Quản lý ảnh</h4>
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<form method="post" name="frmImg" id="frmImg" enctype="multipart/form-data" >
+					<div class="form-group">
+			            <div class="file-loading">
+			                <label>Preview File Icon</label>
+			                <input id="imgs" name="imgs" type="file" multiple>
+			            </div>
+			        </div>
+			        <button type="submit" class="btn btn-primary">Cập nhật</button>
+				</form>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
 </div>
 
 </section>
-<section layout:fragment="script">
+<section layout:fragment="script"> 
 	<script th:src="@{/app/products.js}"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.10/js/bootstrap-select.min.js"></script>
+	<script th:src="@{/js/plugins/piexif.js}"></script>
+    <script th:src="@{/js/plugins/sortable.js}"></script>
+    <script th:src="@{/js/fileinput.js}"></script>
+
+    <script th:src="@{/js/themes/fa/theme.js}"></script>
+    <script th:src="@{/js/themes/explorer-fa/theme.js}"></script>
+    <script>
+    	jQuery("#imgs").fileinput({
+        theme: 'fa',
+        showUpload: false,
+        showCaption: false,
+        browseClass: "btn btn-primary btn-lg",
+        allowedFileExtensions: ['jpg', 'png', 'gif'],
+        previewFileIcon: "<i class='glyphicon glyphicon-king'></i>",
+        overwriteInitial: false,
+        initialPreviewAsData: true
+    });
+    </script>
+
 </section>
 </body>
 </html>

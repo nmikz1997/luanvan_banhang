@@ -22,6 +22,11 @@
 		.img-wrap img {
 			max-height:300px;
 		}
+		.sale{
+			font-weight: 500;
+		    color: #ff3425;
+		    font-size: 17px;
+		}
 	</style>
   </section>
 </head>
@@ -43,10 +48,8 @@
 										</div>
 									</div> <!-- slider-product.// -->
 									<div class="img-small-wrap">
-										<div class="item-gallery" ng-click="changeAvatar('/images/items/1.jpg')"> <img src="/images/items/1.jpg"></div>
-										<div class="item-gallery"> <img src="/images/items/2.jpg"></div>
-										<div class="item-gallery"> <img src="/images/items/3.jpg"></div>
-										<div class="item-gallery"> <img src="/images/items/4.jpg"></div>
+										<div class="item-gallery" ng-click="changeAvatar(anhChinh)"> <img ng-src="/picture/{{anhChinh}}"></div>
+										<div class="item-gallery" ng-repeat="pic in product.pictures" ng-click="changeAvatar(pic.path)"> <img ng-src="/picture/{{pic.path}}"></div>
 									</div> <!-- slider-nav.// -->
 								</article> <!-- gallery-wrap .end// -->
 							</aside>
@@ -58,40 +61,44 @@
 										<dl class="dlist-inline">
 											<span class="border-right">
 												<dt>Cửa hàng:</dt>
-												<dd><a ng-href="/tim-kiem?store={{product.store.plug}}">{{product.store.name}}</a></dd>
+												<dd><a ng-href="/tim-kiem?store={{product.store.id}}">{{product.store.name}}</a></dd>
 											</span>
 											<span class="border-right" style="margin:5px;">
 												<dt>Nhà sản xuất:</dt>
-												<dd><a ng-href="/tim-kiem?producer={{product.producer.plug}}">{{product.producer.name}}</a></dd>
+												<dd><a ng-href="/tim-kiem?producer={{product.producer.id}}">{{product.producer.name}}</a></dd>
 											</span>
 											<span style="margin:5px;">
 												<dt>Quốc gia:</dt>
-												<dd><a ng-href="/tim-kiem?origin={{product.origin.plug}}">{{product.origin.name}}</a></dd>
+												<dd><a ng-href="/tim-kiem?origin={{product.origin.id}}">{{product.origin.name}}</a></dd>
 											</span>
 											
 										</dl>
 									</div>
 									<hr>
-									<div class="mb-3"> 
-										<var class="price h3 text-success">
+									<div class="mb-3 d-inline"> 
+										<span class="">Giá: </span>
+										<var class="mb-3 price h3 text-success">
 											<span class="num">{{product.priceNew | currency:"":0}} đ</span>
-										</var><br>
+										</var>
+										<span class="">Giá thị trường: </span>
 										<var ng-if="((product.price-product.priceNew)/product.price)*100" class="price h6 text-dark">
 											<del class="price-old" th:inline="text">{{product.price | currency:"":0}} đ</del>
-											<span class="discout">-{{ ((product.price-product.priceNew)/product.price)*100 | number:0 }}%</span>
+											<!--<span class="discout">-{{ ((product.price-product.priceNew)/product.price)*100 | number:0 }}%</span>-->
 										</var>
 									</div>
+									
 									<div ng-if="product.maxPromotion.saleOff">
-										<dl class="dlist-inline">
+										<dl class="mt-3 dlist-inline">
 											<dt>Khuyến mãi:</dt>
-											<dd>{{product.maxPromotion.saleOff}}%</dd>
+											<dd><a ng-href="/khuyen-mai?id={{product.imaxPromotion.id}}"> {{product.maxPromotion.name}} </a></dd>
+											<dd class="sale"> -{{product.maxPromotion.saleOff}}%</dd>
 										</dl>
 									</div>
 									<hr>
 									<div>
 										<dl class="dlist-inline">
 											<dt>Chất liệu:</dt>
-											<dd>{{product.material.name}}</dd>
+											<dd><a ng-href="/tim-kiem?material={{product.material.id}}">{{product.material.name}}</a></dd>
 										</dl>
 									</div>
 									<hr>
@@ -112,7 +119,7 @@
 										</div>
 									</div>
 										<p ng-show="product.quantity - product.sold <= 0" class="alert alert-warning">Tạm hết hàng</p>
-									<hr>
+									
 									<!--<a href="#"><i class="far fa-flag"></i> Phản ánh sản phẩm </a> -->
 								</article> 
 							</aside>
@@ -123,7 +130,7 @@
 						<div class="card-body">
 							<h4>Mô tả:</h4>
 							<div class="content less">
-								<p>{{product.derciption}}</p>
+								<div ng-bind-html="product.derciption"></div>
 							</div>
 							<button class="btn btn-primary see-more">Xem thêm...</button> 
 							
@@ -137,38 +144,18 @@
 							Có thể bạn quan tâm
 						</div>
 						<div class="card-body row">
-							<div class="col-md-12 col-sm-3">
+							<div ng-repeat="seen in sanPhamDaXem" class="col-md-12 col-sm-3">
 								<figure class="item border-bottom mb-3">
-									<a href="#" class="img-wrap"> <img src="/images/items/2.jpg" class="img-md"></a>
+									<a ng-href="/chi-tiet-san-pham/{{seen.id}}" class="img-wrap"> <img ng-src="/picture/{{seen.avatar}}" class="img-md"></a>
 									<figcaption class="info-wrap">
-										<a href="#" class="title">The name of product</a>
+										<a ng-href="/chi-tiet-san-pham/{{seen.id}}" class="title">{{seen.name}}</a>
 										<div class="price-wrap mb-3">
-											<span class="price-new">$280</span> <del class="price-old">$280</del>
+											<span class="price-new">{{ seen.priceNew | currency:"":0}} đ</span> 
+											<div ng-if="seen.price != seen.priceNew"><del class="price-old">{{ seen.price | currency:"":0}} đ</del> <span class="discout">-{{ ((seen.price-seen.priceNew)/seen.price)*100 | number:0 }}%</span></div>
 										</div>
 									</figcaption>
 								</figure>
 							</div>
-							<div class="col-md-12 col-sm-3">
-								<figure class="item border-bottom mb-3">
-									<a class="img-wrap"> <img src="/images/items/3.jpg" class="img-md"></a>
-									<figcaption class="info-wrap">
-										<a href="#" class="title">The name of product</a>
-										<div class="price-wrap mb-3">
-											<span class="price-new">$280</span>
-										</div>
-									</figcaption>
-								</figure>
-							</div>
-							<div class="col-md-12 col-sm-3">
-								<figure class="item border-bottom mb-3">
-									<a href="#" class="img-wrap"> <img src="/images/items/4.jpg" class="img-md"></a>
-									<figcaption class="info-wrap">
-										<a href="#" class="title">The name of product</a>
-										<div class="price-wrap mb-3">
-											<span class="price-new">$280</span>
-										</div>
-									</figcaption>
-								</figure>
 							</div>
 						</div>
 					</div>

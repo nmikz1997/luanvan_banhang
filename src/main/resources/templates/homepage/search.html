@@ -29,7 +29,7 @@
 </head>
 <body>
 <section layout:fragment="content">
-<section ng-controller="SearchController" class="section-content bg padding-y-sm">
+<section ng-controller="SearchController" class="section-content bg padding-y-sm" id="show" style="display:none;">
 	<div class="container bg-white shadow-lg">
 		<div class="card">
 			<div class="card-body">
@@ -38,13 +38,28 @@
 					<div class="col-md-21-24"> 
 						<ul class="list-inline">
 							<li class="list-inline-item"><h5>{{data.totalElements}} kết quả được tìm thấy</h5></li>	
+							<li class="list-inline-item">
+								<span ng-repeat="filter in filterArray">
+									<button class="btn btn-outline-success" ng-click="closeParam(filter.param)">{{ filter.name }} <span aria-hidden="true">×</span> </button>
+								</span> 
+							</li>	
 							<div class="float-right">
 								<li class="list-inline-item">
 									<div class="form-inline">
-										<select class="form-control" id="select1">
-											<option>Giá từ thấp đến cao</option>
-											<option>Giá từ cao đến thấp</option>
-										</select>
+										<ul class="nav nav-tabs">
+											<li class="nav-item">
+												<a class="nav-link" ng-click="redirect('filter','priceAsc')" data-toggle="tab" href="javascript:void(0)">Giá thấp</a>
+											</li>
+											<li class="nav-item">
+												<a class="nav-link" ng-click="redirect('filter','priceDesc')" data-toggle="tab" href="javascript:void(0)">Giá cao</a>
+											</li>
+											<li class="nav-item">
+												<a class="nav-link" ng-click="redirect('filter','newest')" data-toggle="tab" href="javascript:void(0)">Hàng mới</a>
+											</li>
+											<li class="nav-item">
+												<a class="nav-link" ng-click="redirect('filter','bestStar')" data-toggle="tab" href="javascript:void(0)">Đánh giá cao nhất</a>
+											</li>
+										</ul>
 									</div>
 								</li>
 							</div>
@@ -60,7 +75,7 @@
 		<div class="row">
 			<aside class="col-md-3">
 				<div class="card card-filter">
-					<article class="card-group-item">
+					<!--<article class="card-group-item">
 						<header class="card-header">
 						<h6 class="title">Khoảng Giá  </h6>
 						</header>
@@ -73,10 +88,10 @@
 									<div class="form-group text-right col-md-6">
 										<input class="form-control" max="0" placeholder="tối đa" type="number">
 									</div>
-								</div> <!-- form-row.// -->
+								</div> 
 								<button class="btn btn-block btn-outline-primary">Apply</button>
-							</div> <!-- card-body.// -->
-					</article> <!-- card-group-item.// -->
+							</div> 
+					</article> -->
 					<article class="card-group-item">
 						<header class="card-header">
 						<h6 class="title">Đánh giá  </h6>
@@ -84,7 +99,7 @@
 						
 							<div class="card-body">
 								<div class="form-row">
-									<a href="#" ng-click="redirect('ratting',5)">
+									<a href="javascript:void(0)" ng-click="redirect('ratting',5)">
 										<span class="fa fa-star checked"></span>
 										<span class="fa fa-star checked"></span>
 										<span class="fa fa-star checked"></span>
@@ -93,7 +108,7 @@
 									</a>
 								</div> <!-- form-row.// -->
 								<div class="form-row">
-									<a href="" ng-click="redirect('ratting',4)">
+									<a href="javascript:void(0)" ng-click="redirect('ratting',4)">
 										<span class="fa fa-star checked"></span>
 										<span class="fa fa-star checked"></span>
 										<span class="fa fa-star checked"></span>
@@ -103,7 +118,7 @@
 									</a>
 								</div> <!-- form-row.// -->
 								<div class="form-row">
-									<a href="" ng-click="redirect('ratting',3)">
+									<a href="javascript:void(0)" ng-click="redirect('ratting',3)">
 										<span class="fa fa-star checked"></span>
 										<span class="fa fa-star checked"></span>
 										<span class="fa fa-star checked"></span>
@@ -113,7 +128,7 @@
 									</a>
 								</div> <!-- form-row.// -->
 								<div class="form-row">
-									<a href="" ng-click="redirect('ratting',2)">
+									<a href="javascript:void(0)" ng-click="redirect('ratting',2)">
 										<span class="fa fa-star checked"></span>
 										<span class="fa fa-star checked"></span>
 										<span class="fa fa-star"></span>
@@ -123,7 +138,7 @@
 									</a>
 								</div> <!-- form-row.// -->
 								<div class="form-row">
-									<a href="" ng-click="redirect('ratting',1)">
+									<a href="javascript:void(0)" ng-click="redirect('ratting',1)">
 										<span class="fa fa-star checked"></span>
 										<span class="fa fa-star"></span>
 										<span class="fa fa-star"></span>
@@ -141,7 +156,7 @@
 						</header>
 						<div class="filter-content">
 							<div class="list-group list-group-flush">
-							  <a href="#" ng-repeat="material in materials" ng-click="redirect('material',material.plug)" class="list-group-item">{{material.name}}</a>
+							  <a href="javascript:void(0)" ng-repeat="material in materials" ng-click="redirect('material',material.id)" class="list-group-item">{{material.name}}</a>
 							</div>
 						</div>
 					</article>
@@ -151,7 +166,7 @@
 						</header>
 						<div class="filter-content">
 							<div class="list-group list-group-flush">
-							  <a href="#" ng-repeat="origin in origins" ng-click="redirect('origin',origin.plug)" class="list-group-item">{{origin.name}}</a>
+							  <a href="javascript:void(0)" ng-repeat="origin in origins" ng-click="redirect('origin',origin.id)" class="list-group-item">{{origin.name}}</a>
 							</div>
 						</div>
 					</article>
@@ -161,19 +176,18 @@
 						</header>
 						<div class="filter-content">
 							<div class="list-group list-group-flush">
-							  <a href="#" ng-repeat="producer in producers" ng-click="redirect('producer',producer.plug)" class="list-group-item">{{producer.name}}</a>
+							  <a href="javascript:void(0)" ng-repeat="producer in producers" ng-click="redirect('producer',producer.id)" class="list-group-item">{{producer.name}}</a>
 							</div>
 						</div>
 					</article>
 				</div>
-
-
 			</aside>
 			<main class="col-md-9">
 				<div class="row">
 					<div ng-repeat="sp in data.content" class="col-6 col-md-4 col-xl-3">						
 						<a ng-href="/chi-tiet-san-pham/{{sp.id}}" title="{{sp.name}}">
 								<figure class="card card-product">
+								<span ng-if="sp.price != sp.priceNew" class="badge-offer"><b>-{{ ((sp.price-sp.priceNew)/sp.price)*100 | number:0 }}%</b></span>
 								<div class="img-wrap"> <img class="card-img-top img-fluid" ng-src="/picture/{{sp.avatar}}" /></div>
 								<figcaption class="info-wrap">
 									<div class="title" ng-if="sp.name.length > 40">{{ sp.name | limitTo: 35 }} ... </div>
@@ -181,7 +195,7 @@
 									<div class="action-wrap">
 										<div class="price-wrap">
 											<span class="price-new">{{ sp.priceNew | currency:"":0}} đ</span><br>
-											<div ng-if="sp.price != sp.priceNew"><del class="price-old">{{ sp.price | currency:"":0}} đ</del> <span class="discout">-{{ ((sp.price-sp.priceNew)/sp.price)*100 | number:0 }}%</span></div>
+											<div ng-if="sp.price != sp.priceNew"><del class="price-old">{{ sp.price | currency:"":0}} đ</del></div>
 											<div ng-if="sp.avgStar">
 												<rate-yo-home rating="sp.avgStar"></rate-yo-home>
 											</div>
@@ -202,38 +216,8 @@
 <section layout:fragment="script">
 <script th:src="@{https://www.solodev.com/assets/pagination/jquery.twbsPagination.js}"></script>
 <script th:inline="javascript">
-homepage.controller('SearchController', function($scope,$http,API){
-	$scope.data = /*[[${result}]]*/;
-	
-	console.log($scope.data);
-	var searchParams = new URLSearchParams(window.location.search);
-	
-	$scope.redirect = function(param, value){
-		if(param != "page"){
-			searchParams.delete("page");
-		}
-		if(searchParams.has(param)){
-			searchParams.set(param, value);
-		}else{
-			searchParams.append(param, value);
-		}
-		window.location.href = "http://localhost:8080/tim-kiem?"+searchParams;
-	}
-	if($scope.data.content.length){
-		$('#pagination-demo').twbsPagination({
-	        totalPages: $scope.data.totalPages,
-	        startPage: $scope.data.number+1,
-	        visiblePages: 4,
-	        initiateStartPageClick: false,
-	        first: 'Trang đầu',
-			prev: '<<',
-			next: '>>',
-			last: 'Trang cuối',
-	        onPageClick: function (event, page) {
-	        	$scope.redirect("page", page);
-	        }
-	    });
-	}
+homepage.controller('SearchController', function($scope,$http,$location,API){
+	//$scope.data = /*[[${result}]]*/;
 	
 	$http.get('/materials').then(function(res){
 		$scope.materials = res.data;
@@ -244,6 +228,92 @@ homepage.controller('SearchController', function($scope,$http,API){
 	$http.get('/producers').then(function(res){
 		$scope.producers = res.data;
 	});
+	
+	var searchParams = new URLSearchParams(window.location.search);
+	
+	//$scope.desc = true;
+	
+	$scope.redirect = function(param, value){
+		if(param != "page"){
+			searchParams.delete("page");
+		}
+		if(searchParams.has(param)){
+			searchParams.set(param, value);
+		}else{
+			searchParams.append(param, value);
+		}
+		
+		window.history.pushState(null, 'Page Title', "tim-kiem?"+searchParams);
+		timKiemNangCao();
+		//window.location.href = "http://localhost:8080/tim-kiem?"+searchParams;
+	}
+	
+	timKiemNangCao();
+	
+	function timKiemNangCao(){
+		searchParams = new URLSearchParams(window.location.search);
+		$http.get('/query?'+searchParams).then(function(res){
+			$scope.data = res.data;
+			$('.pagination').twbsPagination('destroy');
+		}).then(function(){
+			console.log($scope.data);
+			if($scope.data.content.length){
+				$('#pagination-demo').twbsPagination({
+			        totalPages: $scope.data.totalPages,
+			        startPage: $scope.data.number+1,
+			        visiblePages: 4,
+			        initiateStartPageClick: false,
+			        first: 'Trang đầu',
+					prev: '<<',
+					next: '>>',
+					last: 'Trang cuối',
+			        onPageClick: function (event, page) {
+			        	$scope.redirect("page", page);
+			        }
+			    });
+			}
+			$scope.filterArray = [];
+			
+			
+			if( searchParams.has("material") ){
+				 pushFilterArray ($scope.materials, "material");
+			};
+			if( searchParams.has("origin") ){
+				pushFilterArray ($scope.origins, "origin");
+			};
+			if( searchParams.has("producer") ){
+				 pushFilterArray ($scope.producers, "producer");
+			};
+			
+			if(searchParams.has("ratting")){
+				let value = {
+					param: "ratting",
+					name: searchParams.get("ratting") + " sao"
+				}
+				$scope.filterArray.push( value );
+			}
+		}).catch(function(err){
+			console.log("Không tìm thấy");
+		})
+	}
+	
+	function pushFilterArray (array, param){
+		let value = array.find(function(ele){
+			return ele.id == searchParams.get(param);
+		})
+		value.param = param;
+		$scope.filterArray.push( value );
+	}
+	
+	$scope.closeParam = function (param){
+		searchParams.delete(param);
+		window.history.pushState(null, 'Page Title', "tim-kiem?"+searchParams);
+		timKiemNangCao();
+	}
+	
+	window.onpopstate = function(event) {
+		timKiemNangCao();
+	};
 	
 	
 	/*$('#pagination-demo').twbsPagination({
@@ -271,6 +341,16 @@ homepage.controller('SearchController', function($scope,$http,API){
 		activeClass: 'active',
 		disabledClass: 'disabled'
 		});*/
+		$(".bg-loadding").css("display","none");
+		document.getElementById('show').style.display= "block";
+		var items = JSON.parse(localStorage.getItem("items"));
+		var countItems = 0;
+		if(items != null){
+			items.forEach(function(ele){
+				return countItems += ele.quantity;
+			})
+		}
+		$('#countItems').text(countItems);
 });
 
 </script>

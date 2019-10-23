@@ -43,7 +43,9 @@
 							<div class="card-body">
 								<p>Tổng giá trị: {{obj.totalGroup  | currency:"":0}} đ</p>
 								<p>Hình thức thanh toán: {{obj.paymentType.name}}</p>
-								<p>Chưa thanh toán</p>
+								<p ng-hide="true">{{myVar = 0}}</p>
+								<p ng-if="obj.paymentType.id == 2">Đã thanh toán</p>
+								<p ng-if="myVar == 1">Chưa thanh toán</p>
 							</div>
 						</div>
 						<div class="col-12" style="padding: 0">
@@ -66,9 +68,10 @@
 											<p ng-if="dt.promotion">Giá bán: {{dt.price.unitPrice*(dt.promotion.saleOff/100)  | currency:"":0 }}đ</p>
 											<p>Thành tiền: {{ dt.quantity*dt.price.unitPrice }}đ</p>
 										</div>
-										<div class="col-md-2 d-flex justify-content-center align-items-center">
+										<div ng-if="order.orderStatus.id == 5" class="col-md-2 d-flex justify-content-center align-items-center">
 											<button class="btn btn-outline-success" ng-click="modal(order.id,dt)" >Đánh giá</button>
 										</div>
+										
 									</div>	
 								</div>
 								<div class="card-footer">
@@ -139,7 +142,7 @@
 <script>
 	
 homepage.controller('OrderDetailCustomerController', function($scope,$http,API){
-	
+	$(".bg-loadding").css("display","none");
 	var thisPath = window.location.pathname;
 	var id = thisPath.substring(thisPath.lastIndexOf("/")+1);
 	

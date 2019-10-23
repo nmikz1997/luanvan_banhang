@@ -13,13 +13,16 @@
 					<li class="nav-item">
 						<a class="nav-link" th:href="@{/tro-thanh-nha-ban-hang}">Trở thành nhà bán hàng</a>
 					</li>
+					<li sec:authorize="hasRole('ROLE_STORE')" class="nav-item">
+						<a class="nav-link" th:href="@{/store/thong-ke}">Quản lý cửa hàng</a>
+					</li>
 					<li class="menu-mobi nav-item dropdown"><a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Danh mục</a>
 						<ul class="dropdown-menu" >
 							<!-- <li><a class="dropdown-item" href="#">Trade Assurance </a></li> -->
 							<ul class="menu-category">
 								<li ng-repeat="category in categories" ng-include="'categoryTree'"></li>
 								<script type="text/ng-template" id="categoryTree">
-									<a th:href="@{/tim-kiem/?pCate={{category.plug}}}" ng-click="getCate(category.id)" >{{ category.name }}</a>
+									<a th:href="@{/tim-kiem?pCate={{category.id}}}" ng-click="getCate(category.id)" >{{ category.name }}</a>
 									<ul ng-if="category.categories" class="submenu">
 										<li ng-repeat="category in category.categories" ng-include="'categoryTree'">     
 										</li>
@@ -41,7 +44,7 @@
 		</div> <!-- container //  -->
 	</nav>
 
-	<section class="header-main shadow-sm">
+	<section class="header-main">
 		<div class="container">
 			<div class="row-sm align-items-center">
 				<div class="col-sm-2"></div>

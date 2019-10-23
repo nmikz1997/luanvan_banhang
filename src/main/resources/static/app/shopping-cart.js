@@ -1,19 +1,49 @@
-homepage.controller('ShoppingCartController', function($scope, $http, API){
+homepage.controller('ShoppingCartController', function($scope, $http,$timeout, API){
+	$(".bg-loadding").css("display","none");
+	$('#countItems').text(0);
+	$scope.myForm = true;
+	$scope.total = 0;
+	$("#flip").click(function(){
+	    $("#panel").slideToggle("slow");
+	});
+	
+	$scope.selectedProvince = '{"provinceid":"01TTT","name":"Thành phố Hà Nội"}';
+	
 	var thisURL = window.location.pathname;
 	var cart = JSON.parse(localStorage.getItem("items"));
+	//$scope.diaChi = "116A, đường 3/2, phường Xuân Khánh, quận Ninh Kiều, TP Cần Thơ";
 	
-	if(cart != null) refreshData();
+	if(cart != null) {
+		refreshData();
+	}
+	
+	
+	$http.get('https://api.exchangerate-api.com/v4/latest/USD?fbclid=IwAR130H7vwYrcV1Aa1LAcs4LlpnrNEUqEaV2Zi5EPRNn1G1vCkKBW5RNvZmw').then(function(res){
+		$scope.currency = res.data.rates.VND;
+	});
+	
+	function getNgoaiTe(){
+		
+	}
+	
 	
 	function refreshData(){
 		resetCart();
-		$http.post('/products/gio-hang',cart).then(function(res){
+		$http.post('/products/gio-hang',cart)
+		.then(function(res){
 			$scope.items = res.data;
 			$scope.total = 0;
 			res.data.forEach(function(ele){
 				$scope.total = $scope.total + ele.priceNew*ele.soLuongMua;
 			})
 			
-		});
+		})
+		.then(function(){
+			$http.get('orders/exchange').then(function(res){
+				let tiGia = Number(res.data.bantienmat);
+				$scope.totalPaypal = Math.round($scope.total/tiGia*100)/100;
+			})
+		})
 	}
 	
 	$scope.xoa = function(id){
@@ -47,9 +77,7 @@ homepage.controller('ShoppingCartController', function($scope, $http, API){
 		paid(1);
 	}
 	function paid(type){
-		//luu don hang
 		$scope.thanhtoan = true;
-		//console.log($scope.items);
 		var listOrders = [];
 		var grouped = groupBy($scope.items, "store");
 		for (var property in grouped) {
@@ -75,26 +103,26 @@ homepage.controller('ShoppingCartController', function($scope, $http, API){
 		}
 		
 		let request = {
-				orderGroup:{
-					address:"116A, Mạc thiên tích",
-					paymentType: {id: 1}
-				},
-				orders:listOrders
-			};
+			orderGroup:{
+				address:$scope.diaChi,
+				paymentType: {id: type}
+			},
+			orders:listOrders
+		};
 		
 		$http.post('/orders/v2',request)
 		.then(function(res){
-			console.log(res);
-//			if(res.data.Success){
-//				alert("Đặt hàng thành công");
-//				localStorage.removeItem("items");
-//				$scope.items = null;
-//				$scope.total = 0;
-//				resetCart();
-//			}else{
-//				alert("Số lượng không đủ đáp ứng");
-//				refreshData();
-//			}
+			//console.log(res);
+			if(res.data.Success){
+				alert("Đặt hàng thành công");
+				localStorage.removeItem("items");
+				$scope.items = null;
+				$scope.total = 0;
+				resetCart();
+			}else{
+				alert("Số lượng không đủ đáp ứng");
+				refreshData();
+			}
 		})
 	}
 	
@@ -120,82 +148,135 @@ homepage.controller('ShoppingCartController', function($scope, $http, API){
 		}, {});
 	}
 	
+	$timeout( function()
+	{
+		if($scope.authen){
+		paypal.Button.render({
+	        env: 'sandbox',
+	        style: {
+	            color:  'gold',
+	            shape:  'rect',
+	            label:  'paypal',
+	            height: 44,
+	            tagline : false,
+	            size:'responsive',
+	        },
+	
+	        funding: {
+	            allowed: [
+	            paypal.FUNDING.CARD,
+	            paypal.FUNDING.CREDIT
+	            ],
+	            disallowed: []
+	        },
+	
+	        client: {
+	            sandbox: 'ASlF80g16AWLwAnslzRi18WwaS81Uda-aV0ldWjJE02u8fPvchMdCMNKM7fj40j66gekc2tZSOsicGzF',
+	            production: ''
+	        },
+	
+	        
+	        payment: function(data, actions) {
+	        	
+	            return actions.payment.create({
+	                "transactions": [
+	                   {
+	                     "amount": {
+	                       "total": $scope.totalPaypal,
+	                       "currency": "USD",
+	                     },
+	                     "description": "The payment transaction description.",
+	                     "payment_options": {
+	                       "allowed_payment_method": "INSTANT_FUNDING_SOURCE"
+	                     },
+	                     "soft_descriptor": "ECHI5786786",
+	                     "item_list": {
+	                       "items": [
+	                         {
+	                           "name": "Tổng số tiền hóa đơn",
+	                           "quantity": "1",
+	                           "price": $scope.totalPaypal,
+	                           "currency": "USD"
+	                         },
+	                       ],
+	                       
+	                     }
+	                   }
+	                 ]
+	            });
+	        },
 	
 	
-	//paypal
+	        onAuthorize: function (data, actions) {
+	            return actions.payment.execute()
+	            .then(function () {
+	            	paid(2);
+	            });
+	        }
+	    }, '#paypal-button');
+		}
+	},5);
 	
-	paypal.Button.render({
-        env: 'sandbox',
-        style: {
-            color:  'gold',
-            shape:  'rect',
-            label:  'paypal',
-            height: 44,
-            tagline : false,
-            size:'responsive',
-        },
-
-        funding: {
-            allowed: [
-            paypal.FUNDING.CARD,
-            paypal.FUNDING.CREDIT
-            ],
-            disallowed: []
-        },
-
-        client: {
-            sandbox: 'AcY_RqiSajU7n4gcqvWS4wtQNRU2vYG1WZwi7rIpcf1U1-PXyPogoQ6rTBUPuNE6qfLOAkX4iRrlaQH8',
-            production: ''
-        },
-
-        
-        payment: function(data, actions) {
-            return actions.payment.create({
-                "transactions": [
-                   {
-                     "amount": {
-                       "total": "1.00",
-                       "currency": "USD",
-                     },
-                     "description": "The payment transaction description.",
-                     "payment_options": {
-                       "allowed_payment_method": "INSTANT_FUNDING_SOURCE"
-                     },
-                     "soft_descriptor": "ECHI5786786",
-                     "item_list": {
-                       "items": [
-                         {
-                           "name": "hat",
-                           "quantity": "1",
-                           "price": "1.00",
-                           "currency": "USD"
-                         },
-                       ],
-                       "shipping_address": {
-                         "recipient_name": "Brian Robinson",
-                         "line1": "4th Floor",
-                         "line2": "Unit #34",
-                         "city": "San Jose",
-                         "country_code": "US",
-                         "postal_code": "95131",
-                         "phone": "011862212345678",
-                         "state": "CA"
-                       }
-                     }
-                   }
-                 ]
-            });
-        },
-
-
-        onAuthorize: function (data, actions) {
-            return actions.payment.execute()
-            .then(function () {
-            	paid(2);
-            });
-        }
-    }, '#paypal-button');
 	
+	$http.get(API + 'provinces').then(function (response) {
+		$scope.provinces = response.data;
+	});
+	
+	function getDistricts(provinceid){
+		$http.get(API + 'districts/findby?provinceid='+provinceid)
+		.then(function (response) {
+			$scope.districts = response.data;
+			$timeout(function(){
+			     $('.selectpicker').selectpicker('refresh');
+			},1)
+		});
+	}
+	
+	function getWards(districtid){
+		$http.get(API + 'wards/findbydistrict?districtid='+districtid)
+		.then(function (response) {
+			$scope.wards = response.data;
+			$timeout(function(){
+			     $('.selectpicker').selectpicker('refresh');
+			},1)
+		});
+	}
+	
+	$scope.getId = function(state) {
+		
+		$(".dropdown-menu").on('click',function(e){
+			this.classList.remove("show");
+		});
+		
+		switch(state) {
+		  case 'province':
+			$scope.tinh = JSON.parse($scope.selectedProvince);
+			getDistricts($scope.tinh.provinceid);
+			$scope.diaChi = `${$scope.tinh.name}`;
+		    break;
+		  case 'district':
+			$scope.quan = JSON.parse($scope.selectedDistrict);
+			getWards($scope.quan.districtid);
+			$scope.diaChi += `, ${$scope.quan.name}`;
+		    break;
+		  case 'ward':
+			  $scope.phuong = JSON.parse($scope.selectedWard);
+			  $scope.diaChi += `, ${$scope.phuong.name}`;
+			  break;
+		  default:
+		    break;
+		}
+		
+		
+	}
+	
+	$scope.thayDoiChiTiet = function(){
+		$scope.diaChi = `${$scope.chiTiet}, ${$scope.tinh.name}, ${$scope.quan.name}, ${$scope.phuong.name}`;
+		$scope.myForm = false;
+		if(!$scope.chiTiet){
+			$scope.myForm = true;
+		}
+	}
 	
 	
 });

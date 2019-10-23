@@ -25,6 +25,7 @@ app.controller('ProductsController', function($scope, $http,$timeout, API){
 
 
 	$scope.modal = function (state, id) {
+		
 		$scope.state = state;
 		$scope.product = null;
 
@@ -35,13 +36,26 @@ app.controller('ProductsController', function($scope, $http,$timeout, API){
 				$scope.anhAvatar = '';
 				console.log($scope.anhAvatar);
 				$scope.frmTitle = 'Thêm sản phẩm';
+				$scope.giagoc = {
+						id: null,
+						root: 1
+					}
+
+				$scope.giaban = {
+					id: null,
+					root: 0
+				}
+				$scope.anGiaBan = true;
+				
 				break;
 			case "edit":
+				console.log(APIResource + id);
 				method = "PUT";
 				$scope.frmTitle = 'Sửa thông tin sản phẩm';
+				$scope.anGiaBan = false;
 				$http.get(APIResource + id)
 				.then(function (res) {
-					//console.log(res.data.product.origin.id);
+					console.log(res);
 					$scope.product = res.data.product;
 					$scope.giagoc.id = res.data.product.prices[0].id;
 					$scope.giagoc.unitPrice = res.data.product.prices[0].unitPrice;
@@ -52,7 +66,7 @@ app.controller('ProductsController', function($scope, $http,$timeout, API){
 					$scope.anhAvatar = '/picture/'+$scope.product.avatar;
 				})
 				.catch(function (err) {
-					alert("Không tìm thấy");
+					//alert("Không tìm thấy");
 				});
 
 			break;
@@ -64,11 +78,32 @@ app.controller('ProductsController', function($scope, $http,$timeout, API){
 		jQuery("#myModal").modal('show');
 	}
 	
+	var idProductImg = 0;
+	
+	$scope.modalImg = function (state, id) {
+		idProductImg = id;
+		jQuery("#modalImg").modal('show');
+	}
+	
+	
+	
 	jQuery("#submit").on("click", function(event){
 		event.preventDefault();
+		
+		jQuery('#description').each(function () {
+	           for(var description in CKEDITOR.instances)
+	                CKEDITOR.instances[description].updateElement();
+        });
+        
+		
 		delete $scope.product["priceNew"];delete $scope.product["price"];delete $scope.product["createdAt"];
-		delete $scope.giaban["createdAt"];delete $scope.product["priceApply"];
-		$scope.product.status = 1;
+		delete $scope.giaban["createdAt"];delete $scope.product["priceApply"];delete $scope.product["sold"];
+		$scope.product.status = 0;
+		
+		if($scope.anGiaBan){
+			$scope.giaban.unitPrice = $scope.giagoc.unitPrice;
+		}
+		
 		$scope.product.prices = [
 			$scope.giagoc,
 			$scope.giaban
@@ -80,7 +115,7 @@ app.controller('ProductsController', function($scope, $http,$timeout, API){
 		console.log(model);
 		var formData = new FormData();
 
-		//nếu có ảnh thì append
+//		nếu có ảnh thì append
 		if($('#image').get(0).files[0]){
 			formData.append('file', $('#image').get(0).files[0]);
 		}
@@ -96,6 +131,7 @@ app.controller('ProductsController', function($scope, $http,$timeout, API){
 		 		contentType: false,
 		 		cache: false,
 		 		success: function (res) {
+		 			swal("Thành công", "", "success");
 		 			jQuery("#myModal").modal('hide');
 		 			AjaxRenderData();
 		 			$scope.giagoc = {id: null,root: 1}
@@ -186,5 +222,65 @@ app.controller('ProductsController', function($scope, $http,$timeout, API){
 		$scope.giaban.id = null;
 	}
 	
+	
+	jQuery("#frmImg").on("submit", function(event){
+		var formData = new FormData(this);
+		console.log(idProductImg);
+        formData.append("productId",idProductImg);
+        if(jQuery("#imgs").val() != ""){
+        	 jQuery.ajax({
+                url: "/products/mutiple-image",
+                method: "POST",
+                data:formData,
+                contentType: false,
+                cache: false,
+                enctype: 'multipart/form-data',
+                processData: false,
+                success: function(response)
+                {
+                	jQuery("#imgs").val('').clone(true);
+                      
+                },
+                error: function(response)
+                {
+                    console.log(response);
+                    alert("Thao tác bị lỗi");
+                }
+
+          });
+        }
+        else
+        {
+         $scope.warning=true;
+        }
+    });
+	
+	$scope.thayDoiSL = function(id,$index,thayDoi){
+
+		check = $scope.products[$index].quantity - $scope.products[$index].sold - thayDoi;
+		
+		let slGoc = $scope.products[$index].quantity - check;
+		
+		let data = {
+			id: id,
+			quantity: slGoc = slGoc || 0
+		}
+
+		if(slGoc > 0){
+			
+			let SLTon = slGoc - $scope.products[$index].sold;
+			
+			$http.post(APIResource+"thay-doi-gia", data )
+			.then(function (res) {
+				AjaxRenderData();
+				swal("Thay đổi thành công", `số lượng còn lại: ${SLTon}`, "success");
+		 	}).catch(function (err) {
+		 		console.log(err);
+		 		alert('error');
+		 	});
+		}
+		
+
+	}
 	
 });

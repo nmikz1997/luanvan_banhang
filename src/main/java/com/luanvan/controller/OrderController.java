@@ -1,13 +1,18 @@
 package com.luanvan.controller;
 
+import java.io.IOException;
+import java.time.MonthDay;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,10 +21,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.luanvan.dto.request.CreateGroupOrder;
 import com.luanvan.dto.request.CreateOrderDTO;
-import com.luanvan.dto.response.OrderCustomerDTO;
+import com.luanvan.dto.response.ChartOrderInf;
+import com.luanvan.dto.response.Item;
+import com.luanvan.dto.response.ListExchange;
 import com.luanvan.dto.response.OrderDTO;
 import com.luanvan.dto.response.OrderGroupCustomerDTO;
 import com.luanvan.dto.response.OrderGroupDTO;
@@ -34,6 +43,9 @@ public class OrderController {
 	
 	private OrderService orderService;
 	private OrderDetailService orderDetailService;
+	//static final String URL_EMPLOYEES = "https://fcsapi.com/api/forex/converter?pair1=VND&pair2=USD&amount=";
+	//static final String access_key = "&access_key=mObVXMNtWVlH8iXjSA6apwKw8ufNsbxIQ7f3zF3myzATXPAPQl";
+	static final String dongABank = "http://www.dongabank.com.vn/exchange/export";
 	
 	@Autowired
 	public OrderController(OrderService orderService,OrderDetailService orderDetailService) {
@@ -86,5 +98,40 @@ public class OrderController {
 	@GetMapping("order-group/{id}")
 	public OrderGroupCustomerDTO findByOrderGroup(@PathVariable Long id){
 		return orderService.findByOrderGroup(id);
+	}
+	
+	@GetMapping("store/{storeId}/{year}")
+	public List<Entry<YearMonth, Integer>> chartOrder(@PathVariable Long storeId, @PathVariable int year){
+		return orderService.chartByStoreId(storeId,year);
+	}
+	
+	@GetMapping("store/{storeId}/{year}/{month}")
+	public List<Entry<MonthDay, Integer>> chartOrder(@PathVariable Long storeId, @PathVariable int year, @PathVariable int month){
+		return orderService.chartByStoreIdForMonth(storeId,year,month);
+	}
+	@GetMapping("chart-circle")
+	public List<ChartOrderInf> chartCircle(@AuthenticationPrincipal CustomUserDetails user) {
+		return orderService.chartCircle(user.getStoreId());
+	}
+	
+	@DeleteMapping("khach-hang-huy/{groupId}")
+	public void customerDelete(@PathVariable Long groupId) {
+		orderService.deleteGroup(groupId);
+	}
+	
+	@GetMapping("exchange")
+	public Item tyGiaNgoaiTe() throws IOException{
+		RestTemplate restTemplate = new RestTemplate();
+		String response = restTemplate.getForObject(dongABank, String.class);
+		response = response.replace( "(" , "").replace( ")", "");
+		ObjectMapper mapper = new ObjectMapper();
+		ListExchange listConverted = mapper.readValue(response,ListExchange.class);
+		
+		for (Item item : listConverted.getItems()) {
+			if(item.getType().equals("USD")) {
+				return item;
+			}
+		}
+		return null;
 	}
 }

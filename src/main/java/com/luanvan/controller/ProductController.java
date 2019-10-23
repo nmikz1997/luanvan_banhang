@@ -6,10 +6,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,7 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.luanvan.dto.response.CartItemsDTO;
 import com.luanvan.dto.response.ProductDTO;
 import com.luanvan.dto.response.ProductDetailDTO;
-import com.luanvan.dto.response.ProductSearchDTO;
+import com.luanvan.model.CustomUserDetails;
 import com.luanvan.model.Product;
 import com.luanvan.service.ProductService;
 
@@ -125,6 +129,17 @@ public class ProductController {
 		return null;
 	}
 	
+	@PostMapping("san-pham-da-xem")
+	public List<ProductDTO> listProductSeen(@RequestBody List<CartItemsDTO> req){
+		List<Long> ids = new ArrayList<Long>();
+		req.forEach(product ->{
+			ids.add(product.getId());
+		});
+		
+		List<ProductDTO> dataCart = productService.productsInIds(ids);
+		return dataCart;
+	}
+	
 	@PutMapping
 	@ResponseStatus(HttpStatus.OK)
 	public void update(@RequestBody Product product) {
@@ -137,6 +152,20 @@ public class ProductController {
 		productService.delete(id);
 	}
 	
-
+	@PostMapping("/mutiple-image")
+	@ResponseBody
+	@Transactional
+	public ResponseEntity<?> uploadFile(
+			@AuthenticationPrincipal CustomUserDetails auth,
+			@RequestParam(value = "productId") int productId,
+			@RequestParam(value = "imgs") MultipartFile[] uploadfiles) throws IOException {
+		Long storeId = auth.getStoreId();
+		return productService.uploadImage(storeId,productId,uploadfiles);
+	}
+	
+	@PostMapping("thay-doi-gia")
+	public void thayDoiGia(@RequestBody Product product) {
+		productService.doiGia(product);
+	}
 
 }

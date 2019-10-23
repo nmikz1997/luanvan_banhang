@@ -1,9 +1,11 @@
 package com.luanvan.dto.response;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import com.luanvan.model.Customer;
+import com.luanvan.model.OrderStatus;
 import com.luanvan.model.PaymentType;
 
 import lombok.Getter;
@@ -20,6 +22,7 @@ public class OrderGroupDTO {
 	@Setter @Getter
 	public static class Order{
 		private Integer total;
+		private OrderStatus orderStatus;
 	}
 
 	public Integer getTotalGroup() {
@@ -28,6 +31,11 @@ public class OrderGroupDTO {
 			totalGroup += order.getTotal();
 		}
 		return totalGroup;
+	}
+	public List<OrderStatus> getOrderStatus() {
+		List<OrderStatus> orderStatus = new ArrayList<OrderStatus>();
+		orders.forEach(order -> orderStatus.add(order.getOrderStatus()));
+		return orderStatus;
 	}
 	
 	

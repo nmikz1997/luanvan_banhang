@@ -1,6 +1,36 @@
-var app = angular.module('luanvan',['datatables']).constant('API', 'http://localhost:8080/');
+var app = angular.module('luanvan',["ngCkeditor","datatables"]).constant('API', 'http://localhost:8080/');
 
 var homepage = angular.module('homepage',['ngCart','ngSanitize']).constant('API', 'http://localhost:8080/');
+
+
+homepage.config(['$locationProvider', function($locationProvider) {
+    $locationProvider.html5Mode({ enabled: true, requireBase: false, rewriteLinks: false });
+}]);
+
+app.directive('ckEditor', function () {
+	  return {
+	    require: '?ngModel',
+	    link: function (scope, elm, attr, ngModel) {
+	      var ck = CKEDITOR.replace(elm[0]);
+	      if (!ngModel) return;
+	      ck.on('instanceReady', function () {
+	        ck.setData(ngModel.$viewValue);
+	      });
+	      function updateModel() {
+	        scope.$apply(function () {
+	          ngModel.$setViewValue(ck.getData());
+	        });
+	      }
+	      ck.on('change', updateModel);
+	      ck.on('key', updateModel);
+	      ck.on('dataReady', updateModel);
+
+	      ngModel.$render = function (value) {
+	        ck.setData(ngModel.$viewValue);
+	      };
+	    }
+	};
+});
 
 homepage.directive("rateYo", function() {
 	return {

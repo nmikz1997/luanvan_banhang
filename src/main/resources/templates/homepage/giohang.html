@@ -3,6 +3,7 @@
 <head>
   <title>Cuộc sống xanh</title>
   <section layout:fragment="css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.10/css/bootstrap-select.min.css" />
   	<style type="text/css">
 		.quantity {
 			float: left;
@@ -78,24 +79,40 @@
 		}
 		.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
 		    color: #fff;
-		    background-color: #9eacd9;
+		    background-color: #75c38fbf;
+		}
+		#panel {
+		  display: none;
+		}
+		.padd{
+			margin-right: 0;
+			margin-left: 0;
+			padding:5px 0px;
 		}
 	</style>
   </section>
 </head>
 <body ng-controller="ShoppingCartController">
+
   <section layout:fragment="content" class="bg">
   	<div class="container">
-  	<div class="row">
+  	<div ng-if="total == 0" class="row">
+  		<div class="alert alert-danger" style="margin-top: 12px; width:98.8%">Giỏ hàng không có sản phẩm. <a href="/">Tiếp tục mua sắm</a>.</div>
+  	</div>
+  	<div ng-if="total == 0" style="height:300px;"></div>
+  	<div ng-show="total > 0" class="row">
 		<div class="card shopping-cart col-md-7">
 			<div class="card-body">
+			<div sec:authorize="isAuthenticated()" ng-hide="true">{{authen = true}}</div>
+  			<div sec:authorize="!isAuthenticated()" ng-hide="true">{{authen = false}}</div>
+	
 				<div ng-repeat="item in items">
 				<div class="row">
 					<div class="col-12 col-sm-12 col-md-2 text-center">
 						<img class="img-responsive" ng-src="/picture/{{item.avatar}}" alt="prewiew" width="120" height="80">
 					</div>
 					<div class="col-12 text-sm-center col-sm-12 text-md-left col-md-3">
-						<h5 class="product-name"><strong>{{item.name}}</strong></h5>
+						<h6 class="product-name"><strong>{{item.name}}</strong></h6>
 						<h5>
 							<small>Cung cấp bởi: <a href="#">{{item.store.name}}</a></small><br>
 							<small ng-if="(item.quantity - (item.sold+item.soLuongMua)) >= 0" >Còn lại: {{item.quantity - item.sold}}</small>
@@ -133,25 +150,26 @@
 			</div>-->
 			<article class="card">
 			<div class="card-body">
-			<p 	 sec:authorize="!isAuthenticated()" class="alert alert-success">Bạn cần đăng nhập để thanh toán</p>	
+			<p 	ng-init="dangNhap = true" sec:authorize="!isAuthenticated()" class="alert alert-success">Bạn cần đăng nhập để thanh toán</p>	
 			
 			<div class="col-md-8">
 				<dl class="dlist-align">
 				  <dt>Tạm tính: </dt>
 				  <dd class="text-right h5 b">{{total  | currency:"":0}} vnđ </dd>
 				</dl>
+				<br>
 				<dl class="dlist-align">
 				  <dt>Tổng tiền: </dt>
 				  <dd class="text-right h5 b"> {{total  | currency:"":0}} vnđ </dd>
 				</dl>
 			</div>
-			
+			<hr>
 			<div sec:authorize="isAuthenticated()">
 			<ul class="nav bg radius nav-pills nav-fill mb-3" role="tablist">
 				<li class="nav-item">
 					<a class="nav-link active show" data-toggle="pill" href="#nav-tab-card">
-					<i class="fa fa-credit-card"></i> Credit Card</a></li>
-				<li class="nav-item">
+					<i class="fa fa-credit-card"></i> Khi nhận hàng</a></li>
+				<li class="nav-item" ng-click="renderPaypalButton()">
 					<a class="nav-link" data-toggle="pill" href="#nav-tab-paypal">
 					<i class="fab fa-paypal"></i>  Paypal</a></li>
 			</ul>
@@ -159,68 +177,78 @@
 			<div class="tab-pane fade active show" id="nav-tab-card">
 				<form role="form">
 				<div class="form-group">
-					<label for="username">Địa chỉ:</label>
-					<input type="text" class="form-control" name="username" placeholder="" required="">
-				</div> <!-- form-group.// -->
-			
-				<div class="form-group">
-					<label for="cardNumber">Địa chỉ</label>
-					<div class="input-group">
-						<div class="input-group-append">
-							<span class="input-group-text text-muted">
-								+84
-							</span>
+					<label for="username">Thông tin giao hàng: <a href="javascript:void(0)" id="flip">Thay đổi</a></label>
+					<div id="panel">
+						<div class="row padd">
+							<label class="col-4">Tỉnh thành:</label>
+							<select class="col-8 selectpicker form-control" id="tinh" data-size="5" data-style="btn-light"
+									data-live-search="true" 
+									ng-model="selectedProvince" 
+									ng-change="getId('province')">
+								<option data-tokens="ketchup mustard" 
+										ng-repeat="province in provinces" 
+										ng-selected="selectedProvince == province" 
+										value="{{province}}">
+									{{province.name}}
+								</option>
+							</select>
+						</div>	
+						<div class="row padd">
+							<label class="col-4">Quận huyện:</label>
+							<select class="col-8 selectpicker form-control" id="quan" data-size="5" data-style="btn-light"
+									data-live-search="true" 
+									ng-model="selectedDistrict" 
+									ng-change="getId('district')">
+								<option data-tokens="ketchup mustard" 
+										ng-repeat="district in districts"
+										ng-selected="selectedDistrict == district" 
+										value="{{district}}">
+									{{district.name}}
+								</option>
+							</select>
 						</div>
-						<input type="text" class="form-control" name="cardNumber" placeholder="">
+						<div class="row padd">
+							<label class="col-4">Phường xã:</label>
+							<select class="col-8 selectpicker form-control" id="phuong" data-style="btn-light"
+									data-size="5"
+									data-live-search="true"
+									ng-model="selectedWard"
+									ng-change="getId('ward')">
+								<option 
+									data-tokens="ketchup mustard" 
+									ng-repeat="ward in wards" 
+									value="{{ward}}">
+									{{ward.name}}
+								</option>
+							</select>
+						</div>
+						<div class="row padd">
+							<label class="col-4">Địa chỉ</label>
+							<input type="text" ng-model="chiTiet" name="username" ng-change="thayDoiChiTiet()" class="form-control padd col-8" placeholder="">
+						</div>
+						<div class="row padd">
+							<label class="col-4">Số điện thoại</label>
+							<input type="text" name="username" ng-model="sdt" pattern="(03[2-9]|05[6|8|9]|07[0|6-9]|08[1-9]|09[^5])+([0-9]{7})\b" class="form-control padd col-8" placeholder="">
+						</div>
 					</div>
+					<textarea type="text" class="form-control" ng-model="diaChi" name="username" placeholder="" readonly="true"></textarea>
 				</div> <!-- form-group.// -->
-			
-				<div class="row">
-				    <div class="col-sm-8">
-				        <div class="form-group">
-				            <label><span class="hidden-xs">Expiration</span> </label>
-				        	<div class="input-group">
-				        		<input type="number" class="form-control" placeholder="MM" name="">
-					            <input type="number" class="form-control" placeholder="YY" name="">
-				        	</div>
-				        </div>
-				    </div>
-				    <div class="col-sm-4">
-				        <div class="form-group">
-				            <label data-toggle="tooltip" title="" data-original-title="3 digits code on back side of the card">CVV <i class="fa fa-question-circle"></i></label>
-				            <input type="number" class="form-control" required="">
-				        </div> <!-- form-group.// -->
-				    </div>
-				</div> <!-- row.// -->
-					<button class="subscribe btn btn-primary btn-block" type="button"> Confirm  </button>
+					<button class="subscribe btn btn-success btn-block" ng-disabled="myForm" ng-click="thanhToan()" type="submit"> Tiến hành đặt hàng  </button>
 				</form>
 			</div> <!-- tab-pane.// -->
 			<div class="tab-pane fade" id="nav-tab-paypal">
-			<p>Paypal is easiest way to pay online</p>
-			<p>
+			<p>Thanh toán dễ dàng với paypal</p>
 			<script src="https://www.paypalobjects.com/api/checkout.js"></script>
-            <div id="paypal-button" class="hidden"></div>
-			</p>
-			<p><strong>Note:</strong> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-			tempor incididunt ut labore et dolore magna aliqua. </p>
+			<form name="myForm" role="form">
+				<div class="form-group">
+					<label for="username">Địa chỉ:</label>
+					<textarea type="text" rows="2" class="form-control" ng-model="diaChi" name="username" placeholder=""></textarea>
+				</div> <!-- form-group.// -->
+					<div id="paypal-button" class=""></div>
+			</form>
+            
+			<p><strong>Note:</strong> Số tiền sẽ được chuyển về trung tâm và thanh toán lại cho các cửa hàng. Quý khách không cần thanh toán khi nhận kiện hàng. </p>
 			</div>
-			<div class="tab-pane fade" id="nav-tab-bank">
-			<p>Bank accaunt details</p>
-			<dl class="param">
-			  <dt>BANK: </dt>
-			  <dd> THE WORLD BANK</dd>
-			</dl>
-			<dl class="param">
-			  <dt>Accaunt number: </dt>
-			  <dd> 12345678912345</dd>
-			</dl>
-			<dl class="param">
-			  <dt>IBAN: </dt>
-			  <dd> 123456789</dd>
-			</dl>
-			<p><strong>Note:</strong> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-			tempor incididunt ut labore et dolore magna aliqua. </p>
-			</div> <!-- tab-pane.// -->
 			</div> <!-- tab-content .// -->
 			</div>
 			</div> <!-- card-body.// -->
@@ -231,6 +259,7 @@
   </section>
   <section layout:fragment="script">
   <script th:src="@{/app/shopping-cart.js}"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.10/js/bootstrap-select.min.js"></script>
   </section>
 </body>
 </html>

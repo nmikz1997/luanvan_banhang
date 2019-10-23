@@ -8,9 +8,10 @@ homepage.controller('ProductDetailController', function($scope,$timeout, $http, 
 	
 	$http.get(API + 'products'+thisURL).then(function(res){
 		$scope.product = res.data;
+		$scope.anhChinh = res.data.avatar;
 	}).then(function(){
 		document.getElementById('show').style.display= "block";
-		
+		$(".bg-loadding").css("display","none");
 		jQuery(function () {
 		 	jQuery("#rateYoProduct").rateYo({
 		 		starWidth: "20px",
@@ -28,6 +29,43 @@ homepage.controller('ProductDetailController', function($scope,$timeout, $http, 
 	}
 	
 	var items = JSON.parse(localStorage.getItem("items"));
+	var productSeen = JSON.parse(localStorage.getItem("seen"));
+	
+	console.log(productSeen);
+	
+	if(productSeen){
+		
+		$http.post('/products/san-pham-da-xem',productSeen)
+		.then(function(res){
+			$scope.sanPhamDaXem = res.data;
+			console.log($scope.sanPhamDaXem);
+		}).then(function(){
+			let check = 0;
+			for(let i = 0; i < productSeen.length; i++){
+				if(productSeen[i].id == productId){
+					break;
+				}else{
+					if(i == productSeen.length - 1 && productSeen.length < 3){
+						productSeen.push({id:productId});
+						localStorage.setItem("seen", JSON.stringify(productSeen));
+					}
+					else if(i == productSeen.length - 1)
+					{
+						productSeen.unshift({id:productId});
+						productSeen.pop();
+						localStorage.setItem("seen", JSON.stringify(productSeen));
+					}
+				}
+			};
+		});
+	}else{
+		let productSeen = [];
+		productSeen.push({id:productId});
+		localStorage.setItem("seen", JSON.stringify(productSeen));
+	}
+	
+	
+	
 	resetCart();
 	$scope.addToCart = function(id){
 		var check = false;
@@ -67,21 +105,22 @@ homepage.controller('ProductDetailController', function($scope,$timeout, $http, 
 			product: {id: productId}
 		}
 		
-		$http.post('/questions',question).then(function(res){
-			console.log(res);
+		$http.post('/questions',question)
+		.then(function(res){
+			//console.log(res);
 		}).catch(function(err){
-			console.log(err)
+			//console.log(err)
 		})
 		
 	}
 	
 	$http.get('/questions/product/'+productId).then(function(res){
-		console.log(res);
+		//console.log(res);
 		$scope.questions = res.data;
 	})
 	
 	$http.get('/reviews/product/'+productId).then(function(res){
-		console.log(res);
+		//console.log(res);
 		$scope.reviews = res.data;
 	})
 	
