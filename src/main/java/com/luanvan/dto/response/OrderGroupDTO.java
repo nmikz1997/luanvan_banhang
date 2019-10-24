@@ -1,6 +1,5 @@
 package com.luanvan.dto.response;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -17,12 +16,24 @@ public class OrderGroupDTO {
 	@Setter @Getter private Date createdAt;
 	@Setter @Getter private PaymentType paymentType;
 	@Setter @Getter private Customer customer;
-	@Setter private List<Order> orders;
+	@Setter @Getter private List<Order> orders;
 	
 	@Setter @Getter
 	public static class Order{
 		private Integer total;
 		private OrderStatus orderStatus;
+		private List<OrderDetail> ordersDetail;
+		
+		@Setter @Getter
+		public static class OrderDetail{
+			
+			private Product product;
+			
+			@Setter @Getter
+			public static class Product{
+				private String avatar;
+			}
+		}
 	}
 
 	public Integer getTotalGroup() {
@@ -31,11 +42,6 @@ public class OrderGroupDTO {
 			totalGroup += order.getTotal();
 		}
 		return totalGroup;
-	}
-	public List<OrderStatus> getOrderStatus() {
-		List<OrderStatus> orderStatus = new ArrayList<OrderStatus>();
-		orders.forEach(order -> orderStatus.add(order.getOrderStatus()));
-		return orderStatus;
 	}
 	
 	

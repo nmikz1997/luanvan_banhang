@@ -23,6 +23,18 @@
 		.page-link{
 			color:#57b846;
 		}
+		.content {
+			overflow: hidden;
+			word-wrap: break-word;
+			text-overflow: ellipsis;
+			line-height: 18px;
+		}
+		.less {
+			max-height: 154px;
+		}
+		.list-group-item {
+			border: none;
+		}
 	</style>
 </section>
 
@@ -155,9 +167,10 @@
 							<h6 class="title">Vật liệu  </h6>
 						</header>
 						<div class="filter-content">
-							<div class="list-group list-group-flush">
+							<div class="list-group list-group-flush content" ng-class="{ less:hidden }">
 							  <a href="javascript:void(0)" ng-repeat="material in materials" ng-click="redirect('material',material.id)" class="list-group-item">{{material.name}}</a>
 							</div>
+							<a href="javascript:void(0)" class="list-group-item text-center" ng-click="hidden = !hidden"><strong>{{hidden ? 'Xem thêm' : 'Ẩn bớt'}}</strong></a>
 						</div>
 					</article>
 					<article class="card-group-item">
@@ -165,9 +178,10 @@
 							<h6 class="title">Xuất xứ  </h6>
 						</header>
 						<div class="filter-content">
-							<div class="list-group list-group-flush">
+							<div class="list-group list-group-flush content" ng-class="{ less:hiddenOrigin }">
 							  <a href="javascript:void(0)" ng-repeat="origin in origins" ng-click="redirect('origin',origin.id)" class="list-group-item">{{origin.name}}</a>
 							</div>
+							<a href="javascript:void(0)" class="list-group-item text-center" ng-click="hiddenOrigin = !hiddenOrigin"><strong>{{hiddenOrigin ? 'Xem thêm' : 'Ẩn bớt'}}</strong></a>
 						</div>
 					</article>
 					<article class="card-group-item">
@@ -315,7 +329,8 @@ homepage.controller('SearchController', function($scope,$http,$location,API){
 		timKiemNangCao();
 	};
 	
-	
+	$scope.hidden = true;
+	$scope.hiddenOrigin = true;
 	/*$('#pagination-demo').twbsPagination({
 		totalPages: 5,
 		startPage: 1,

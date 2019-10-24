@@ -115,8 +115,9 @@ public class OrderController {
 	}
 	
 	@DeleteMapping("khach-hang-huy/{groupId}")
-	public void customerDelete(@PathVariable Long groupId) {
-		orderService.deleteGroup(groupId);
+	public void customerDelete(@PathVariable Long groupId, @AuthenticationPrincipal CustomUserDetails customer) {
+		Long customerId = customer.getCustomerId();
+		orderService.deleteGroup(groupId,customerId);
 	}
 	
 	@GetMapping("exchange")

@@ -43,6 +43,7 @@
 							<div class="card-body">
 								<p>Tổng giá trị: {{obj.totalGroup  | currency:"":0}} đ</p>
 								<p>Hình thức thanh toán: {{obj.paymentType.name}}</p>
+								<p>Ngày mua: {{obj.createdAt | date:"MM/dd/yyyy HH:mm" :'UTC'}}</p>
 								<p ng-hide="true">{{myVar = 0}}</p>
 								<p ng-if="obj.paymentType.id == 2">Đã thanh toán</p>
 								<p ng-if="myVar == 1">Chưa thanh toán</p>
@@ -66,7 +67,7 @@
 											<p>Số lượng: {{dt.quantity}}</p>
 											<p ng-if="!dt.promotion">Giá bán: {{dt.price.unitPrice  | currency:"":0}}đ</p>
 											<p ng-if="dt.promotion">Giá bán: {{dt.price.unitPrice*(dt.promotion.saleOff/100)  | currency:"":0 }}đ</p>
-											<p>Thành tiền: {{ dt.quantity*dt.price.unitPrice }}đ</p>
+											<p>Thành tiền: {{ dt.quantity*dt.price.unitPrice | currency:"":0 }}đ</p>
 										</div>
 										<div ng-if="order.orderStatus.id == 5" class="col-md-2 d-flex justify-content-center align-items-center">
 											<button class="btn btn-outline-success" ng-click="modal(order.id,dt)" >Đánh giá</button>
@@ -78,7 +79,9 @@
 								  <strong>Tình trạng: {{order.orderStatus.name}}</strong>
 							      <strong class="float-right">Tổng: {{order.total | currency:"":0}}đ</strong>
 							    </div>
+							    
 							</div>
+							<button ng-if="checkHuy" class="btn btn-outline-danger col-md-4 offset-md-4" ng-click="huy(obj.id)" >Hủy</button>
 						</div>
 					</div>
 				</div>		
@@ -139,6 +142,7 @@
 	</section>
 </section>
 <section layout:fragment="script">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
 <script>
 	
 homepage.controller('OrderDetailCustomerController', function($scope,$http,API){
@@ -146,14 +150,23 @@ homepage.controller('OrderDetailCustomerController', function($scope,$http,API){
 	var thisPath = window.location.pathname;
 	var id = thisPath.substring(thisPath.lastIndexOf("/")+1);
 	
-	$http.get('/orders/order-group/'+id)
-	.then(function (res) {
-		console.log(res);
-		$scope.obj = res.data;
-	})
-	.catch(function (err) {
-		console.log(err);
-	});
+	function render(){
+		$http.get('/orders/order-group/'+id)
+		.then(function (res) {
+			$scope.checkHuy = true;
+			for( let i=0; i < res.data.orders.length;i++){
+				if(res.data.orders[i].orderStatus.id > 1){
+					$scope.checkHuy = false;
+				};
+			};
+			$scope.obj = res.data;
+		})
+		.catch(function (err) {
+			console.log(err);
+		});
+	}
+	render();
+	
 	
 	var order = null;
 	var reviewId = null;
@@ -193,6 +206,35 @@ homepage.controller('OrderDetailCustomerController', function($scope,$http,API){
 			console.log(res);
 		})
 		
+	}
+	
+	$scope.huy = function(id){
+		
+		Swal.fire({
+			  title: 'Bạn có chắc muốn hủy hóa đơn?',
+			  text: "",
+			  type: 'warning',
+			  showCancelButton: true,
+			  confirmButtonColor: '#3085d6',
+			  cancelButtonColor: '#d33',
+			  confirmButtonText: 'Hủy hóa đơn!'
+			}).then((result) => {
+			  if (result.value) {
+			    Swal.fire(
+			      'Đã hủy hóa đơn!',
+			      '',
+			      'success'
+			    )
+			    $http.delete(`/orders/khach-hang-huy/${id}`).then(function(res){
+					render();
+				})
+			  }
+			})
+		
+		/*var isConfirmDelete = confirm('Bạn có chắc muốn hủy đơn hàng này không?');
+		if (isConfirmDelete) {
+			
+		}*/
 	}
 	
 });

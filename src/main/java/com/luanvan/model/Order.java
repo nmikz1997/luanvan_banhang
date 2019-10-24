@@ -39,6 +39,9 @@ public class Order{
 	@NotNull 
 	private String address;
 	
+//	@NotNull
+//	private String phoneNumber;
+	
 	@CreatedDate
 	@Column(updatable = false)
 	private Date createdAt;

@@ -6,12 +6,10 @@ homepage.controller('ShoppingCartController', function($scope, $http,$timeout, A
 	$("#flip").click(function(){
 	    $("#panel").slideToggle("slow");
 	});
-	
-	$scope.selectedProvince = '{"provinceid":"01TTT","name":"Thành phố Hà Nội"}';
-	
+
 	var thisURL = window.location.pathname;
 	var cart = JSON.parse(localStorage.getItem("items"));
-	//$scope.diaChi = "116A, đường 3/2, phường Xuân Khánh, quận Ninh Kiều, TP Cần Thơ";
+	$scope.diaChi = JSON.parse(localStorage.getItem("infoShip"));
 	
 	if(cart != null) {
 		refreshData();
@@ -77,6 +75,9 @@ homepage.controller('ShoppingCartController', function($scope, $http,$timeout, A
 		paid(1);
 	}
 	function paid(type){
+		
+		localStorage.setItem("infoShip", JSON.stringify($scope.diaChi));
+		
 		$scope.thanhtoan = true;
 		var listOrders = [];
 		var grouped = groupBy($scope.items, "store");
@@ -270,11 +271,15 @@ homepage.controller('ShoppingCartController', function($scope, $http,$timeout, A
 		
 	}
 	
+	if($scope.diaChi){
+		$scope.disabled = false;
+	}
+	
 	$scope.thayDoiChiTiet = function(){
-		$scope.diaChi = `${$scope.chiTiet}, ${$scope.tinh.name}, ${$scope.quan.name}, ${$scope.phuong.name}`;
-		$scope.myForm = false;
+		$scope.diaChi = `${$scope.chiTiet}, ${$scope.phuong.name}, ${$scope.quan.name}, ${$scope.tinh.name}`;
+		
 		if(!$scope.chiTiet){
-			$scope.myForm = true;
+			$scope.disabled = true;
 		}
 	}
 	

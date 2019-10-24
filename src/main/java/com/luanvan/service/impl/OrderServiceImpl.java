@@ -242,13 +242,20 @@ public class OrderServiceImpl implements OrderService{
 	}
 
 	@Override
-	@Transactional
-	public void deleteGroup(Long groupId) {
-		List<Order> orders = orderRepository.findByOrderGroupId(groupId);
-		OrderStatus status = orderStatus.getOne((long)6);
-		orders.stream().forEach(order ->{
-			order.setOrderStatus(status);
-		});
-		orderRepository.saveAll(orders);
+	@Transactional(rollbackOn=RollbackException.class)
+	public void deleteGroup(Long groupId,Long customerId) {
+		OrderGroup orderGroup = orderGroupRepository.findById(groupId).get();
+		
+		if(orderGroup.getCustomer().getId() != customerId) {
+			throw new RollbackException("Không phải bạn");
+		}else {
+			List<Order> orders = orderRepository.findByOrderGroupId(groupId);
+			OrderStatus status = orderStatus.getOne((long)6);
+			
+			orders.stream().forEach(order ->{
+				order.setOrderStatus(status);
+			});
+			orderRepository.saveAll(orders);
+		}
 	}
 }

@@ -32,19 +32,21 @@
 		                      <th>Mã đơn hàng</th>
 		                      <th>Ngày mua</th>
 		                      <th>Tổng giá trị</th>
-		                      <th>Trạng thái đơn hàng</th>
-		                      <th></th>
+		                      <th>Sản phẩm</th>
 		                    </tr>
 		                  </thead>
 		                  <tbody>
 		                    <tr ng-repeat = "obj in data">
-		                      <td><a th:href="@{chi-tiet-don-hang/{{obj.id}} }"> HD-{{ obj.id }}	</a></td>
-		                      <td>	{{ obj.createdAt | date:"MM/dd/yyyy HH:mm" :'UTC' }}	</td>
-		                      <td>	{{ obj.totalGroup }}		</td>
-		                      <td>
-		                      	<p ng-repeat="status in obj.orderStatus">Kiện {{$index+1}}: {{status.name}}</p>
+		                      <td><a th:href="@{chi-tiet-don-hang/{{obj.id}} }"> HD-{{ obj.id }}</a></td>
+		                      <td>{{ obj.createdAt | date:"MM/dd/yyyy HH:mm" :'UTC' }}</td>
+		                      <td>{{ obj.totalGroup | currency:"":0 }} vnđ</td>
+		                      <td style="width: 167px">
+		                      	<span ng-repeat="order in obj.orders">
+		                      		<span class="item-gallery" ng-repeat="dt in order.ordersDetail">
+		                      			<img width="70" height="70" ng-src="/picture/{{dt.product.avatar}}">
+		                      		</span>
+		                      	</span>
 		                      </td>
-		                      <td>	<button class="btn btn-outline-danger" ng-click="huy(obj.id)"> Hủy </button>	</td>
 		                    </tr>
 		                  </tbody>
 		                </table>
@@ -75,12 +77,6 @@ homepage.controller('OrderCustomerController', function($scope,$http,API){
 		$scope.data = res.data;
 	})
 	$(".bg-loadding").css("display","none");
-	
-	$scope.huy = function(id){
-		$http.delete(`/orders/khach-hang-huy/${id}`).then(function(res){
-			console.log(res);
-		})
-	}
 });
 </script>
 <script th:src="@{js/sb-admin-2.min.js}"></script>

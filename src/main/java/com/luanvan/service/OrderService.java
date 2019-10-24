@@ -45,5 +45,5 @@ public interface OrderService {
 	
 	List<ChartOrderInf> chartCircle(Long storeId);
 
-	void deleteGroup(Long groupId);
+	void deleteGroup(Long groupId, Long customerId);
 }

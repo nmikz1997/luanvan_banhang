@@ -109,7 +109,7 @@
 				<div ng-repeat="item in items">
 				<div class="row">
 					<div class="col-12 col-sm-12 col-md-2 text-center">
-						<img class="img-responsive" ng-src="/picture/{{item.avatar}}" alt="prewiew" width="120" height="80">
+						<img class="img-responsive" ng-src="/picture/{{item.avatar}}" alt="prewiew" width="80" height="80">
 					</div>
 					<div class="col-12 text-sm-center col-sm-12 text-md-left col-md-3">
 						<h6 class="product-name"><strong>{{item.name}}</strong></h6>
@@ -233,7 +233,7 @@
 					</div>
 					<textarea type="text" class="form-control" ng-model="diaChi" name="username" placeholder="" readonly="true"></textarea>
 				</div> <!-- form-group.// -->
-					<button class="subscribe btn btn-success btn-block" ng-disabled="myForm" ng-click="thanhToan()" type="submit"> Tiến hành đặt hàng  </button>
+					<button class="subscribe btn btn-success btn-block" ng-disabled="disabled" ng-click="thanhToan()" type="submit"> Tiến hành đặt hàng  </button>
 				</form>
 			</div> <!-- tab-pane.// -->
 			<div class="tab-pane fade" id="nav-tab-paypal">
