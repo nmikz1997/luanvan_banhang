@@ -28,6 +28,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -296,6 +297,9 @@ public class ProductServiceImpl implements ProductService{
 			pageable = PageRequest.of(page,4, sort);
 		}else if(filter.equalsIgnoreCase("bestStar")) {
 			Sort sort = new Sort(Sort.Direction.DESC, "avgStar");
+			pageable = PageRequest.of(page,4, sort);
+		}else if(filter.equalsIgnoreCase("bestSeller")) {
+			Sort sort = JpaSort.unsafe(Sort.Direction.DESC, "count(dt.product.id)");
 			pageable = PageRequest.of(page,4, sort);
 		}
 		

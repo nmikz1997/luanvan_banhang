@@ -1,0 +1,207 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+ 
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>A Simple Responsive HTML Email</title>
+  <style type="text/css">
+  body {margin: 0; padding: 0; min-width: 100%!important; font-size:14px}
+  img {height: auto;}
+  .content {width: 100%; max-width: 600px;}
+  .header {padding: 40px 30px 20px 30px;}
+  .innerpadding {padding: 30px 30px 30px 30px;}
+  .borderbottom {border-bottom: 1px solid #f2eeed;}
+  .subhead {font-size: 12px; color: #ffffff; font-family: sans-serif; letter-spacing: 10px;}
+  .h1, .h2, .bodycopy {color: #153643; font-family: sans-serif;}
+  .h1 {font-size: 33px; line-height: 38px; font-weight: bold;}
+  .h2 {padding: 0 0 15px 0; font-size: 24px; line-height: 28px; font-weight: bold;}
+  .bodycopy {font-size: 16px; line-height: 22px;}
+  .button {text-align: center; font-size: 18px; font-family: sans-serif; font-weight: bold; padding: 0 30px 0 30px;}
+  .button a {color: #ffffff; text-decoration: none;}
+  .footer {padding: 20px 30px 15px 30px;}
+  .footercopy {font-family: sans-serif; font-size: 14px; color: #ffffff;}
+  .footercopy a {color: #ffffff; text-decoration: underline;}
+  .custom-table {
+  border-collapse: collapse;
+  width: 100%;
+ }
+
+ .custom-table th, td {
+   text-align: left;
+   padding: 8px;
+ }
+ .banner {
+    padding: 30px 0px 30px 0px;
+ }
+ .tablepadding {
+    padding: 10px 30px 10px 30px;
+ }
+ .custom-table tr:nth-child(even){background-color: #f2f2f2}
+
+ .custom-table th {
+   background-color: #4CAF50;
+   color: white;
+ }
+  @media only screen and (max-width: 550px), screen and (max-device-width: 550px) {
+  body[yahoo] .hide {display: none!important;}
+  body[yahoo] .buttonwrapper {background-color: transparent!important;}
+  body[yahoo] .button {padding: 0px!important;}
+  body[yahoo] .button a {background-color: #e05443; padding: 15px 15px 13px!important;}
+  body[yahoo] .unsubscribe {display: block; margin-top: 20px; padding: 10px 50px; background: #2f3942; border-radius: 5px; text-decoration: none!important; font-weight: bold;}
+  }
+
+  /*@media only screen and (min-device-width: 601px) {
+    .content {width: 600px !important;}
+    .col425 {width: 425px!important;}
+    .col380 {width: 380px!important;}
+    }*/
+
+  </style>
+</head>
+
+<body yahoo bgcolor="#f6f8f1">
+<table width="100%" bgcolor="#f6f8f1" border="0" cellpadding="0" cellspacing="0">
+<tr>
+  <td>
+    <!--[if (gte mso 9)|(IE)]>
+      <table width="600" align="center" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td>
+    <![endif]-->     
+    <table bgcolor="#ffffff" class="content" align="center" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td bgcolor="#c7d8a7" class="header">
+          <table width="70" align="left" border="0" cellpadding="0" cellspacing="0">  
+            <tr>
+              <td height="70" style="padding: 0 20px 20px 0;">
+                <img class="fix" src="https://cdn2.iconfinder.com/data/icons/ecology-environment-special/180/Ecology-512.png" width="70" height="70" border="0" alt="" />
+              </td>
+            </tr>
+          </table>
+          <table class="col425" align="left" border="0" cellpadding="0" cellspacing="0" style="width: 100%; max-width: 425px;">  
+            <tr>
+              <td height="70">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td class="subhead" style="padding: 0 0 0 3px;">
+                      Sống xanh
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="h1" style="padding: 5px 0 0 0;">
+                      Thông tin đơn hàng
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td class="innerpadding borderbottom">
+          <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+              <td class="h2">
+                Cảm ơn quý khách đã đặt hàng đã đặt hàng!
+              </td>
+            </tr>
+            <tr>
+              <td class="bodycopy">
+                "Sống xanh" rất vui thông báo đơn hàng <strong>#<span th:text="${data.id}"></span></strong> của quý khách đã được tiếp nhận và đang trong quá trình xử lý. Chúng tôi sẽ thông báo đến quý khách ngay khi hàng chuẩn bị được giao.
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td class="tablepadding borderbottom">
+          <table border="0" cellpadding="0" cellspacing="0" width="100%">
+          	  
+	          <thead>
+		          <tr>
+		              <th align="left" style="padding:6px 9px 0px 9px;font-family:Arial,Helvetica,sans-serif;color:#444;font-weight:bold" width="50%">Thông tin khách hàng</th>
+		              <th align="left" style="padding:6px 9px 0px 9px;font-family:Arial,Helvetica,sans-serif;color:#444;font-weight:bold" width="50%">Địa chỉ giao hàng </th>
+		          </tr>
+	          </thead>
+	          <tbody>
+		          <tr>
+		              <td style="padding:3px 9px 9px 9px;border-top:0;font-family:Arial,Helvetica,sans-serif;color:#444;line-height:18px;font-weight:normal" valign="top">
+		              <strong>Họ tên: </strong><span th:text="${data.customer.name}"></span><br>
+		              <strong>SĐT: </strong><span th:text="${data.customer.phoneNumber}"></span>
+		              </td>
+		              <td style="padding:3px 9px 9px 9px;border-top:0;border-left:0;font-family:Arial,Helvetica,sans-serif;color:#444;line-height:18px;font-weight:normal" valign="top">
+		                  <span th:text="${data.address}"></span>
+		              </td>
+		          </tr>
+		          <tr>
+		              <td colspan="2" style="padding:7px 9px 0px 9px;border-top:0;font-family:Arial,Helvetica,sans-serif;color:#444" valign="top">
+		                  <p style="font-family:Arial,Helvetica,sans-serif;color:#444;line-height:18px;font-weight:normal"><strong>Phương thức thanh toán: </strong> <span>Thanh toán khi giao hàng</span><br><strong>Thời gian giao hàng dự kiến:</strong> Dự kiến giao hàng trong vòng 3-4 ngày - không giao ngày Thứ Bảy &amp; Chủ Nhật  <br>
+		                  </p>
+		              </td>
+		          </tr>
+		          <tr>
+	                  <td colspan="2">
+	                      <p style="margin:4px 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#444;line-height:18px;font-weight:normal"><i>Lưu ý: Đối với đơn hàng đã được thanh toán trước, nhân viên giao nhận có thể yêu cầu người nhận hàng cung cấp CMND / giấy phép lái xe để chụp ảnh hoặc ghi lại thông tin.</i></p>
+	                  </td>
+                  </tr>
+	          </tbody>
+      	  </table>
+        </td>
+      </tr>
+      <tr th:each="order : ${data.orders}">
+        <td class="tablepadding borderbottom">
+          <table class="custom-table">
+          <h2 style="text-align:left;margin:10px 0;padding-bottom:5px;font-size:14px;color:#f29f29">Kiện hàng <span th:text="${order.id}"></span></h2>
+			  <tr>
+			    <th>Sản phẩm</th>
+			    <th>Đơn giá</th>
+			    <th>Khuyến mãi</th>
+			    <th>Số lượng</th>
+			    <th>Thành tiền</th>
+			  </tr>
+			  <tr th:each="dt : ${order.ordersDetail}">
+			  	<td style="width:150px"><strong><span th:text="${dt.product.name}"></span></strong></td>
+			    <td><span th:text="${dt.price.unitPrice}"></span></td>
+			    <td>
+  					<span th:text="${dt.promotion != null} ? ${dt.promotion.saleOff} + ' %'"></span> 
+			    </td>
+			    <td><span th:text="${dt.quantity}"></span></td>
+			    <td style="text-align: right;">
+			    	<span th:text="${dt.promotion != null} ? ${#numbers.formatDecimal(dt.price.unitPrice*dt.quantity*(100-dt.promotion.saleOff)/100, 0, 'COMMA', 0, 'POINT')} : ${#numbers.formatDecimal(dt.price.unitPrice*dt.quantity, 0, 'COMMA', 0, 'POINT')}"> </span>
+			    	VNĐ
+			    </td>
+			  </tr>
+			</table>
+        </td>
+      </tr>
+      <tr>
+        <td class="tablepadding" style="padding-top:10px;">
+          <table class="custom-table">
+			  <tr>
+			  	<td style="text-align: right;"><strong>Tạm tính</strong></td>
+			  	<td style="text-align: right;"><strong th:text="${#numbers.formatDecimal(data.totalGroup, 0, 'COMMA', 0, 'POINT')}"></strong> VNĐ</td>
+			  </tr>
+			  <tr>
+			  	<td style="text-align: right;"><strong>Tổng giá trị đơn hàng</strong></td>
+			   	<td style="text-align: right;"><strong th:text="${#numbers.formatDecimal(data.totalGroup, 0, 'COMMA', 0, 'POINT')}"></strong> VNĐ</td>
+			  </tr>
+		  </table>
+        </td>
+      </tr>
+      <tr>
+        <td class="banner borderbottom">
+          <img class="fix" src="https://scontent.fvca1-1.fna.fbcdn.net/v/t1.0-9/57433666_352547298712663_6016723975915175936_n.png?_nc_cat=105&_nc_oc=AQkD5Un17arY0J3gQVyAyVrw1U35BML_YsQO2khF9nB5UT5pygCdA6syqm5JE1s8jfg&_nc_ht=scontent.fvca1-1.fna&oh=cedf0d010f5b1f908033b2e55e1412ee&oe=5E260BEF" width="100%" border="0" alt="" />
+        </td>
+      </tr>
+      <tr>
+        <td class="innerpadding bodycopy">
+          <p style="margin:10px 0 0 0;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#444;line-height:18px;font-weight:normal">Bạn cần được hỗ trợ ngay? Chỉ cần email <a href="mailto:trinhthenguyen123@gmail.vn" style="color:#099202;text-decoration:none" target="_blank"> <strong>hotro@songxanh.vn</strong> </a>, hoặc gọi số điện thoại <strong style="color:#099202">1900-6035</strong> (8-21h cả T7,CN). Đội ngũ NoiThat246 Care luôn sẵn sàng hỗ trợ bạn bất kì lúc nào.</p>
+        </td>
+      </tr>
+    </table>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

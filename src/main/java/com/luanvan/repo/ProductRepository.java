@@ -22,6 +22,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>{
 			countQuery = "SELECT count(*) FROM PRODUCT INNER JOIN PRICE ON PRODUCT.id = PRICE.product_id GROUP BY PRODUCT.id",
 			nativeQuery = true)*/
 	@Query(value = "SELECT pro FROM product pro JOIN pro.prices pri "+
+			"LEFT JOIN pro.ordersDetails dt "+
 			"WHERE pro.plug LIKE ?1 "		+
 			"AND CAST( pro.material.id AS string )  LIKE ?2 " 	+ 
 			"AND CAST( pro.origin.id AS string ) 	LIKE ?3 " 	+ 
@@ -42,6 +43,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>{
 			);
 	
 	@Query(value = "SELECT pro FROM product pro JOIN pro.prices pri "+
+			"LEFT JOIN pro.ordersDetails dt "+
 			"WHERE pro.plug LIKE ?1 "		+
 			"AND CAST( pro.material.id AS string )  LIKE ?2 " 	+ 
 			"AND CAST( pro.origin.id AS string ) 	LIKE ?3 " 	+ 

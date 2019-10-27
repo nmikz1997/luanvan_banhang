@@ -90,8 +90,8 @@
 									<div ng-if="product.maxPromotion.saleOff">
 										<dl class="mt-3 dlist-inline">
 											<dt>Khuyến mãi:</dt>
-											<dd><a ng-href="/khuyen-mai?id={{product.imaxPromotion.id}}"> {{product.maxPromotion.name}} </a></dd>
 											<dd class="sale"> -{{product.maxPromotion.saleOff}}%</dd>
+											<dd style="margin-left: 7px"><i class="far fa-clock"></i> Kết thúc trong: <strong id="timeCountDown"></strong></dd>
 										</dl>
 									</div>
 									<hr>
@@ -141,7 +141,7 @@
 				<aside class="col-xl-2 col-lg-3 col-md-4 col-sm-12">
 					<div class="card mt-3">
 						<div class="card-header">
-							Có thể bạn quan tâm
+							Sản phẩm vừa xem
 						</div>
 						<div class="card-body row">
 							<div ng-repeat="seen in sanPhamDaXem" class="col-md-12 col-sm-3">

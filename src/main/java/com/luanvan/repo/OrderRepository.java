@@ -19,6 +19,8 @@ public interface OrderRepository extends JpaRepository<Order, Long>{
 	
 	List<Order> findByOrderGroupId(Long id);
 	
+	Long countByOrderGroupIdAndOrderStatusIdGreaterThan(Long groupId,Long statusId);
+	
 	@Query(value="select o from orders o where o.store.id = ?1 and o.orderStatus.id = ?2 and Year(o.createdAt) = ?3")
 	List<Order> findOrderOfYear(Long storeId, Long statusId,int year);
 	

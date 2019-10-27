@@ -17,6 +17,7 @@ import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.luanvan.dto.request.CreateGroupOrder;
 import com.luanvan.dto.request.CreateOrderDTO;
@@ -52,6 +53,7 @@ public class OrderServiceImpl implements OrderService{
 	private ProductRepository productRepository;
 	private OrderGroupRepository orderGroupRepository;
 	private OrderStatusRepository orderStatus;
+	private SendGridEmailService sendGridEmailService;
 	
 	@Autowired
 	public OrderServiceImpl(OrderRepository orderRepository,
@@ -60,7 +62,8 @@ public class OrderServiceImpl implements OrderService{
 			CustomerRepository customerRepository,
 			ProductRepository productRepository,
 			OrderGroupRepository orderGroupRepository,
-			OrderStatusRepository orderStatus) {
+			OrderStatusRepository orderStatus,
+			SendGridEmailService sendGridEmailService) {
 		this.orderRepository 		= orderRepository;
 		this.orderDetailRepository 	= orderDetailRepository;
 		this.customerRepository 	= customerRepository;
@@ -68,6 +71,7 @@ public class OrderServiceImpl implements OrderService{
 		this.productRepository		= productRepository;
 		this.orderGroupRepository	= orderGroupRepository;
 		this.orderStatus			= orderStatus;
+		this.sendGridEmailService 	= sendGridEmailService;
 	}
 	
 	@Override
@@ -168,9 +172,21 @@ public class OrderServiceImpl implements OrderService{
 
 	@Override
 	public void updateStatusOrder(Long id, OrderStatus orderStatus) {
+		
 		Order order = orderRepository.getOne(id);
+		Long count = orderRepository.countByOrderGroupIdAndOrderStatusIdGreaterThan(order.getOrderGroup().getId(), (long) 1);
+		if(orderStatus.getId() == 2 && count == (long) 0) {
+			sendMail(order.getOrderGroup().getId(),order.getCustomer().getUser().getEmail());
+		}
+		
 		order.setOrderStatus(orderStatus);
 		orderRepository.save(order);
+	}
+	
+	private void sendMail(Long groupId, String customerEmail) {
+		RestTemplate restTemplate = new RestTemplate();
+		String body = restTemplate.getForObject("http://localhost:8080/store/order-group/"+groupId, String.class);
+		sendGridEmailService.sendHTML(customerEmail, "Xác nhận đơn hàng #"+groupId, body);
 	}
 
 	@Override

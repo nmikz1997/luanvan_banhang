@@ -268,6 +268,7 @@ homepage.controller('ShoppingCartController', function($scope, $http,$timeout, A
 		    break;
 		}
 		
+		$scope.disabled = true;
 		
 	}
 	
@@ -277,7 +278,7 @@ homepage.controller('ShoppingCartController', function($scope, $http,$timeout, A
 	
 	$scope.thayDoiChiTiet = function(){
 		$scope.diaChi = `${$scope.chiTiet}, ${$scope.phuong.name}, ${$scope.quan.name}, ${$scope.tinh.name}`;
-		
+		$scope.disabled = false;
 		if(!$scope.chiTiet){
 			$scope.disabled = true;
 		}

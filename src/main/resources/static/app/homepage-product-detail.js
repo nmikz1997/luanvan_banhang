@@ -6,9 +6,24 @@ homepage.controller('ProductDetailController', function($scope,$timeout, $http, 
 		quantity: 1
 	}
 	
+	
+	function countDownTimer(timeBetween){
+		let day = timeBetween.getDate();
+		let hour = timeBetween.getHours();
+		let minute = timeBetween.getMinutes();
+		let second = timeBetween.getSeconds();
+		document.getElementById("timeCountDown").innerHTML = `${day} ngày ${hour}:${minute}:${second}`
+	}
+	
 	$http.get(API + 'products'+thisURL).then(function(res){
 		$scope.product = res.data;
 		$scope.anhChinh = res.data.avatar;
+		if($scope.product.maxPromotion.dayEnd){
+			setInterval(function(){ 
+				let timeBetween = new Date (new Date($scope.product.maxPromotion.dayEnd) - new Date() );
+				countDownTimer(timeBetween);
+			}, 1000);
+		}	
 	}).then(function(){
 		document.getElementById('show').style.display= "block";
 		$(".bg-loadding").css("display","none");
@@ -31,14 +46,14 @@ homepage.controller('ProductDetailController', function($scope,$timeout, $http, 
 	var items = JSON.parse(localStorage.getItem("items"));
 	var productSeen = JSON.parse(localStorage.getItem("seen"));
 	
-	console.log(productSeen);
+	//console.log(productSeen);
 	
 	if(productSeen){
 		
 		$http.post('/products/san-pham-da-xem',productSeen)
 		.then(function(res){
 			$scope.sanPhamDaXem = res.data;
-			console.log($scope.sanPhamDaXem);
+			//console.log($scope.sanPhamDaXem);
 		}).then(function(){
 			let check = 0;
 			for(let i = 0; i < productSeen.length; i++){

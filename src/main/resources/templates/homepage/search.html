@@ -52,13 +52,16 @@
 							<li class="list-inline-item"><h5>{{data.totalElements}} kết quả được tìm thấy</h5></li>	
 							<li class="list-inline-item">
 								<span ng-repeat="filter in filterArray">
-									<button class="btn btn-outline-success" ng-click="closeParam(filter.param)">{{ filter.name }} <span aria-hidden="true">×</span> </button>
+									<button class="btn btn-outline-success btn-sm" ng-click="closeParam(filter.param)">{{ filter.name }} <span aria-hidden="true">×</span> </button>
 								</span> 
 							</li>	
 							<div class="float-right">
 								<li class="list-inline-item">
 									<div class="form-inline">
 										<ul class="nav nav-tabs">
+											<li class="nav-item">
+												<a class="nav-link" ng-click="redirect('filter','bestSeller')" data-toggle="tab" href="javascript:void(0)">Bán chạy</a>
+											</li>
 											<li class="nav-item">
 												<a class="nav-link" ng-click="redirect('filter','priceAsc')" data-toggle="tab" href="javascript:void(0)">Giá thấp</a>
 											</li>
@@ -164,7 +167,7 @@
 					</article> <!-- card-group-item.// -->
 					<article class="card-group-item">
 						<header class="card-header">
-							<h6 class="title">Vật liệu  </h6>
+							<h6 class="title text-center">Vật liệu  </h6>
 						</header>
 						<div class="filter-content">
 							<div class="list-group list-group-flush content" ng-class="{ less:hidden }">
@@ -175,7 +178,7 @@
 					</article>
 					<article class="card-group-item">
 						<header class="card-header">
-							<h6 class="title">Xuất xứ  </h6>
+							<h6 class="title text-center">Xuất xứ  </h6>
 						</header>
 						<div class="filter-content">
 							<div class="list-group list-group-flush content" ng-class="{ less:hiddenOrigin }">
@@ -186,7 +189,7 @@
 					</article>
 					<article class="card-group-item">
 						<header class="card-header">
-							<h6 class="title">Nhà cung cấp  </h6>
+							<h6 class="title text-center">Nhà cung cấp  </h6>
 						</header>
 						<div class="filter-content">
 							<div class="list-group list-group-flush">
@@ -229,146 +232,7 @@
 </section>
 <section layout:fragment="script">
 <script th:src="@{https://www.solodev.com/assets/pagination/jquery.twbsPagination.js}"></script>
-<script th:inline="javascript">
-homepage.controller('SearchController', function($scope,$http,$location,API){
-	//$scope.data = /*[[${result}]]*/;
-	
-	$http.get('/materials').then(function(res){
-		$scope.materials = res.data;
-	});
-	$http.get('/origins').then(function(res){
-		$scope.origins = res.data;
-	});
-	$http.get('/producers').then(function(res){
-		$scope.producers = res.data;
-	});
-	
-	var searchParams = new URLSearchParams(window.location.search);
-	
-	//$scope.desc = true;
-	
-	$scope.redirect = function(param, value){
-		if(param != "page"){
-			searchParams.delete("page");
-		}
-		if(searchParams.has(param)){
-			searchParams.set(param, value);
-		}else{
-			searchParams.append(param, value);
-		}
-		
-		window.history.pushState(null, 'Page Title', "tim-kiem?"+searchParams);
-		timKiemNangCao();
-		//window.location.href = "http://localhost:8080/tim-kiem?"+searchParams;
-	}
-	
-	timKiemNangCao();
-	
-	function timKiemNangCao(){
-		searchParams = new URLSearchParams(window.location.search);
-		$http.get('/query?'+searchParams).then(function(res){
-			$scope.data = res.data;
-			$('.pagination').twbsPagination('destroy');
-		}).then(function(){
-			console.log($scope.data);
-			if($scope.data.content.length){
-				$('#pagination-demo').twbsPagination({
-			        totalPages: $scope.data.totalPages,
-			        startPage: $scope.data.number+1,
-			        visiblePages: 4,
-			        initiateStartPageClick: false,
-			        first: 'Trang đầu',
-					prev: '<<',
-					next: '>>',
-					last: 'Trang cuối',
-			        onPageClick: function (event, page) {
-			        	$scope.redirect("page", page);
-			        }
-			    });
-			}
-			$scope.filterArray = [];
-			
-			
-			if( searchParams.has("material") ){
-				 pushFilterArray ($scope.materials, "material");
-			};
-			if( searchParams.has("origin") ){
-				pushFilterArray ($scope.origins, "origin");
-			};
-			if( searchParams.has("producer") ){
-				 pushFilterArray ($scope.producers, "producer");
-			};
-			
-			if(searchParams.has("ratting")){
-				let value = {
-					param: "ratting",
-					name: searchParams.get("ratting") + " sao"
-				}
-				$scope.filterArray.push( value );
-			}
-		}).catch(function(err){
-			console.log("Không tìm thấy");
-		})
-	}
-	
-	function pushFilterArray (array, param){
-		let value = array.find(function(ele){
-			return ele.id == searchParams.get(param);
-		})
-		value.param = param;
-		$scope.filterArray.push( value );
-	}
-	
-	$scope.closeParam = function (param){
-		searchParams.delete(param);
-		window.history.pushState(null, 'Page Title', "tim-kiem?"+searchParams);
-		timKiemNangCao();
-	}
-	
-	window.onpopstate = function(event) {
-		timKiemNangCao();
-	};
-	
-	$scope.hidden = true;
-	$scope.hiddenOrigin = true;
-	/*$('#pagination-demo').twbsPagination({
-		totalPages: 5,
-		startPage: 1,
-		visiblePages: 2,
-		initiateStartPageClick: true,
-		href: true,
-		hrefVariable: '{{number}}',
-		first: 'First',
-		prev: 'Previous',
-		next: 'Next',
-		last: 'Last',
-		loop: false,
-		onPageClick: function (event, page) {
-			$('.page-active').removeClass('page-active');
-		 	$('#page'+page).addClass('page-active');
-		},
-		paginationClass: 'pagination',
-		nextClass: 'next',
-		prevClass: 'prev',
-		lastClass: 'last',
-		firstClass: 'first',
-		pageClass: 'page',
-		activeClass: 'active',
-		disabledClass: 'disabled'
-		});*/
-		$(".bg-loadding").css("display","none");
-		document.getElementById('show').style.display= "block";
-		var items = JSON.parse(localStorage.getItem("items"));
-		var countItems = 0;
-		if(items != null){
-			items.forEach(function(ele){
-				return countItems += ele.quantity;
-			})
-		}
-		$('#countItems').text(countItems);
-});
-
-</script>
+<script th:src="@{/app/search.js}"></script>
 </section>
 </body>
 </html>

@@ -97,4 +97,9 @@ public class HomePage {
 		return "homepage/chitietdonhang";
 	}
 	
+	
+	@GetMapping("email-template")
+	public String emailTemplate() {
+		return "homepage/emailTemplate";
+	}
 }
