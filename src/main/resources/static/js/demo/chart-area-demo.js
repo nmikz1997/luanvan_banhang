@@ -4,7 +4,13 @@ app.controller('IndexController', function($scope, $http, API){
 	
 	$http.get('/orders-details/tong-doanh-thu').then(function(res){
 		$scope.tongDoanhThu = res.data[0].total;
+	}).then(function(){
+		
 	})
+	
+	setTimeout(function(){
+		document.getElementById('show').style.display= "block";
+	}, 100);
 	
 	$scope.thang = [];
 	

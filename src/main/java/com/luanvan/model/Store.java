@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -44,6 +45,8 @@ public class Store{
 	@NotBlank
 	private String name;
 	
+	private int status;
+	
 	@NotBlank
 	private String address;
 	
@@ -77,4 +80,16 @@ public class Store{
 	@JsonIgnore
 	@OneToMany(mappedBy = "store")
 	private List<Order> orders;
+	
+	@ManyToOne
+    @JoinColumn(name="provinceid")
+    private Province province;
+	
+	@ManyToOne
+    @JoinColumn(name="districtid")
+    private District district;
+	
+	@ManyToOne
+    @JoinColumn(name="wardid")
+    private Ward ward;
 }

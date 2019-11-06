@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.luanvan.dto.request.CreateStoreDTO;
+import com.luanvan.dto.response.StoreDTO;
 import com.luanvan.model.Store;
 import com.luanvan.service.StoreService;
 
@@ -31,7 +32,7 @@ public class StoreController {
 	}
 	
 	@GetMapping
-	public List<Store> findAll() {
+	public List<StoreDTO> findAll() {
 		return StoreService.findAll();
 	}
 	
@@ -47,8 +48,13 @@ public class StoreController {
 	}
 
 	@PutMapping("/{id}")
-	public Store update(@PathVariable Long id, @Valid @RequestBody Store Store) {
+	public Store update(@PathVariable Long id,@Valid @RequestBody Store Store) {
 		return StoreService.update(Store, id);
+	}
+	
+	@PutMapping("thay-doi-trang-thai/{id}")
+	public void changeStatus(@PathVariable Long id,@RequestBody Store Store) {
+		StoreService.updateStatus(Store, id);
 	}
 	
 	@DeleteMapping("/{id}")

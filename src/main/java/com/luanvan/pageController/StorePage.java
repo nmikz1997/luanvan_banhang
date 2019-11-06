@@ -46,6 +46,11 @@ public class StorePage {
 		return "admin/question/question";
 	}
 	
+	@GetMapping("inventory")
+	public String inventory() {
+		return "admin/inventory/inventory";
+	}
+	
 	@GetMapping("dashboard")
 	public String dashboard() {
 		return "admin/dashboard/dashboard";

@@ -1,6 +1,8 @@
 package com.luanvan.service.impl;
 
+import java.util.Date;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,16 +15,25 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.luanvan.model.CustomUserDetails;
+import com.luanvan.model.Member;
 import com.luanvan.model.Role;
 import com.luanvan.model.User;
+import com.luanvan.repo.MemberRepository;
 import com.luanvan.repo.UserRepository;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 	
-	@Autowired
-	private UserRepository userRepository;
 	
+	private UserRepository userRepository;
+	private MemberRepository memberRepository;
+	
+	@Autowired
+	public UserDetailsServiceImpl(UserRepository userRepository,MemberRepository memberRepository) {
+		this.userRepository = userRepository;
+		this.memberRepository = memberRepository;
+	}
+
 	@Override
 	@Transactional
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -30,15 +41,26 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }
-		
+		Date hethan = new Date();
 		Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
-		
 		Set<Role> roles = user.getRoles();
 		for (Role role : roles) {
 			grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
 		}
 		
-		return new CustomUserDetails(user,grantedAuthorities,getStoreId(user),getCustomerId(user));		
+		if( grantedAuthorities.contains( new SimpleGrantedAuthority("ROLE_STORE")) &&
+			!grantedAuthorities.contains( new SimpleGrantedAuthority("ROLE_ADMIN")) ) 
+		{
+			Optional<Member> member = memberRepository.findFirstByStoreIdAndDateEndAfterOrderByIdDesc(getStoreId(user), new Date());
+			if(!member.isPresent()) {
+				grantedAuthorities.remove(new SimpleGrantedAuthority("ROLE_STORE"));
+				grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_HETHAN"));
+			}else {
+        		hethan = member.get().getDateEnd();
+        	}
+		}
+		
+		return new CustomUserDetails(user,grantedAuthorities,getStoreId(user),getCustomerId(user),hethan);		
 
 	}
 	

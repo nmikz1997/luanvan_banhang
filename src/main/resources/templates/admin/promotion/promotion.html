@@ -11,7 +11,6 @@
     <div class="container-fluid" ng-controller="PromotionController">
           <!-- Page Heading -->
           <h1 class="h3 mb-2 text-gray-800">Quản lý khuyến mãi</h1>
-          <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below. For more information about DataTables, please visit the <a target="_blank" href="https://datatables.net">official DataTables documentation</a>.</p>
           <!-- DataTales Example -->
           <div class="card shadow mb-4">
             <div class="card-header py-3">
@@ -37,8 +36,8 @@
                     <tr ng-repeat = "obj in data">
                       <td>{{ obj.name }}</td>
                       <td>{{ obj.saleOff }} %</td>
-                      <td>{{ obj.dayStart }}</td>
-                      <td>{{ obj.dayEnd }}</td>
+                      <td>{{ obj.dayStart | date:"MM/dd/yyyy" :'UTC'}}</td>
+                      <td>{{ obj.dayEnd | date:"MM/dd/yyyy" :'UTC'}}</td>
                       <td align="center">
 	                      <a href="#" ng-click="modal('edit',obj.id)" class="btn btn-warning" title="Chỉnh sửa thông tin khuyến mãi" />
 	                      <i class="fas fa-edit"></i>
@@ -82,11 +81,12 @@
 								<input type="datetime-local" class="form-control" id="name" name="name" ng-model="obj.dayEnd" ng-required="true"/>					
 							</div>
 							<div class="form-group">
-								<select multiple class="form-control selectpicker" ng-model="obj.products" ng-options="obj.id as obj.name for obj in products" required=""></select>
+								<label for="mota"class="col-form-label">Sản phẩm:</label><span id="helpBlock2" class="help-block" ng-show="frmobj.derciption.$error.required">*</span>
+								<select multiple class="form-control selectpicker" data-live-search="true" data-size="3" ng-model="obj.products" ng-options="obj.id as obj.name for obj in products" required=""></select>
 							</div>
 							<div class="form-group">
-								<label for="mota" class="col-form-label">Mô tả:</label><span id="helpBlock2" class="help-block" ng-show="frmobj.derciption.$error.required">*</span>
-								<textarea class="form-control" id="derciption" name="derciption" ng-model="obj.decription" ng-required="true"></textarea>
+								<label for="mota"class="col-form-label">Mô tả:</label><span id="helpBlock2" class="help-block" ng-value="akasdk" ng-show="frmobj.derciption.$error.required">*</span>
+								<textarea class="form-control" id="derciption" name="derciption" ng-model="obj.decription"></textarea>
 							</div>
 						</form>
 					</div>

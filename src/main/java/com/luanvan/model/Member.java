@@ -2,6 +2,7 @@ package com.luanvan.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
@@ -33,6 +34,7 @@ public class Member {
 	
 	//ngay tao
 	@CreatedDate
+	@Column(nullable = false, updatable = false)
 	private Date createAt;
 	
 	//ngay ap dung

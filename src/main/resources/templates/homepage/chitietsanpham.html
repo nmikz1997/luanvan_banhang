@@ -27,12 +27,72 @@
 		    color: #ff3425;
 		    font-size: 17px;
 		}
+		
+.ajax360{
+        display: block;
+        overflow: hidden;
+        background-color: #fff;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1600;
+    }
+    .close360{
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        font-size: 11px;
+        z-index: 100;
+        color: #333;
+        border: 1px solid;
+        text-align: center;
+        cursor: pointer;
+    }
+    .boxpicture360{
+        float: none;
+        overflow: hidden;
+        background-color: #fff;
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+        width: auto;
+        min-width: 1024px;
+        max-width: 1366px;
+
+    }
+    .boxpicture360 h4, .boxpicture360 h2 {
+        display: block;
+        overflow: hidden;
+        line-height: 5vh;
+        height: 5vh;
+        font-size: 20px;
+        color: #333;
+        margin-bottom: 1vh;
+        text-align: center;
+    }
+    .content360{
+        background-color: #fff;
+        display: block;
+        width: 800px;
+        overflow: hidden;
+        position: relative;
+        margin: 0 auto;
+    }
 	</style>
   </section>
 </head>
 <body ng-controller="ProductDetailController">
   <section id="show" layout:fragment="content" style="display:none;">
-  	<section class="section-content bg padding-y-sm">
+  	<section class="section-content bg padding-y-sm" id="contentProduct">
 		<div class="container">
 			<div class="row">
 				<div class="col-xl-10 col-lg-9 col-md-8 col-sm-12">
@@ -43,15 +103,18 @@
 									<div class="img-wrap">
 										<div> 
 											<a href="/picture/{{product.avatar}}" data-fancybox="">
-												<img class="img-fluid img-product" ng-src="/picture/{{product.avatar}}" />
+											<!-- <img class="img-fluid img-product" ng-src="/picture/{{product.avatar}}" /> -->
+											<img class="img-fluid img-product" id="zoom_01" ng-src="/picture/{{product.avatar}}" data-zoom-image="/picture/{{product.avatar}}"/>
 											</a>
 										</div>
-									</div> <!-- slider-product.// -->
+									</div>
 									<div class="img-small-wrap">
 										<div class="item-gallery" ng-click="changeAvatar(anhChinh)"> <img ng-src="/picture/{{anhChinh}}"></div>
 										<div class="item-gallery" ng-repeat="pic in product.pictures" ng-click="changeAvatar(pic.path)"> <img ng-src="/picture/{{pic.path}}"></div>
-									</div> <!-- slider-nav.// -->
-								</article> <!-- gallery-wrap .end// -->
+										<div class="item-gallery" ng-click="view360()"> <img src="/img/360.png"></div>
+										
+									</div>
+								</article>
 							</aside>
 							<aside class="col-xl-7 col-lg-7">
 								<article class="card-body">
@@ -105,7 +168,7 @@
 	                                <span>Đánh giá : </span>
 	                                <span id="rateYoProduct"></span>
 									<hr>
-									<div class="row" ng-show="product.quantity - product.sold">
+									<div class="row" ng-show="product.quantity - product.sold && product.status == 1">
 										<div class="col-sm-5">
 											<dl class="dlist-inline">
 												<dt>Số lượng: </dt>
@@ -118,8 +181,7 @@
 											<a href="#" class="btn btn-outline-success" ng-click="addToCart(product.id)"> <i class="fas fa-shopping-cart"></i> Thêm vào giỏ hàng </a>
 										</div>
 									</div>
-										<p ng-show="product.quantity - product.sold <= 0" class="alert alert-warning">Tạm hết hàng</p>
-									
+										<p ng-if="product.quantity - product.sold <= 0 || product.status == 0" class="alert alert-warning"> Tạm hết hàng</p>
 									<!--<a href="#"><i class="far fa-flag"></i> Phản ánh sản phẩm </a> -->
 								</article> 
 							</aside>
@@ -230,8 +292,10 @@
 	</section>
   </section>
   <section layout:fragment="script">
+  <script th:src="@{/js/plugins/spritespin.js}"></script>
   <script src="/plugins/fancybox/fancybox.min.js" type="text/javascript"></script>
-  <script th:src="@{/app/homepage-product-detail.js}"></script>
+  <script src="/plugins/elevatezoom/jquery.elevatezoom.js"></script>
+  <script th:src="@{/app/homepage-product-detail.js}"></script>  
   <script type="text/javascript">
 	$(document).ready(function() {
 		$('.see-more').click(function() {

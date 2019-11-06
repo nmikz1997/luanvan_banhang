@@ -27,7 +27,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
-	
+
 	@Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -52,5 +52,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
     			.accessDeniedPage("/403");
         http
         	.csrf().disable();
+        
     }
 }

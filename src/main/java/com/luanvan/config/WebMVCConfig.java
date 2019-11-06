@@ -19,6 +19,6 @@ public class WebMVCConfig {
 	
 	@Bean
 	public SendGrid SendGridMail() {
-		 return new SendGrid(sendGridAPIKey);
+		return new SendGrid(sendGridAPIKey);
 	}
 }

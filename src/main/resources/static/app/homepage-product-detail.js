@@ -6,7 +6,6 @@ homepage.controller('ProductDetailController', function($scope,$timeout, $http, 
 		quantity: 1
 	}
 	
-	
 	function countDownTimer(timeBetween){
 		let day = timeBetween.getDate();
 		let hour = timeBetween.getHours();
@@ -36,11 +35,16 @@ homepage.controller('ProductDetailController', function($scope,$timeout, $http, 
 		  	});
 		 
 		});
-		
+		$timeout(function(){
+			$("#zoom_01").elevateZoom({scrollZoom : true});
+		},1)
 	});
 	
 	$scope.changeAvatar = function(avatar){
 		$scope.product.avatar = avatar;
+		$timeout(function(){
+			$('.zoomContainer div').css("background-image", `url(/picture/${avatar})`);
+		},1)
 	}
 	
 	var items = JSON.parse(localStorage.getItem("items"));
@@ -78,8 +82,6 @@ homepage.controller('ProductDetailController', function($scope,$timeout, $http, 
 		productSeen.push({id:productId});
 		localStorage.setItem("seen", JSON.stringify(productSeen));
 	}
-	
-	
 	
 	resetCart();
 	$scope.addToCart = function(id){
@@ -137,6 +139,37 @@ homepage.controller('ProductDetailController', function($scope,$timeout, $http, 
 	$http.get('/reviews/product/'+productId).then(function(res){
 		//console.log(res);
 		$scope.reviews = res.data;
+	})
+	
+	$scope.view360 = function(){
+		jQuery('#contentProduct').append('<div class="ajax360">'+
+	            '<div class="close360">x</div>'+
+	            '<div class="boxpicture360">'+
+	                '<h2>Hình 360 độ</h2>'+
+	                '<div class="content360">'+
+	                    '<div id="mySpriteSpin"></div>'+
+	                '</div>'+
+	            '</div>'+
+	        '</div>');
+		let imgsrc = [];
+		$http.get('/products/hinh-cua-san-pham-360/'+productId)
+		.then(function(res){
+			$scope.listImg = res.data;
+			$scope.listImg.forEach(function(ele){
+				imgsrc.push('/picture/'+ele.path);
+			})
+		})
+		.then(function(){
+			jQuery("#mySpriteSpin").spritespin({
+				source: imgsrc,
+				width: 700,
+				height: 600,
+			});
+		});
+	}
+	
+	jQuery(document).on('click', '.close360' ,function(){
+		jQuery('.ajax360').remove()
 	})
 	
 });

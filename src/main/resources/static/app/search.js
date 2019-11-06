@@ -11,6 +11,14 @@ homepage.controller('SearchController', function($scope,$http,$location,API){
 		$scope.producers = res.data;
 	});
 	
+	$scope.bestSeller = [];
+	
+	$http.get('/products/top-ban-chay/3')
+	.then(function(res){
+		console.log(res);
+		res.data.map(obj => $scope.bestSeller.push(obj.product_id) );
+	})
+	
 	var searchParams = new URLSearchParams(window.location.search);
 	
 	//$scope.desc = true;
@@ -43,12 +51,12 @@ homepage.controller('SearchController', function($scope,$http,$location,API){
 				$('#pagination-demo').twbsPagination({
 			        totalPages: $scope.data.totalPages,
 			        startPage: $scope.data.number+1,
-			        visiblePages: 4,
+			        visiblePages: 3,
 			        initiateStartPageClick: false,
-			        first: 'Trang đầu',
-					prev: '<<',
-					next: '>>',
-					last: 'Trang cuối',
+			        first: '',
+					prev: '<',
+					next: '>',
+					last: '',
 			        onPageClick: function (event, page) {
 			        	$scope.redirect("page", page);
 			        }

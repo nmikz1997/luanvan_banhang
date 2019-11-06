@@ -98,6 +98,10 @@ public class Product{
 	@OneToMany(mappedBy="product")
 	private List<Picture> pictures;
 	
+	@JsonIgnore
+	@OneToMany(mappedBy="product")
+	private List<Image360> image360;
+	
 	@OneToMany(mappedBy="product")
 	private List<Price> prices;
 	
@@ -108,6 +112,10 @@ public class Product{
 	@JsonIgnore
 	@OneToMany(mappedBy="product")
 	private List<Review> reviews;
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "product")
+	private List<Inventory> inventories;
 	
 	@JsonIgnore
 	@OneToMany(mappedBy = "product")

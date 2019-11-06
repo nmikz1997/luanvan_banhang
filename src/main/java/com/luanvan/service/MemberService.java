@@ -16,5 +16,5 @@ public interface MemberService {
 	Member findById(Long id);
 	
 	//save
-	Member save(Member member);
+	void save(Member member, Long storeId);
 }

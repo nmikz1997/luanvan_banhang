@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{admin/layout/Layout}">
+<head>
+  <title>Quản lý danh mục sản phẩm</title>
+  <meta charset="utf-8" />
+  <section layout:fragment="css">
+  	<link th:href="@{/css/ui.css}" rel="stylesheet" type="text/css"/>
+  	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.10/css/bootstrap-select.min.css" />
+  </section>
+</head>
+<body>
+  <section layout:fragment="content" ng-controller="InventoryController">
+    <div class="container-fluid">
+          <!-- Page Heading -->
+          <h1 class="h3 mb-2 text-gray-800">Quản lý danh mục sản phẩm</h1>
+          <!-- DataTales Example -->
+          <div class="card shadow mb-4">
+            <div class="card-header py-3">
+              <h6 class="m-0 font-weight-bold text-primary">Thông tin nhập kho</h6>
+            </div>
+            <div class="card-body">
+	            <div class="row">
+	            	<div class="col-md-6">
+	            		<form name="frmCategory" class="form-horizontal">
+	            			<div class="form-group">
+								<label for="mota"class="col-form-label">Sản phẩm:</label><span id="helpBlock2" class="help-block" ng-show="frmobj.derciption.$error.required">*</span>
+								<select class="form-control selectpicker" ng-change="chonSP(obj)" data-live-search="true" data-size="3" ng-model="obj.products" ng-options="obj as obj.name for obj in products" required=""></select>
+							</div>
+							<div class="form-group">
+								<label for="name" class="col-form-label">Số lượng tồn:
+								</label>
+								<input type="text" class="form-control" id="name" name="name" ng-value="soluongton" ng-readOnly="true"/>
+							</div>
+							<div class="form-group">
+								<label for="name" class="col-form-label">Số lượng nhập
+									<span id="helpBlock2" class="help-block" ng-show="frmCategory.name.$error.required">(*)</span>
+								</label>
+								<input type="number" min="1" class="form-control" id="categoryName" name="name" ng-model="inventory.quantity" ng-required="true"/>
+							</div>
+							<div class="form-group">
+								<label for="name" class="col-form-label">Ngày nhập kho:</label><span id="helpBlock2" class="help-block" ng-show="frmobj.name.$error.required">*</span>
+								<input type="datetime-local" class="form-control" id="name" name="name" ng-model="inventory.importDate" ng-required="true"/>					
+							</div>
+							<button type="button" class="btn btn-primary" ng-disabled="frmCategory.$invalid" ng-click="save(state)">Lưu</button>
+						</form>
+	            	</div>
+	            	<div class="aside-menu col-lg-6">
+						<h5 class="text-uppercase">Lịch sử nhập kho</h5>
+						<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+		                  <thead>
+		                    <tr>
+		                      <th>STT</th>
+		                      <th>Thời điểm nhập</th>
+		                      <th>Số lượng</th>
+		                    </tr>
+		                  </thead>
+		                  <tbody>
+		                    <tr ng-repeat = "obj in inventories">
+		                      <td>{{ $index +1}}</td>
+		                      <td>{{ obj.importDate | date:"dd/MM/yyyy 'at' h:mma" :'UTC' }}</td>
+		                      <td>{{ obj.quantity }}</td>
+		                    </tr>
+		                  </tbody>
+		                </table>
+					</div> <!-- col.// -->
+	            </div>
+            </div>
+          </div>
+   	</div>
+    <!-- /.container-fluid -->
+  </section>
+  <section layout:fragment="script">
+  	<script th:src="@{/app/inventory.js}"></script>
+  	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.10/js/bootstrap-select.min.js"></script>
+  </section>
+</body>
+</html>

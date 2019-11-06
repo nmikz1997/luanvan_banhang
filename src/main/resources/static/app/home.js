@@ -9,6 +9,7 @@ homepage.controller('HomeController', function($scope, $http, API){
 		$http.get('products/san-pham-moi')
 		.then(function (response) {
 			$scope.listSPNEW = response.data;
+			console.log(response.data);
 		}).then(function(){
 			$(".bg-loadding").css("display","none");
 		});
@@ -58,4 +59,12 @@ homepage.controller('HomeController', function($scope, $http, API){
 		})
 	}
 	$('#countItems').text(countItems);
+	
+	$scope.bestSeller = [];
+	
+	$http.get('/products/top-ban-chay/3')
+	.then(function(res){
+		res.data.map(obj => $scope.bestSeller.push(obj.product_id) );
+	})
+	
 });

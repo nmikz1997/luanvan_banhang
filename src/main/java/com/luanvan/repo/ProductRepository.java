@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import com.luanvan.dto.response.ProductDTO;
 import com.luanvan.dto.response.ProductSearchDTO;
+import com.luanvan.dto.response.TopSeller;
 import com.luanvan.model.Category;
 import com.luanvan.model.Product;
 
@@ -23,7 +24,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>{
 			nativeQuery = true)*/
 	@Query(value = "SELECT pro FROM product pro JOIN pro.prices pri "+
 			"LEFT JOIN pro.ordersDetails dt "+
-			"WHERE pro.plug LIKE ?1 "		+
+			"WHERE pro.plug LIKE ?1 AND pro.status = 1"		+
 			"AND CAST( pro.material.id AS string )  LIKE ?2 " 	+ 
 			"AND CAST( pro.origin.id AS string ) 	LIKE ?3 " 	+ 
 			"AND CAST( pro.producer.id AS string ) 	LIKE ?4 " 	+
@@ -44,7 +45,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>{
 	
 	@Query(value = "SELECT pro FROM product pro JOIN pro.prices pri "+
 			"LEFT JOIN pro.ordersDetails dt "+
-			"WHERE pro.plug LIKE ?1 "		+
+			"WHERE pro.plug LIKE ?1 AND pro.status = 1"		+
 			"AND CAST( pro.material.id AS string )  LIKE ?2 " 	+ 
 			"AND CAST( pro.origin.id AS string ) 	LIKE ?3 " 	+ 
 			"AND CAST( pro.producer.id AS string ) 	LIKE ?4 " 	+
@@ -66,6 +67,9 @@ public interface ProductRepository extends JpaRepository<Product, Long>{
 	//select
 	@Query(value ="SELECT * FROM PRODUCT", nativeQuery = true)
 	List<ProductDTO> selectAll();
+	
+	@Query(value="select product_id from order_detail group by product_id order by count(product_id) desc limit ?1", nativeQuery = true)
+	List<TopSeller> bestSeller(int limit);
 	
 //	@Query(value = "SELECT * FROM product WHERE category_id = ?1", nativeQuery = true)
 //	List<Product> findByCategory(Long categoryId);
@@ -107,7 +111,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>{
 	//List<Product> findByPromotionsDayStartBeforeAndPromotionsDayEndAfter(Date today,Date toDay);
 	
 	//sản pham moi nhat
-	List<Product> findAllByOrderByIdDesc();
+	List<Product> findFirst12ByStatusOrderByIdDesc(int status);
 	
 	//Sản phẩm theo category
 	List<Product> findByCategoryIn(List<Category> categories);
@@ -116,13 +120,11 @@ public interface ProductRepository extends JpaRepository<Product, Long>{
 	List<Product> findByStoreId(Long storeId);
 	
 	//tìm sản phẩm theo mảng id sản phẩm
-	List<Product> findByIdIn(List<Long> ids);
+	List<Product> findByIdInAndStatus(List<Long> ids,int status);
 	
 	//tim san pham theo ten khong dau
 	
 	//tất cả sản phẩm còn hàng và có khuyến mãi sẽ bị lặp record do join
 	//findProductsByQuantityGreaterThanAndPromotionsIdNotNull
 	//List<Product> findProductsByQuantityGreaterThanAndPromotionsIdNotNull(Long soluong);
-
-	
 }

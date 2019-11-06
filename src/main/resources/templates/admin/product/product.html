@@ -6,14 +6,37 @@
 <section layout:fragment="css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.10/css/bootstrap-select.min.css" />
 	<link rel="stylesheet" th:href="@{/css/fileinput.css}">
+	<style>
+	.row-image{
+	    display: flex;
+	    flex-wrap: wrap;
+	    padding: 0 4px;
+	}
+	.column-image{
+	    flex: 25%;
+	    max-width: 25%;
+	    padding: 0 4px;
+	}
+	.column-image img{
+	    margin-top: 8px;
+	    vertical-align: middle;
+	    width: 100%;
+	}
 	
+	.column-image.hover-shadow {
+	  transition: 0.3s;
+	}
+	
+	.hover-shadow:hover {
+	  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	}
+	</style>
 </section>
 <body>
 	<section layout:fragment="content">
 		<div class="container-fluid" ng-controller="ProductsController">
 			<!-- Page Heading -->
 			<h1 class="h3 mb-2 text-gray-800">Quản lý sản phẩm</h1>
-			<p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below. For more information about DataTables, please visit the <a target="_blank" href="https://datatables.net">official DataTables documentation</a>.</p>
 			<!-- DataTales Example -->
 			<div class="card shadow mb-4">
 				<div class="card-header py-3">
@@ -43,16 +66,16 @@
 											{{ product.name }}
 										</a>
 									</td>
-									<td  ng-hide="true">{{ product.quantity }}</td>
-									<td>	
+									<td>{{ product.quantity }}</td>
+									<!--<td>	
 										<input type="number" style="width:auto;" min="0" ng-model="moi" class="form-control d-inline" width="10" ng-value="product.quantity - product.sold">
 										<button class="btn btn-primary float-right d-inline" ng-click="thayDoiSL(product.id,$index,moi)">Lưu</button>
-									</td>
+									</td>-->
 									<td>	{{ product.price | currency:"":0}} đ</td>
 									<td>	{{ product.priceNew | currency:"":0}} đ</td>
 									<td align="center">
-										<a href="#" class="btn btn-info" title="Xem thông tin chi tiết sản phẩm" />
-										<i class="fas fa-info-circle"></i>
+										<a href="#" ng-click="modalView360(product.id)" class="btn btn-info" title="Ảnh 360" />
+										<i class="fas fa-sync-alt"></i>
 									</a>
 									<a href="#" ng-click="modalImg('images',product.id)" class="btn btn-primary" title="Quản lý hình ảnh sản phẩm" />
 									<i class="fas fa-images"></i>
@@ -211,6 +234,73 @@
 	<!-- /.modal-dialog -->
 </div>
 <!-- /.modal -->
+
+<!--Modal cập nhật hình ảnh 360 -->
+<div class="modal fade" tabindex="-1" role="dialog" id="modalView360">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<p class="modal-header-custom">Cập nhật ảnh 360 cho sản phẩm: <span class="modal-title">{{ frmTitle }}</span></p>
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="col-md-12">
+					<div id='mySpriteSpin'></div>
+				</div>
+				<div class="col-md-12 card">
+			  		<p class="modal-header-custom">Ảnh 360 của sản phẩm</p>
+			  		<br>
+		  			<form method="post" id="frmEditImg360" class="form-horizontal" enctype="multipart/form-data">
+			  			<div class="alert alert-primary" ng-if="listImage360.length <= 0">Chưa có ảnh 360 của sản phẩm</div>
+			  			<div class="row-image" ng-if="listImage360.length > 0" >
+					    	<div class="column-image hover-shadow" ng-repeat="img360 in listImage360" >
+					      		<img ng-src="/picture/{{img360.path}}" alt="Image">
+					      		<div style="text-align: center; padding: 10px 0">
+					      			<div class="input-group mb-3">
+									    <div class="input-group-prepend">
+									      <span class="input-group-text">STT</span>
+									    </div>
+									    <input type="number" name="stt360[]" min="0" id="status_{{img360.id}}" class="form-control" ng-value="img360.status">
+									</div>
+									<div class="form-check">
+										<label class="form-check-label">
+											<input  type="checkbox" class="form-check-input" name="deleteImg360[]" id="check_{{img360.id}}" value="{{img360.id}}">Xóa
+										</label>
+									</div>
+					      			
+					      		</div>
+					      		
+					    	</div>
+						</div>
+						<div style="float: right; padding:10px " ng-if="listImage360.length > 0">
+							<button type="button" ng-click="update360STT()" class="btn btn-success" ><i class="fa fa-dot-circle-o"></i> Cập nhật</button>
+			    			<button type="submit" class="btn btn-danger" ><i class="fa fa-trash-o"></i> Xóa ảnh</button>
+			    		</div>
+		    		</form>
+		  		</div>	
+					<form  method="post" name="frmImg360" id="frmImg360" enctype="multipart/form-data" >
+						<div class="col-md-12">
+							<div class="form-group">
+					            <div class="file-loading">
+					                <input id="imgview360" name="imgview360" type="file" multiple accept='image/jpeg , image/jpg, image/gif, image/png'>
+					            </div>
+					        </div>
+					        <button type="submit" class="btn btn-success" style="float: right;"><i class="fa fa-dot-circle-o"></i> Thêm ảnh mới</button>
+						</div>
+						
+					</form>	
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+
 </div>
 
 </section>
@@ -219,10 +309,13 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.10/js/bootstrap-select.min.js"></script>
 	<script th:src="@{/js/plugins/piexif.js}"></script>
     <script th:src="@{/js/plugins/sortable.js}"></script>
+    <script th:src="@{/js/plugins/spritespin.js}"></script>
     <script th:src="@{/js/fileinput.js}"></script>
 
     <script th:src="@{/js/themes/fa/theme.js}"></script>
     <script th:src="@{/js/themes/explorer-fa/theme.js}"></script>
+    
+    
     <script>
     	jQuery("#imgs").fileinput({
         theme: 'fa',

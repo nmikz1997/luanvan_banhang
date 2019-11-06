@@ -11,9 +11,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.luanvan.dto.response.InventoryProductDTO;
 import com.luanvan.dto.response.ProductDTO;
 import com.luanvan.dto.response.ProductDetailDTO;
-import com.luanvan.dto.response.ProductSearchDTO;
+import com.luanvan.dto.response.TopSeller;
+import com.luanvan.model.CustomUserDetails;
+import com.luanvan.model.Image360;
+import com.luanvan.model.Inventory;
 import com.luanvan.model.Product;
 
 public interface ProductService {
@@ -22,7 +26,7 @@ public interface ProductService {
 	
 	Set<ProductDTO> selectAll();
 	
-	//List<Product> findByStore();
+	InventoryProductDTO findInventory(Long productId);
 	
 	List<Product> findByName(String name);
 	
@@ -65,4 +69,16 @@ public interface ProductService {
 	ResponseEntity<?> uploadImage(Long storeId,int productId, MultipartFile[] uploadfiles);
 
 	void doiGia(Product product);
+	
+	List<TopSeller> bestSeller(int limit);
+
+	void createInventory(Inventory inventory, Long productId);
+
+	List<Image360> allImage360Product(Long productid);
+
+	void updateSttImage360(List<Image360> image360s, Long productid);
+
+	Map<String, String> deleteImage360(List<Long> imageIds);
+
+	ResponseEntity<?> uploadImage360(int product, MultipartFile[] uploadfiles, CustomUserDetails user);
 }

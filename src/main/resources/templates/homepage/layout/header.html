@@ -10,8 +10,11 @@
 					<li class="nav-item active">
 						<a class="nav-link" th:href="@{/}">Trang chủ</a>
 					</li>
-					<li class="nav-item">
+					<li sec:authorize="!hasRole('ROLE_STORE')" class="nav-item">
 						<a class="nav-link" th:href="@{/tro-thanh-nha-ban-hang}">Trở thành nhà bán hàng</a>
+					</li>
+					<li sec:authorize="hasRole('ROLE_STORE') || hasRole('ROLE_HETHAN')" class="nav-item">
+						<a class="nav-link" th:href="@{/dang-ky-thanh-vien}">Gia hạn cửa hàng</a>
 					</li>
 					<li sec:authorize="hasRole('ROLE_STORE')" class="nav-item">
 						<a class="nav-link" th:href="@{/store/thong-ke}">Quản lý cửa hàng</a>

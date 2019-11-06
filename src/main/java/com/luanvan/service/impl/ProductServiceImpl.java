@@ -32,22 +32,30 @@ import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.luanvan.dto.request.CreateProduct;
+import com.luanvan.dto.response.InventoryProductDTO;
 import com.luanvan.dto.response.ProductDTO;
 import com.luanvan.dto.response.ProductDetailDTO;
+import com.luanvan.dto.response.TopSeller;
 import com.luanvan.exception.RollbackException;
 import com.luanvan.model.Category;
+import com.luanvan.model.CustomUserDetails;
+import com.luanvan.model.Image360;
+import com.luanvan.model.Inventory;
 import com.luanvan.model.Picture;
 import com.luanvan.model.Product;
 import com.luanvan.model.Store;
 import com.luanvan.repo.CategoryRepository;
+import com.luanvan.repo.InventoryRepository;
 import com.luanvan.repo.PictureRepository;
 import com.luanvan.repo.PriceRepository;
 import com.luanvan.repo.ProductRepository;
+import com.luanvan.repo.RealPictureRepository;
 import com.luanvan.repo.StoreRepository;
 import com.luanvan.service.ProductService;
 
@@ -60,6 +68,8 @@ public class ProductServiceImpl implements ProductService{
 	private StoreRepository storeRepository;
 	private CategoryRepository categoryRepository;
 	private PictureRepository pictureRepository;
+	private InventoryRepository inventoryRepository;
+	private RealPictureRepository image360Repository;
 	
 	@Autowired
 	public ProductServiceImpl(
@@ -67,13 +77,17 @@ public class ProductServiceImpl implements ProductService{
 			PriceRepository priceRepository,
 			StoreRepository storeRepository,
 			CategoryRepository categoryRepository,
-			PictureRepository pictureRepository
+			PictureRepository pictureRepository,
+			InventoryRepository inventoryRepository,
+			RealPictureRepository image360Repository
 			) {
 		this.productRepository 	= productRepository;
 		this.priceRepository	= priceRepository;
 		this.storeRepository	= storeRepository;
 		this.categoryRepository	= categoryRepository;
 		this.pictureRepository	= pictureRepository;
+		this.inventoryRepository= inventoryRepository;
+		this.image360Repository = image360Repository;
 	}
 	
 	@Override
@@ -123,8 +137,9 @@ public class ProductServiceImpl implements ProductService{
 		
 		if(product.getId() != null && productDTO.getProduct().getStore().getId() != store.getId()) {
 			throw new RollbackException("Bạn không phải chủ món hàng này!!");
-		}else if(product.getId() == null){
+		}else if(product.getId() == null){//tao moi
 			product.setStore(store);
+			product.setStatus(0);
 		}
 		
 		if(fileupload != null) {
@@ -150,6 +165,14 @@ public class ProductServiceImpl implements ProductService{
 		};
 		
 		Product productnew = productRepository.save(product);
+		
+		if(product.getId() != null){//tao moi
+			Inventory inventory = new Inventory();
+			inventory.setProduct(productnew);
+			inventory.setQuantity(productnew.getQuantity());
+			inventory.setImportDate(new Date());
+			inventoryRepository.save(inventory);
+		}
 		
 		productDTO.getProduct().getPrices().forEach(price ->{
 			price.setProduct(productnew);
@@ -213,12 +236,10 @@ public class ProductServiceImpl implements ProductService{
 	
 	@Override
 	public List<ProductDTO> listSPMoi() {
-		List<Product> products = productRepository.findAllByOrderByIdDesc();
+		List<Product> products = productRepository.findFirst12ByStatusOrderByIdDesc(1);
 		ModelMapper mapper = new ModelMapper();
 		List<ProductDTO> productDTO = mapper.map(products,new TypeToken<List<ProductDTO>>(){}.getType());
-		return productDTO.stream()
-						.limit(12)
-						.collect(Collectors.toList());//danh sách sản phẩm mới
+		return productDTO;
 	}
 
 	@Override
@@ -243,7 +264,7 @@ public class ProductServiceImpl implements ProductService{
 	@Override
 	public List<ProductDTO> productsInIds(List<Long> ids) {
 		ModelMapper mapper = new ModelMapper();
-		List<ProductDTO> productDTO = mapper.map(productRepository.findByIdIn(ids),new TypeToken<List<ProductDTO>>(){}.getType());
+		List<ProductDTO> productDTO = mapper.map(productRepository.findByIdInAndStatus(ids,1),new TypeToken<List<ProductDTO>>(){}.getType());
 		return productDTO;
 	}
 	
@@ -383,6 +404,8 @@ public class ProductServiceImpl implements ProductService{
 		    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
+	
+	
 
 	@Override
 	public void doiGia(Product product) {
@@ -391,6 +414,95 @@ public class ProductServiceImpl implements ProductService{
 		
 		productRepository.save(capnhat);
 	}
-	
 
+	@Override
+	public List<TopSeller> bestSeller(int limit) {
+		return productRepository.bestSeller(limit);
+	}
+
+	@Override
+	public InventoryProductDTO findInventory(Long productId) {
+		Product product = productRepository.findById(productId).get();
+		ModelMapper mapper = new ModelMapper();
+		InventoryProductDTO dto = mapper.map(product, InventoryProductDTO.class);
+		
+		return dto;
+	}
+	
+	
+	@Override
+	@Transactional
+	public void createInventory(Inventory inventory,Long productId) {
+		Product product = productRepository.getOne(productId);
+		product.setQuantity( product.getQuantity() + inventory.getQuantity() );
+		productRepository.save(product);
+		inventoryRepository.save(inventory);
+	}
+
+	@Override
+	public ResponseEntity<?> uploadImage360(int product, MultipartFile[] uploadfiles,@AuthenticationPrincipal CustomUserDetails user) {
+		try {
+			Product productmap = productRepository.getOne((long)product);
+			String directory = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\picture\\";
+			int i = 0;
+			for(MultipartFile uploadedFile : uploadfiles) {
+					String file = uploadedFile.getOriginalFilename();
+					Long storeid = user.getStoreId();
+					String filename = storeid+"_"+System.currentTimeMillis()+"_"+file;
+					String filepath = directory+filename;
+
+				    Image360 image360 = new Image360();
+				    image360.setPath(filename);
+				    image360.setProduct(productmap);
+				    image360.setStatus(++i);
+				    image360Repository.save(image360);
+				 
+				    BufferedOutputStream stream =
+				        new BufferedOutputStream(new FileOutputStream(new File(filepath)));
+				    stream.write(uploadedFile.getBytes());
+				    stream.close();
+				 
+	        }
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+		catch (Exception e) {
+		    System.out.println(e.getMessage());
+		    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@Override
+	public List<Image360> allImage360Product(Long productid) {
+		return image360Repository.image360Product(productid);
+	}
+
+	@Override
+	public void updateSttImage360(List<Image360> image360s, Long productid) {
+		Product product = productRepository.getOne(productid);
+		for(Image360 image360 : image360s) {
+			image360.setProduct(product);;
+			image360Repository.save(image360);
+		}
+	}
+
+	@Override
+	public Map<String, String> deleteImage360(List<Long> imagesID) {
+		Map<String, String> map = new HashMap<String, String>();
+		imagesID.forEach(id->{
+			Image360 image360 = image360Repository.getOne(id);
+			image360Repository.delete(image360);
+			String directory = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\img\\uploads\\";
+		  	// Delete image old
+		  	String deleteFilePath = directory + image360.getPath() ;
+		  	File filePath = new File(deleteFilePath);
+		  	Path path =  Paths.get(deleteFilePath);
+		  	//check file path exits
+		  	if(Files.exists(path)) {
+		  		filePath.delete();
+		  	}
+			
+		});
+		map.put("success", "Xóa thành công");
+		return map;
+	}
 }

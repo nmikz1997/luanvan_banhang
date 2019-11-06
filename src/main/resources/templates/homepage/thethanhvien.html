@@ -7,33 +7,91 @@
   		.card-body {
   			padding:3.25rem;
   		}
+  		.header-main {
+		    display: none;
+		}
   	</style>
+  	<link href="/css/sb-admin-2.min.css" rel="stylesheet">
   </section>
 </head>
 <body>
-  <section layout:fragment="content">
+  <section layout:fragment="content" ng-controller="GiaHanController">
   <div class="container">
     <div class="card o-hidden border-0 shadow-lg my-5">
       <div class="card-body p-0">
 		<div class="row">
-		<a href="#" class="p-4 col-md-3">
-		<div id="code_banner1">
-			<div class="card-banner overlay-grad" style="height:250px; background-image: url('images/posts/1.jpg');">
-			  <div class="text-center card-body white">
-			    <h5 class="card-title">Tên gói</h5>
-			    <p class="card-text">Mô tả gói ....Mô tả gói ....Mô tả gói ....</p>
+			<div class="col-lg-12">
+            <div class="p-5">
+              <div class="text-center">
+                <h3 class="h4 text-gray-900 mb-2">Gia hạn cửa hàng</h3>
+              </div>
+              <div class="col-12 btn-group btn-group-toggle" data-toggle="buttons">
+				  <label class="btn btn-outline-success" ng-click="chonGoi(type)" ng-class="{active:$index==0}" ng-repeat="type in membertype" ng-checked="$first">
+				    <input type="radio" name="options" autocomplete="off"> {{type.name}}
+				  </label>
 			  </div>
-			</div>
-		</div>
-		</a>
-      </div>
+              <form name="frmobj" id="frmobj" class="user" ng-class="validate" autocomplete="off">
+                <div class="form-group row">
+                </div>
+                <div class="alert alert-info">
+				  <strong><li>{{type.derciption}}</li></strong>
+			  	</div>
+                <div class="form-group">
+                  <label for="hoTen">Phí đăng ký (VNĐ)</label>
+                  <input type="text" class="form-control form-control-user" ng-value="type.price" readonly />
+                </div>
+                <div class="form-group">
+                  <label for="Email">Phí đăng ký (USD) - PayPal</label>
+                  <input type="text" class="form-control form-control-user" value="{{type.price/currency | currency}}" readonly />
+                </div>
+                <script src="https://www.paypalobjects.com/api/checkout.js"></script>
+                <div id="paypal-button" class=""></div>
+              </form>
+            </div>     
+          </div>
+        </div>
+        <div class="row">
+	        <div class="col-lg-12">
+	        	<div class="p-5">
+	        	<h3>Lịch sử gia hạn</h3>
+		        <table class="table table-hover">
+				    <thead>
+				      <tr>
+				        <th style="text-align: left;">STT</th>
+				        <th style="text-align: left;">Thông tin gói</th>
+				        <th style="text-align: left;">Ngày bắt đầu</th>
+				        <th style="text-align: left;">Ngày hết hạn</th>
+				      </tr>
+				    </thead>
+				    <tbody>
+				      <tr ng-repeat="history in historyMember">
+				        <td>{{$index + 1}}</td>
+				        <td>
+				        	<ul>
+				        		<li><strong>Tên gói: </strong>{{history.memberType.name}}</li>
+				        		<li><strong>Thời hạn: </strong>{{history.memberType.duration}}</li>
+				        		<li><strong>Giá: </strong>{{history.memberType.price}}</li>
+				        	</ul>
+				        </td>
+				        <td>{{history.dateStart | date:"dd/MM/yyyy 'at' h:mma"}}</td>
+				        <td>{{history.dateEnd | date:"dd/MM/yyyy 'at' h:mma"}}</td>
+				      </tr>
+				    </tbody>
+			  	</table>
+			  	</div>
+	        </div>
+        </div>
     </div>
   </div>
   </section>
   <section layout:fragment="script">
-  
-  
-  
+	<script>
+	$(document).ready(function(){
+		$(".bg-loadding").css("display","none");
+	});
+  	</script>
+  	<script src="/js/sb-admin-2.min.js"></script>
+  	<script th:src="@{/app/member-account.js}"></script>
   </section>
 </body>
 </html>

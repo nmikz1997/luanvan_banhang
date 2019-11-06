@@ -1,8 +1,14 @@
 package com.luanvan.dto.request;
 
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+
+import com.luanvan.model.District;
+import com.luanvan.model.Province;
+import com.luanvan.model.Ward;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,5 +42,11 @@ public class CreateRegisterStoreDTO {
 		private String phoneNumber;
 		
 		private String derciption;
+		
+	    private Province province;
+		
+	    private District district;
+
+	    private Ward ward;
 	}
 }

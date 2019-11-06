@@ -15,26 +15,22 @@ homepage.controller('ShoppingCartController', function($scope, $http,$timeout, A
 		refreshData();
 	}
 	
-	
 	$http.get('https://api.exchangerate-api.com/v4/latest/USD?fbclid=IwAR130H7vwYrcV1Aa1LAcs4LlpnrNEUqEaV2Zi5EPRNn1G1vCkKBW5RNvZmw').then(function(res){
 		$scope.currency = res.data.rates.VND;
 	});
 	
-	function getNgoaiTe(){
-		
-	}
-	
-	
 	function refreshData(){
-		resetCart();
 		$http.post('/products/gio-hang',cart)
 		.then(function(res){
 			$scope.items = res.data;
+			cart = [];
 			$scope.total = 0;
 			res.data.forEach(function(ele){
 				$scope.total = $scope.total + ele.priceNew*ele.soLuongMua;
+				cart.push({id: ele.id, quantity: ele.soLuongMua});
 			})
-			
+			localStorage.setItem("items", JSON.stringify(cart));
+			resetCart();
 		})
 		.then(function(){
 			$http.get('orders/exchange').then(function(res){
@@ -267,7 +263,6 @@ homepage.controller('ShoppingCartController', function($scope, $http,$timeout, A
 		  default:
 		    break;
 		}
-		
 		$scope.disabled = true;
 		
 	}

@@ -27,9 +27,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.luanvan.dto.response.CartItemsDTO;
+import com.luanvan.dto.response.InventoryProductDTO;
 import com.luanvan.dto.response.ProductDTO;
 import com.luanvan.dto.response.ProductDetailDTO;
+import com.luanvan.dto.response.TopSeller;
 import com.luanvan.model.CustomUserDetails;
+import com.luanvan.model.Image360;
+import com.luanvan.model.Inventory;
 import com.luanvan.model.Product;
 import com.luanvan.service.ProductService;
 
@@ -79,6 +83,7 @@ public class ProductController {
 		productService.save(productReq, fileupload, auth);
 	}
 	
+	
 	@GetMapping("/san-pham-dang-khuyen-mai/{id}")
 	public ProductDTO findSanPhamKhuyenMai(@PathVariable("id") Long id) {
 		return productService.findProducts(id);
@@ -87,6 +92,11 @@ public class ProductController {
 	@GetMapping("/chi-tiet-san-pham/{id}")
 	public ProductDetailDTO chiTietSanPham(@PathVariable("id") Long id) {
 		return productService.chiTietSanPham(id);
+	}
+	
+	@GetMapping("inventory/{productId}")
+	public InventoryProductDTO getInventory(@PathVariable Long productId) {
+		return productService.findInventory(productId);
 	}
 	
 	@PostMapping("/gio-hang")
@@ -129,6 +139,11 @@ public class ProductController {
 		return null;
 	}
 	
+	@GetMapping("top-ban-chay/{limit}")
+	public List<TopSeller> bestSeller(@PathVariable int limit){
+		return productService.bestSeller(limit);
+	}
+	
 	@PostMapping("san-pham-da-xem")
 	public List<ProductDTO> listProductSeen(@RequestBody List<CartItemsDTO> req){
 		List<Long> ids = new ArrayList<Long>();
@@ -167,5 +182,35 @@ public class ProductController {
 	public void thayDoiGia(@RequestBody Product product) {
 		productService.doiGia(product);
 	}
-
+	
+	@PutMapping("inventory/{productId}")
+	public void createInventory(@RequestBody Inventory inventory, @PathVariable Long productId) {
+		productService.createInventory(inventory,productId);
+	}
+	
+	@PostMapping("/mutiple-image-360")
+	@ResponseBody
+	@Transactional
+	public ResponseEntity<?> uploadImage360(
+			@RequestParam(value = "product") int product,
+			@RequestParam(value = "imgview360") MultipartFile[] uploadfiles,
+			@AuthenticationPrincipal CustomUserDetails auth) throws IOException {
+		return productService.uploadImage360(product, uploadfiles, auth);
+	}
+	
+	@GetMapping("/hinh-cua-san-pham-360/{productid}")
+	public List<Image360> imag360eOfPro(@PathVariable Long productid){
+		return productService.allImage360Product(productid);
+	}
+	
+	@PostMapping("/update-stt-image-360/{productid}")
+	public void updateSttImage360(@RequestBody List<Image360> image360s, @PathVariable Long productid) {
+		productService.updateSttImage360(image360s, productid);
+	}
+	
+	@PostMapping("/image/deleteSelect-360/{productid}")
+	public Map<String, String> deleteImage360Select(@RequestBody List<Long> imageIds, @PathVariable Long productid) {
+		return productService.deleteImage360(imageIds);
+	}
+	
 }

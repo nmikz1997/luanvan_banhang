@@ -1,6 +1,7 @@
 package com.luanvan.model;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -17,12 +18,14 @@ public class CustomUserDetails implements UserDetails{
 	private Set<GrantedAuthority> grantedAuthorities;
 	private Long storeId = null;
 	private Long customerId = null;
+	private Date hethan;
 	
-	public CustomUserDetails(User user, Set<GrantedAuthority> grantedAuthorities, Long storeId, Long customerId) {
+	public CustomUserDetails(User user, Set<GrantedAuthority> grantedAuthorities, Long storeId, Long customerId, Date hethan) {
 		this.user = user;
 		this.grantedAuthorities = grantedAuthorities;
 		this.storeId = storeId;
 		this.customerId = customerId;
+		this.hethan = hethan;
 	}
 	
 	
@@ -32,7 +35,7 @@ public class CustomUserDetails implements UserDetails{
     }
 
     @Override
-    public String getPassword() {
+	public String getPassword() {
         return user.getPassword();
     }
 

@@ -5,6 +5,12 @@
   <section layout:fragment="css">
 	<link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 	<link href="css/sb-admin-2.min.css" rel="stylesheet">
+	<style>
+		.header-main {
+		    display: none;
+		}
+	</style>
+  	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.10/css/bootstrap-select.min.css" />
   </section>
 </head>
 <body>
@@ -31,6 +37,46 @@
                   <label for="hoTen">Tên cửa hàng</label>
                   <input type="text" class="form-control form-control-user" ng-model="obj.store.name" id="hoTen" required="true" ng-required="true" placeholder="Tên doanh nghiệp" autocomplete="off" />
                 </div>
+                <div class="form-group">
+	                <label>Tỉnh thành:</label>
+					<select class="selectpicker" data-size="5" data-style="btn-light"
+							data-live-search="true" 
+							ng-model="obj.store.province.provinceid" 
+							ng-change="getId('province')">
+						<option data-tokens="ketchup mustard" 
+								ng-repeat="province in provinces" 
+								ng-selected="obj.store.province == province" 
+								value="{{province.provinceid}}">
+							{{province.name}}
+						</option>
+					</select>
+					<label>Quận huyện:</label>
+					<select class="selectpicker" data-size="5" data-style="btn-light"
+							data-live-search="true" 
+							ng-model="obj.store.district.districtid" 
+							ng-change="getId('district')">
+						<option data-tokens="ketchup mustard" 
+								ng-repeat="district in districts"
+								ng-selected="obj.store.district == district" 
+								value="{{district.districtid}}">
+							{{district.name}}
+						</option>
+					</select>
+					<label>Phường xã:</label>
+					<select class="selectpicker" data-style="btn-light"
+							data-size="5"
+							data-live-search="true"
+							ng-model="obj.store.ward.wardid"
+							ng-change="getId('ward')">
+						<option 
+							data-tokens="ketchup mustard" 
+							ng-repeat="ward in wards" 
+							ng-selected="obj.store.ward == ward"
+							value="{{ward.wardid}}">
+							{{ward.name}}
+						</option>
+					</select>
+				</div>
                 <div class="form-group">
                   <label for="diaChi">Địa chỉ cửa hàng</label>
                   <input type="text" class="form-control form-control-user" ng-model="obj.store.address" id="diaChi" required="true" ng-required="true" placeholder="Địa chỉ cửa hàng" autocomplete="off" />
@@ -78,6 +124,8 @@
   <section layout:fragment="script">
   <script th:src="@{/app/registerStore.js}"></script>
   <script src="js/sb-admin-2.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.10/js/bootstrap-select.min.js"></script>
+  
   <script>
 	$(document).ready(function(){
 		$(".bg-loadding").css("display","none");

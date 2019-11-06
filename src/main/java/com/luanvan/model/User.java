@@ -38,11 +38,11 @@ public class User implements Serializable{
 	@Column(name = "email", nullable = false, unique = true)
 	private String email;
 	
+	@JsonIgnore
 	@Column(name = "password", nullable = false)
 	private String password;
 	
 //	OneToOne Custommer
-	@JsonIgnore
 	@OneToOne(mappedBy = "user")
 	private Customer customer;
 	

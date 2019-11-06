@@ -1,9 +1,13 @@
 package com.luanvan.controller;
 
+import java.util.Date;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.luanvan.dto.request.CreateRegisterStoreDTO;
 import com.luanvan.dto.request.RegisterDTO;
+import com.luanvan.model.CustomUserDetails;
 import com.luanvan.model.Customer;
 import com.luanvan.model.Store;
 import com.luanvan.service.UserService;
@@ -50,5 +55,14 @@ public class UserController{
 	@GetMapping("testAuth")
 	public Authentication getUser(Authentication auth) {
 		return auth;
+	}
+	
+	@GetMapping("getThoiHan")
+	public Long getThoiHan(@AuthenticationPrincipal CustomUserDetails userDetail) {
+		if( userDetail.getAuthorities().contains( new SimpleGrantedAuthority("ROLE_STORE")) &&
+				!userDetail.getAuthorities().contains( new SimpleGrantedAuthority("ROLE_ADMIN")) ) {
+			return userDetail.getHethan().getTime();
+		}
+		return null;
 	}
 }
