@@ -17,14 +17,19 @@ import com.luanvan.model.Product;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long>{
-	
+	final static String storeHopLe = "(SELECT str.id from store str JOIN str.members mem WHERE str.status = 1 AND mem.dateEnd > CURRENT_DATE)";
 	
 	/*@Query(value ="SELECT * FROM PRODUCT INNER JOIN PRICE ON PRODUCT.id = PRICE.product_id GROUP BY PRODUCT.id HAVING MAX(PRICE.created_at)",
 			countQuery = "SELECT count(*) FROM PRODUCT INNER JOIN PRICE ON PRODUCT.id = PRICE.product_id GROUP BY PRODUCT.id",
 			nativeQuery = true)*/
 	@Query(value = "SELECT pro FROM product pro JOIN pro.prices pri "+
-			"LEFT JOIN pro.ordersDetails dt "+
-			"WHERE pro.plug LIKE ?1 AND pro.status = 1"		+
+			"LEFT JOIN pro.ordersDetails dt "+ 
+			"WHERE pro.store.id IN ("
+						+ "SELECT str.id from store str "
+						+ "JOIN str.members mem "
+						+ "WHERE str.status = 1 "
+						+ "AND mem.dateEnd > CURRENT_DATE) "+
+			"AND pro.plug LIKE ?1 AND pro.status = 1"		+
 			"AND CAST( pro.material.id AS string )  LIKE ?2 " 	+ 
 			"AND CAST( pro.origin.id AS string ) 	LIKE ?3 " 	+ 
 			"AND CAST( pro.producer.id AS string ) 	LIKE ?4 " 	+
@@ -45,7 +50,12 @@ public interface ProductRepository extends JpaRepository<Product, Long>{
 	
 	@Query(value = "SELECT pro FROM product pro JOIN pro.prices pri "+
 			"LEFT JOIN pro.ordersDetails dt "+
-			"WHERE pro.plug LIKE ?1 AND pro.status = 1"		+
+			"WHERE pro.store.id IN ("
+						+ "SELECT str.id from store str "
+						+ "JOIN str.members mem "
+						+ "WHERE str.status = 1 "
+						+ "AND mem.dateEnd > CURRENT_DATE) "+
+			"AND pro.plug LIKE ?1 AND pro.status = 1 "			+
 			"AND CAST( pro.material.id AS string )  LIKE ?2 " 	+ 
 			"AND CAST( pro.origin.id AS string ) 	LIKE ?3 " 	+ 
 			"AND CAST( pro.producer.id AS string ) 	LIKE ?4 " 	+
@@ -111,7 +121,9 @@ public interface ProductRepository extends JpaRepository<Product, Long>{
 	//List<Product> findByPromotionsDayStartBeforeAndPromotionsDayEndAfter(Date today,Date toDay);
 	
 	//sản pham moi nhat
-	List<Product> findFirst12ByStatusOrderByIdDesc(int status);
+	@Query(value = "SELECT pro FROM product pro "+ 
+				   "WHERE pro.status = ?1 AND pro.store.id IN "+storeHopLe)
+	List<Product> findFirst12ByStatusOrderByIdDesc(int status, Pageable pageable);
 	
 	//Sản phẩm theo category
 	List<Product> findByCategoryIn(List<Category> categories);
@@ -120,6 +132,8 @@ public interface ProductRepository extends JpaRepository<Product, Long>{
 	List<Product> findByStoreId(Long storeId);
 	
 	//tìm sản phẩm theo mảng id sản phẩm
+	@Query(value = "SELECT pro FROM product pro "+ 
+			   "WHERE pro.id IN ?1 AND pro.status = ?2 AND pro.store.id IN "+storeHopLe)
 	List<Product> findByIdInAndStatus(List<Long> ids,int status);
 	
 	//tim san pham theo ten khong dau

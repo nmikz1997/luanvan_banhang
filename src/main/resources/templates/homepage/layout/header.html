@@ -13,7 +13,7 @@
 					<li sec:authorize="!hasRole('ROLE_STORE')" class="nav-item">
 						<a class="nav-link" th:href="@{/tro-thanh-nha-ban-hang}">Trở thành nhà bán hàng</a>
 					</li>
-					<li sec:authorize="hasRole('ROLE_STORE') || hasRole('ROLE_HETHAN')" class="nav-item">
+					<li sec:authorize="hasRole('ROLE_STORE') || hasRole('ROLE_EXPIRED')" class="nav-item">
 						<a class="nav-link" th:href="@{/dang-ky-thanh-vien}">Gia hạn cửa hàng</a>
 					</li>
 					<li sec:authorize="hasRole('ROLE_STORE')" class="nav-item">

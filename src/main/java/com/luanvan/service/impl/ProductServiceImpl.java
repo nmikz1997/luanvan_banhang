@@ -236,7 +236,7 @@ public class ProductServiceImpl implements ProductService{
 	
 	@Override
 	public List<ProductDTO> listSPMoi() {
-		List<Product> products = productRepository.findFirst12ByStatusOrderByIdDesc(1);
+		List<Product> products = productRepository.findFirst12ByStatusOrderByIdDesc(1, PageRequest.of(0, 12, Sort.by("id").descending()));
 		ModelMapper mapper = new ModelMapper();
 		List<ProductDTO> productDTO = mapper.map(products,new TypeToken<List<ProductDTO>>(){}.getType());
 		return productDTO;
@@ -244,7 +244,7 @@ public class ProductServiceImpl implements ProductService{
 
 	@Override
 	public List<ProductDTO> listSPKM() {
-		List<Product> products = findAll();
+		List<Product> products = productRepository.findFirst12ByStatusOrderByIdDesc(1, PageRequest.of(0, Integer.MAX_VALUE));
 		ModelMapper mapper = new ModelMapper();
 		List<ProductDTO> productDTO = mapper.map(products,new TypeToken<List<ProductDTO>>(){}.getType());
 		return productDTO.stream()

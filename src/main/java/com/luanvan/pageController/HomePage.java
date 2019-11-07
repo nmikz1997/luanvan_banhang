@@ -49,7 +49,7 @@ public class HomePage {
 		return "homepage/dangkybanhang";
 	}
 	
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_STORE','ROLE_HETHAN')")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_STORE','ROLE_EXPIRED')")
 	@GetMapping("/dang-ky-thanh-vien")
 	public String BuyMember() {
 		return "homepage/thethanhvien";

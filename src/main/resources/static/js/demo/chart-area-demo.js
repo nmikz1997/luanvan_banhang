@@ -93,7 +93,7 @@ app.controller('IndexController', function($scope, $http, API){
 			}
 		})
 		.then(function(){
-			console.log(tempData);
+			//console.log(tempData);
 			renderChart();
 		})
 	}
@@ -110,7 +110,7 @@ app.controller('IndexController', function($scope, $http, API){
 	$scope.theoThang = function(thang=10, nam=2019){
 		$http.get('/orders-details/thong-ke/'+nam+'/'+thang)
 		.then(function(res){
-			console.log(res.data);
+			//console.log(res.data);
 		})
 	}
 
@@ -244,18 +244,28 @@ app.controller('IndexController', function($scope, $http, API){
 			return totalCircle += ele.total;
 		});
 	}).then(function(){
-		tempData.forEach(function(ele){
-			let tile = (ele.total*100/totalCircle).toFixed(2);
-			if(ele.created_at == 1){
-				dataCircle[0] = tile;
-			}else if(ele.created_at == 2){
-				dataCircle[1] = tile;
-			}else if(ele.created_at == 5){
-				dataCircle[2] = tile;
-			}else if(ele.created_at == 6 || ele.created_at == 7){
-				dataCircle[3] = tile;
+		var dulieu1 = 0;
+		var dulieu2	= 0;
+		var dulieu3 = 0;
+		var dulieu4 = 0;
+		var tong = 0;
+		console.log(tempData);
+		tempData.forEach(function(status){
+			if(status.created_at == 1){
+				dulieu1 += status.total;
 			}
+			else if(status.created_at >1 && status.created_at < 5){
+				dulieu2 += status.total;
+			}
+			else if(status.created_at == 5){
+				dulieu3 += status.total;
+			}
+			else if(status.created_at >5){
+				dulieu4 += status.total;
+			}
+			tong += status.total;
 		})
+		dataCircle = [(dulieu1*100/tong).toFixed(2),(dulieu2*100/tong).toFixed(2),(dulieu3*100/tong).toFixed(2),(dulieu4*100/tong).toFixed(2)];;
 	}).then(function(){
 		var ctxx = document.getElementById("myPieChart");
 		var myPieChart = new Chart(ctxx, {

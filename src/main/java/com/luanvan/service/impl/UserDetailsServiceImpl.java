@@ -52,10 +52,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 			!grantedAuthorities.contains( new SimpleGrantedAuthority("ROLE_ADMIN")) ) 
 		{
 			Optional<Member> member = memberRepository.findFirstByStoreIdAndDateEndAfterOrderByIdDesc(getStoreId(user), new Date());
+			
 			if(!member.isPresent()) {
 				grantedAuthorities.remove(new SimpleGrantedAuthority("ROLE_STORE"));
-				grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_HETHAN"));
-			}else {
+				if(user.getStore().getStatus() == 1) {
+					grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_EXPIRED"));
+				}
+			}else{
         		hethan = member.get().getDateEnd();
         	}
 		}
