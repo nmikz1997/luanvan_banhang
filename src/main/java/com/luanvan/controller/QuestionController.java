@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.luanvan.dto.request.CreateQuestion;
 import com.luanvan.dto.response.QuestionDTO;
 import com.luanvan.model.CustomUserDetails;
-import com.luanvan.model.Question;
 import com.luanvan.service.QuestionService;
 
 @RestController
@@ -41,9 +40,15 @@ public class QuestionController {
 		return QuestionService.findByStore(user.getStoreId());
 	}
 	
+	
 	@GetMapping("product/{id}")
 	public List<QuestionDTO> findByProductId(@PathVariable Long id){
 		return QuestionService.findByProductId(id);
+	}
+	
+	@GetMapping("/count")
+	public Long countQuestionStore(@AuthenticationPrincipal CustomUserDetails store) {
+		return QuestionService.countByProductStoreId(store.getStoreId());
 	}
 	
 	@PostMapping

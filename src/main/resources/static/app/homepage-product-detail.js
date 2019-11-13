@@ -102,6 +102,7 @@ homepage.controller('ProductDetailController', function($scope,$timeout, $http, 
 		if(check == false) items.push({id: $scope.item.id, quantity: $scope.item.quantity});
 		localStorage.setItem("items", JSON.stringify(items));
 		resetCart();
+		swal("Đã thêm sản phẩm vào giỏ", "", "success");
 	}
 	
 	
@@ -125,6 +126,7 @@ homepage.controller('ProductDetailController', function($scope,$timeout, $http, 
 		$http.post('/questions',question)
 		.then(function(res){
 			//console.log(res);
+			swal("Đã gửi câu hỏi cho chủ Shop", "", "success");
 		}).catch(function(err){
 			//console.log(err)
 		})
@@ -162,7 +164,7 @@ homepage.controller('ProductDetailController', function($scope,$timeout, $http, 
 		.then(function(){
 			jQuery("#mySpriteSpin").spritespin({
 				source: imgsrc,
-				width: 700,
+				width: 350,
 				height: 600,
 			});
 		});

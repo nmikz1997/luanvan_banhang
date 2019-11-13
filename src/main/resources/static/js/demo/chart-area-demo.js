@@ -2,19 +2,21 @@ app.controller('IndexController', function($scope, $http, API){
 	
 	$scope.tongDoanhThu = 0;
 	
+	
 	$http.get('/orders-details/tong-doanh-thu').then(function(res){
 		$scope.tongDoanhThu = res.data[0].total;
+		$http.get('/questions/count').then(function(res){
+			$scope.soCauHoi = res.data;
+		})
 	}).then(function(){
-		
+		hienThi();
 	})
 	
-	setTimeout(function(){
+	function hienThi(){
 		document.getElementById('show').style.display= "block";
-	}, 100);
+	}
 	
 	$scope.thang = [];
-	
-	
 	$scope.year	= [
 		{id:2019, name:"2019"},
 		{id:2018, name:"2018"}

@@ -23,6 +23,7 @@ app.controller('InventoryController', function($scope,$timeout, $http, API){
 			render($scope.inventory.product.id);
 			$scope.inventory.importDate = null;
 			$scope.inventory.quantity = null;
+			swal("Thành công", "", "success");
 		})
 	}
 

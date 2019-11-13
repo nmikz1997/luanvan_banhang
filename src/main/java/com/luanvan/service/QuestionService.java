@@ -20,5 +20,7 @@ public interface QuestionService {
 	void delete(Long id);
 
 	List<QuestionDTO> findByStore(Long storeId);
+
+	Long countByProductStoreId(Long storeId);
 	
 }

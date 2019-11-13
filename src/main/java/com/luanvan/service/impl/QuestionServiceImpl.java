@@ -5,11 +5,9 @@ import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import com.luanvan.dto.request.CreateQuestion;
-import com.luanvan.dto.response.ProductDTO;
 import com.luanvan.dto.response.QuestionDTO;
 import com.luanvan.exception.NotFoundException;
 import com.luanvan.model.CustomUserDetails;
@@ -78,6 +76,11 @@ public class QuestionServiceImpl implements QuestionService {
 		ModelMapper mapper = new ModelMapper();
 		List<QuestionDTO> questiondto = mapper.map(questions,new TypeToken<List<QuestionDTO>>(){}.getType());
 		return questiondto;
+	}
+
+	@Override
+	public Long countByProductStoreId(Long storeId) {
+		return questionRepository.countByProductStoreId(storeId);
 	}
 
 }

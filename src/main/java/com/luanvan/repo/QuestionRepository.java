@@ -12,4 +12,6 @@ public interface QuestionRepository extends JpaRepository<Question, Long>{
 	List<Question> findQuestionByProductIdAndStatus(Long productId,boolean status);
 
 	List<Question> findQuestionByProductStoreId(Long storeId);
+
+	Long countByProductStoreId(Long storeId);
 }

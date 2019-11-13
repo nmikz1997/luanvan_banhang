@@ -15,9 +15,9 @@ homepage.controller('ShoppingCartController', function($scope, $http,$timeout, A
 		refreshData();
 	}
 	
-	$http.get('https://api.exchangerate-api.com/v4/latest/USD?fbclid=IwAR130H7vwYrcV1Aa1LAcs4LlpnrNEUqEaV2Zi5EPRNn1G1vCkKBW5RNvZmw').then(function(res){
-		$scope.currency = res.data.rates.VND;
-	});
+//	$http.get('https://api.exchangerate-api.com/v4/latest/USD?fbclid=IwAR130H7vwYrcV1Aa1LAcs4LlpnrNEUqEaV2Zi5EPRNn1G1vCkKBW5RNvZmw').then(function(res){
+//		$scope.currency = res.data.rates.VND;
+//	});
 	
 	function refreshData(){
 		$http.post('/products/gio-hang',cart)
@@ -33,10 +33,14 @@ homepage.controller('ShoppingCartController', function($scope, $http,$timeout, A
 			resetCart();
 		})
 		.then(function(){
-			$http.get('orders/exchange').then(function(res){
-				let tiGia = Number(res.data.bantienmat);
-				$scope.totalPaypal = Math.round($scope.total/tiGia*100)/100;
+//			$http.get('orders/exchange').then(function(res){
+//				let tiGia = Number(res.data.bantienmat);
+//				$scope.totalPaypal = Math.round($scope.total/tiGia*100)/100;
+//			})
+			$http.get('https://api.exchangerate-api.com/v4/latest/USD?fbclid=IwAR130H7vwYrcV1Aa1LAcs4LlpnrNEUqEaV2Zi5EPRNn1G1vCkKBW5RNvZmw').then(function(res){
+				$scope.totalPaypal = Math.round($scope.total/res.data.rates.VND*100)/100;
 			})
+			
 		})
 	}
 	
@@ -111,13 +115,13 @@ homepage.controller('ShoppingCartController', function($scope, $http,$timeout, A
 		.then(function(res){
 			//console.log(res);
 			if(res.data.Success){
-				alert("Đặt hàng thành công");
+				swal("Đặt hàng thành công", "", "success");
 				localStorage.removeItem("items");
 				$scope.items = null;
 				$scope.total = 0;
 				resetCart();
 			}else{
-				alert("Số lượng không đủ đáp ứng");
+				swal("Số lượng không đủ đáp ứng", "", "error");
 				refreshData();
 			}
 		})

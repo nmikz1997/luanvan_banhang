@@ -55,6 +55,7 @@ app.controller('ProducerController', function($scope, $http, API){
 		$http.post('/replies', data )
 			.then(function (res) {
 		 		render();
+		 		swal("Thành công", "", "success");
 		 		console.log(res);
 		 	}).catch(function (err) {
 		 		console.log(err);

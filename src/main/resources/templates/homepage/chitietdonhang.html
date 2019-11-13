@@ -206,7 +206,12 @@ homepage.controller('OrderDetailCustomerController', function($scope,$http,API){
 		}
 		
 		$http.post('/reviews',data).then(function(res){
-			console.log(res);
+			//console.log(res);
+			Swal.fire(
+			  'Cảm ơn bạn đã đánh giá sản phẩm!',
+			  '',
+			  'success'
+			)
 		})
 		
 	}
