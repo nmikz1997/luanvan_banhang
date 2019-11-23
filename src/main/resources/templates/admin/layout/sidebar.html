@@ -6,7 +6,7 @@
         <div class="sidebar-brand-icon rotate-n-15">
           <i class="fas fa-laugh-wink"></i>
         </div>
-        <div class="sidebar-brand-text mx-3">Green Life</div>
+        <div class="sidebar-brand-text mx-3">GreenLife</div>
       </a>
 
       <!-- Divider -->
@@ -42,10 +42,15 @@
           </div>
         </div>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" th:href="@{/admin/stores}">
+      <li sec:authorize="hasRole('ROLE_ADMIN')" class="nav-item">
+        <a class="nav-link" th:href="@{/admin/store}">
           <i class="fas fa-fw fa-table"></i>
           <span>Quản lý cửa hàng</span></a>
+      </li>
+      <li sec:authorize="hasRole('ROLE_ADMIN')" class="nav-item">
+        <a class="nav-link" th:href="@{/admin/product-of-store}">
+          <i class="fas fa-fw fa-table"></i>
+          <span>Phê duyệt sản phẩm</span></a>
       </li>
       <hr sec:authorize="hasRole('ROLE_ADMIN')" class="sidebar-divider" />
       <!--

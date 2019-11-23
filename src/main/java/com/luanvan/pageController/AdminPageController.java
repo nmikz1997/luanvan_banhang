@@ -50,4 +50,9 @@ public class AdminPageController {
 		return "admin/producer/producer";
 	}
 	
+	@GetMapping("product-of-store")
+	public String productOfStore() {
+		return "admin/product/product-admin";
+	}
+	
 }

@@ -11,7 +11,7 @@
           <!-- DataTales Example -->
           <div class="card shadow mb-4">
             <div class="card-header py-3">
-              <h6 class="m-0 font-weight-bold text-primary">Danh sách sản phẩm</h6>
+              <h6 class="m-0 font-weight-bold text-primary">Danh sách hóa đơn</h6>
             </div>
             <div class="card-body">
               <div class="table-responsive">
@@ -35,7 +35,6 @@
                       <td>	{{ obj.orderStatus.name }}	</td>
                       <td>
                       	<b>Tên</b>: {{ obj.customer.name }}<br>
-                      	<b>Email</b>: {{ obj.customer.email }}<br>
                       	<b>SĐT</b>: {{ obj.customer.phoneNumber }}<br>
                       	<b>Địa chỉ</b>: {{ obj.address }}
                       </td>
@@ -109,7 +108,7 @@
 						<button ng-if="obj.orderStatus.id == 1" class="btn btn-primary" ng-click="save('xác nhận',obj.id,2)">Xác nhận hóa đơn</button>
 						<button ng-if="obj.orderStatus.id == 2" class="btn btn-primary" ng-click="save('vận chuyển',obj.id,3)">Vận chuyển</button>
 						<button ng-if="obj.orderStatus.id == 3 || obj.orderStatus.id == 4" class="btn btn-primary" ng-click="save('giao',obj.id,5)">Đã giao</button>
-						<button ng-if="obj.orderStatus.id != 7" class="btn btn-warning" ng-click="save('hủy',obj.id,7)">Hủy hóa đơn</button>
+						<button ng-if="obj.orderStatus.id < 5" class="btn btn-warning" ng-click="save('hủy',obj.id,7)">Hủy hóa đơn</button>
 					</div>
 				</div>
 			</div>

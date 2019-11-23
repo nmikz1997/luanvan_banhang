@@ -24,11 +24,11 @@ app.controller('ProducerController', function($scope, $http, API){
 		switch (state){
 			case "add":
 				$scope.reset();
-				$scope.frmTitle = 'Thêm nhà cung cấp';
+				$scope.frmTitle = 'Trả lời câu hỏi';
 				break;
 			case "edit":
-				$scope.frmTitle = 'Sửa thông tin nhà cung cấp';
-				console.log(url+id);
+				$scope.frmTitle = 'Trả lời câu hỏi';
+				//console.log(url+id);
 				$http.get(url + id)
 					.then(function (res) {
 						$scope.obj = res.data;

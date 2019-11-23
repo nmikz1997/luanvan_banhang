@@ -1,5 +1,16 @@
 app.controller('ProductsController', function($scope, $http,$timeout, API){
 	
+	$http.get('/stores/active').then(function(res){
+		$scope.stores = res.data;
+	})
+	
+	var storeId;
+	
+	$scope.getStore = function(id){
+		storeId = id;
+		AjaxRenderData(id);
+	}
+	
 	var APIResource = API + 'products/';
 	
 	var method = null;
@@ -14,14 +25,11 @@ app.controller('ProductsController', function($scope, $http,$timeout, API){
 		root: 0
 	}
 	
-	function AjaxRenderData(){
-		$http.get(APIResource)
-		.then(function (res) {
+	function AjaxRenderData(storeId){
+		$http.get(APIResource+`getByStore/${storeId}`).then(function (res) {
 			$scope.products = res.data;
 		});
 	}
-	
-	AjaxRenderData();
 
 
 	$scope.modal = function (state, id) {
@@ -152,10 +160,10 @@ app.controller('ProductsController', function($scope, $http,$timeout, API){
 	 	$scope.confirmDelete = function (id,status) {
 	 		var product = {};
 	 		product.id = id;
-	 		if(status == 1){
+	 		if(status == 0){
 	 			var msg = "Bạn muốn ngừng kinh doanh sản phẩm này?";
 	 			var msgSuccess = "Đã ẩn sản phẩm";
-	 			product.status = 2;
+	 			product.status = 0;
 	 		}else{
 	 			var msg = "Bạn muốn mở bán sản phẩm này?";
 	 			var msgSuccess = "Đã mở bán sản phẩm";
@@ -176,12 +184,16 @@ app.controller('ProductsController', function($scope, $http,$timeout, API){
 						swal(msgSuccess, {
 							   icon: "success",
 						});
-			 			AjaxRenderData();
+			 			AjaxRenderData(storeId);
+			 			jQuery("#myModal").modal('hide');
 			 		}).catch(function(err){
 			 			console.log(err);
 			 		});
 				  }
-				});	
+				});
+	 		
+	 		
+	 		
 //	 		var isConfirmDelete = confirm('Bạn có chắc muốn xóa dòng dữ liệu này hay không');
 //	 		if (isConfirmDelete) {
 //	 			$http.delete(APIResource + id)
@@ -309,8 +321,12 @@ app.controller('ProductsController', function($scope, $http,$timeout, API){
 		 		alert('error');
 		 	});
 		}
+		
 
 	}
+	
+	
+	
 	$scope.modalView360 = function(productId){
 		// Xử lí modal Img
 		jQuery("#imgview360").fileinput({

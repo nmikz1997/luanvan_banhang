@@ -166,7 +166,7 @@ public class ProductServiceImpl implements ProductService{
 		
 		Product productnew = productRepository.save(product);
 		
-		if(product.getId() != null){//tao moi
+		if(product.getStatus() == 0){//tao moi
 			Inventory inventory = new Inventory();
 			inventory.setProduct(productnew);
 			inventory.setQuantity(productnew.getQuantity());
@@ -202,7 +202,9 @@ public class ProductServiceImpl implements ProductService{
 	
 	@Override
 	public void update(Product product) {
-		productRepository.save(product);
+		Product pro = productRepository.getOne(product.getId());
+		pro.setStatus(product.getStatus());
+		productRepository.save(pro);
 	}
 
 	@Override
@@ -305,23 +307,23 @@ public class ProductServiceImpl implements ProductService{
 	{
 		name = covertToString("%"+name+"%");
 		
-		Pageable pageable = PageRequest.of(page,4);
+		Pageable pageable = PageRequest.of(page,8);
 		
 		if(filter.equalsIgnoreCase("priceAsc")) {
 			Sort sort = new Sort(Sort.Direction.ASC, "pri.unitPrice");
-			pageable = PageRequest.of(page,4, sort);
+			pageable = PageRequest.of(page,8, sort);
 		}else if(filter.equalsIgnoreCase("priceDesc")) {
 			Sort sort = new Sort(Sort.Direction.DESC, "pri.unitPrice");
-			pageable = PageRequest.of(page,4, sort);
+			pageable = PageRequest.of(page,8, sort);
 		}else if(filter.equalsIgnoreCase("newest")) {
 			Sort sort = new Sort(Sort.Direction.DESC, "createdAt");
-			pageable = PageRequest.of(page,4, sort);
+			pageable = PageRequest.of(page,8, sort);
 		}else if(filter.equalsIgnoreCase("bestStar")) {
 			Sort sort = new Sort(Sort.Direction.DESC, "avgStar");
-			pageable = PageRequest.of(page,4, sort);
+			pageable = PageRequest.of(page,8, sort);
 		}else if(filter.equalsIgnoreCase("bestSeller")) {
 			Sort sort = JpaSort.unsafe(Sort.Direction.DESC, "count(dt.product.id)");
-			pageable = PageRequest.of(page,4, sort);
+			pageable = PageRequest.of(page,8, sort);
 		}
 		
 		Page<Product> products;
@@ -504,5 +506,10 @@ public class ProductServiceImpl implements ProductService{
 		});
 		map.put("success", "Xóa thành công");
 		return map;
+	}
+
+	@Override
+	public List<Product> findByStoreId(Long storeId) {
+		return productRepository.findByStoreId(storeId);	
 	}
 }

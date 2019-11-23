@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{admin/layout/Layout}">
 <head>
-	<title>Quản lý sản phẩm</title>
+	<title>Duyệt sản phẩm nhà bán hàng</title>
 </head>
 <section layout:fragment="css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.10/css/bootstrap-select.min.css" />
@@ -36,11 +36,22 @@
 	<section layout:fragment="content">
 		<div class="container-fluid" ng-controller="ProductsController">
 			<!-- Page Heading -->
-			<h1 class="h3 mb-2 text-gray-800">Quản lý sản phẩm</h1>
+			<h1 class="h3 mb-2 text-gray-800">Duyệt sản phẩm nhà bán hàng</h1>
 			<!-- DataTales Example -->
 			<div class="card shadow mb-4">
 				<div class="card-header py-3">
-					<h6 class="m-0 font-weight-bold text-primary">Danh sách sản phẩm</h6>
+					<label>Chọn cửa hàng:</label>
+					<select class="selectpicker" data-size="5" data-style="btn-success"
+							data-live-search="true" 
+							ng-model="selectedStore" 
+							ng-change="getStore(selectedStore)">
+						<option data-tokens="ketchup mustard" 
+								ng-repeat="store in stores" 
+								ng-selected="selectedStore == store.id" 
+								value="{{store.id}}">
+							{{store.name}}
+						</option>
+					</select>
 				</div>
 				<div class="card-body">
 					<div class="table-responsive">
@@ -52,11 +63,8 @@
 									<th>Số lượng tồn</th>
 									<th>Đơn giá gốc</th>
 									<th>Đơn giá bán</th>
-									<th>
-										<a href="#" class="btn btn-success" ng-click="modal('add')">
-											Thêm sản phẩm
-										</a>
-									</th>
+									<th>Trạng thái</th>
+									<th>Thông tin chi tiết</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -74,23 +82,18 @@
 									<td>	{{ product.price | currency:"":0}} đ</td>
 									<td>	{{ product.priceNew | currency:"":0}} đ</td>
 									<td align="center">
+										<span ng-if="product.status == 0">Chờ duyệt</span>
+										<span ng-if="product.status == 1">Đang kinh doanh</span>
+										<span ng-if="product.status == 2">Ngừng kinh doanh</span>
+									</td>
+									<td align="center">
 										<a href="#" ng-click="modalView360(product.id)" class="btn btn-info" title="Ảnh 360" />
 										<i class="fas fa-sync-alt"></i>
 									</a>
-									<a href="#" ng-click="modalImg('images',product.id)" class="btn btn-primary" title="Quản lý hình ảnh sản phẩm" />
-									<i class="fas fa-images"></i>
 								</a>
 								<a href="#" ng-click="modal('edit',product.id)" class="btn btn-warning" title="Chỉnh sửa thông tin sản phẩm" />
 								<i class="fas fa-edit"></i>
 							</a>
-							<span sec:authorize="hasRole('ROLE_ADMIN')">
-							<a href="#" ng-if="product.status == 1" ng-click="confirmDelete(product.id,product.status)" class="btn btn-danger" title="Ngừng kinh doanh sản phẩm">
-								<i class="fas fa-eye-slash"></i>
-							</a>
-							<a href="#" ng-if="product.status == 0" ng-click="confirmDelete(product.id,product.status)" class="btn btn-success" title="Mở bán sản phẩm">
-								<i class="fas fa-eye"></i>
-							</a>
-							</span>
 						</td>
 					</tr>
 				</tr>
@@ -104,7 +107,7 @@
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title">{{frmTitle}}</h5>
+				<h5 class="modal-title">Kiểm duyệt sản phẩm</h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
@@ -126,13 +129,13 @@
 						<div id="home" class="container tab-pane active"><br>
 							<div class="form-group">
 								<label for="name" class="col-form-label">Tên sản phẩm:</label>
-								<input type="text" class="form-control" id="name" name="name" ng-model="product.name" ng-required="true"/>
+								<input type="text" readonly="true" class="form-control" id="name" name="name" ng-model="product.name" ng-required="true"/>
 								<span id="helpBlock2" class="help-block" ng-show="frmProduct.name.$error.required">*</span>
 							</div>
 							<div class="row">
 								<div class="form-group col-6">
 									<label class="col-form-label">Chọn danh mục</label>
-									<select name="category" id="category" class="form-control" ng-model="product.category.id">
+									<select name="category" readonly="true" id="category" class="form-control" ng-model="product.category.id">
 										<optgroup ng-repeat="cate in categories" label="{{ cate.name }}">
 											<option ng-repeat="ct in cate.categories" ng-value="ct.id">{{ ct.name }}</option>
 										</optgroup>
@@ -140,43 +143,43 @@
 								</div>
 								<div class="form-group col-6">
 									<label for="origin" class="col-form-label">Xuất xứ: </label>
-									<select name="origin" id="origin" ng-model="product.origin.id" class="form-control"  ng-options="origin.id as origin.name for origin in origins">
+									<select name="origin" readonly="true" id="origin" ng-model="product.origin.id" class="form-control"  ng-options="origin.id as origin.name for origin in origins">
 									</select>
 									<span id="helpBlock2" class="help-block" ng-show="frmProduct.origin.$error.required">*</span>
 								</div>
 							</div>
 							<div class="row">
 								<div class="form-group col-6">
-									<label for="material" class="col-form-label">Vật liệu: </label><span id="helpBlock2" class="help-block" ng-show="frmProduct.material.$error.required">*</span>
-									<select name="material" id="material" ng-model="product.material.id" class="form-control" ng-options="material.id as material.name for material in materials">
+									<label for="material" readonly="true" class="col-form-label">Vật liệu: </label><span id="helpBlock2" class="help-block" ng-show="frmProduct.material.$error.required">*</span>
+									<select name="material" readonly="true" id="material" ng-model="product.material.id" class="form-control" ng-options="material.id as material.name for material in materials">
 									</select>
 								</div>
 								<div class="form-group col-6">
 									<label for="producer" class="col-form-label">Nhà sản xuất <span id="helpBlock2" class="help-block" ng-show="frmProduct.producer.$error.required">*</span>: </label>
-									<select name="producer" id="producer" ng-model="product.producer.id" class="form-control" ng-options="producer.id as producer.name for producer in producers">
+									<select name="producer" readonly="true" id="producer" ng-model="product.producer.id" class="form-control" ng-options="producer.id as producer.name for producer in producers">
 									</select>
 								</div>
 							</div>
-							<div ng-hide="!anGiaBan" class="form-group">
+							<div ng-hide="true" class="form-group">
 								<label for="quantity" class="col-form-label">Số lượng gốc:</label>
-								<input type="number" min="0" class="form-control" id="quantity" name="quantity" ng-readonly="!anGiaBan" ng-model="product.quantity" ng-required="true" />
+								<input type="number" readonly="true" min="0" class="form-control" id="quantity" name="quantity" ng-readonly="!anGiaBan" ng-model="product.quantity" ng-required="true" />
 								<span id="helpBlock2" class="help-block" ng-show="frmProduct.quantity.$error.required">*</span>
 							</div>
 							<div class="form-group">
 								<label for="image" class="col-form-label">Ảnh đại diện:</label>
-								<input type="file" id="image" name="image" ng-model="product.avatar" />
+								<input ng-hide="true" type="file" readonly="true" id="image" name="image" ng-model="product.avatar" />
 								<img id="avatar" style="width:200px; height:200px" ng-src="{{anhAvatar}}" />
 							</div>
 						</div>
 						<div id="menu1" class="container tab-pane fade"><br>
 							<div class="form-group">
 								<label for="price" class="col-form-label">Giá gốc:</label>
-								<input type="number" min="{{giaban.unitPrice}}" step="500" ng-model="giagoc.unitPrice" class="form-control" id="price" name="price" ng-required="!anGiaBan" />
+								<input type="number" readonly="true" min="{{giaban.unitPrice}}" step="500" ng-model="giagoc.unitPrice" class="form-control" id="price" name="price" ng-required="!anGiaBan" />
 								<span id="helpBlock2" class="help-block" ng-show="frmProduct.price.$error.required">*</span>
 							</div>
 							<div class="form-group" ng-hide="anGiaBan">
 								<label for="price" class="col-form-label">Giá bán:</label>
-								<input type="number" min=0 max="{{giagoc.unitPrice}}" step="500" ng-model="giaban.unitPrice" ng-change="thayDoiGiaBan()" class="form-control" id="pricenew" name="pricenew" ng-required="!anGiaBan" />
+								<input type="number" readonly="true" min=0 max="{{giagoc.unitPrice}}" step="500" ng-model="giaban.unitPrice" ng-change="thayDoiGiaBan()" class="form-control" id="pricenew" name="pricenew" ng-required="!anGiaBan" />
 								<span id="helpBlock2" class="help-block" ng-show="frmProduct.price.$error.required">*</span>
 							</div>
 							<table class="table table-bordered">
@@ -197,7 +200,7 @@
 						<div id="menu2" class="container tab-pane fade"><br>
 							<div class="form-group">
 								<label for="mota" class="col-form-label">Mô tả:</label>
-								<textarea class="form-control" id="derciption" name="derciption" ng-model="product.derciption" ng-required="true" ckeditor="editorOptions"></textarea>
+								<textarea readonly="true" class="form-control" id="derciption" name="derciption" ng-model="product.derciption" ng-required="true" ckeditor="editorOptions"></textarea>
 								<!--<textarea ng-model="product.derciption" class="form-control" name="description" id="description" ckeditor="editorOptions"></textarea>-->
 								<span id="helpBlock2" class="help-block" ng-show="frmProduct.derciption.$error.required">Vui lòng mô tả sản phẩm</span>
 							</div>
@@ -205,8 +208,18 @@
 					</div>
 				</form>
 			</div>
-			<div class="modal-footer">
-				<button type="button" id="submit" class="btn btn-primary" ng-disabled="frmProduct.$invalid" ng-click="save()">Gửi</button>
+			<div class="modal-footer">		
+				<span sec:authorize="hasRole('ROLE_ADMIN')">
+					<a href="#" ng-if="product.status == 0" ng-click="confirmDelete(product.id,1)" class="btn btn-danger" title="Mở bán sản phẩm">
+						Duyệt sản phẩm
+					</a>
+					<!--<a href="#" ng-if="product.status == 1" ng-click="confirmDelete(product.id,2)" class="btn btn-success" title="Ngừng kinh doanh sản phẩm">
+						Khóa sản phẩm
+					</a>
+					<a href="#" ng-if="product.status == 0" ng-click="confirmDelete(product.id,product.status)" class="btn btn-danger" title="Xóa sản phẩm">
+						Xóa sản phẩm
+					</a>-->
+				</span>
 			</div>
 		</div>
 	</div>
@@ -260,7 +273,7 @@
 			  		<br>
 		  			<form method="post" id="frmEditImg360" class="form-horizontal" enctype="multipart/form-data">
 			  			<div class="alert alert-primary" ng-if="listImage360.length <= 0">Chưa có ảnh 360 của sản phẩm</div>
-			  			<div class="row-image" ng-if="listImage360.length > 0" >
+			  			<div ng-hide='true' class="row-image" ng-if="listImage360.length > 0" >
 					    	<div class="column-image hover-shadow" ng-repeat="img360 in listImage360" >
 					      		<img ng-src="/picture/{{img360.path}}" alt="Image">
 					      		<div style="text-align: center; padding: 10px 0">
@@ -281,12 +294,11 @@
 					    	</div>
 						</div>
 						<div style="float: right; padding:10px " ng-if="listImage360.length > 0">
-							<button type="button" ng-click="update360STT()" class="btn btn-success" ><i class="fa fa-dot-circle-o"></i> Cập nhật</button>
-			    			<button type="submit" class="btn btn-danger" ><i class="fa fa-trash-o"></i> Xóa ảnh</button>
+
 			    		</div>
 		    		</form>
 		  		</div>	
-					<form  method="post" name="frmImg360" id="frmImg360" enctype="multipart/form-data" >
+					<form ng-hide="true" method="post" name="frmImg360" id="frmImg360" enctype="multipart/form-data" >
 						<div class="col-md-12">
 							<div class="form-group">
 					            <div class="file-loading">
@@ -310,7 +322,7 @@
 
 </section>
 <section layout:fragment="script"> 
-	<script th:src="@{/app/products.js}"></script>
+	<script th:src="@{/app/products-admin.js}"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.10/js/bootstrap-select.min.js"></script>
 	<script th:src="@{/js/plugins/piexif.js}"></script>
     <script th:src="@{/js/plugins/sortable.js}"></script>

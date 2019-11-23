@@ -2,12 +2,18 @@ package com.luanvan.service;
 
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+
 import com.luanvan.dto.request.CreateStoreDTO;
 import com.luanvan.dto.response.StoreDTO;
 import com.luanvan.model.Store;
 public interface StoreService {
 	
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	List<StoreDTO> findAll();
+	
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	List<StoreDTO> findAllActive();
 	
 	List<Store> findByName(String name);
 	

@@ -147,7 +147,7 @@
 										<var class="mb-3 price h3 text-success">
 											<span class="num">{{product.priceNew | currency:"":0}} đ</span>
 										</var>
-										<span class="">Giá thị trường: </span>
+										<span ng-if="((product.price-product.priceNew)/product.price)*100" class="">Giá thị trường: </span>
 										<var ng-if="((product.price-product.priceNew)/product.price)*100" class="price h6 text-dark">
 											<del class="price-old" th:inline="text">{{product.price | currency:"":0}} đ</del>
 											<!--<span class="discout">-{{ ((product.price-product.priceNew)/product.price)*100 | number:0 }}%</span>-->
@@ -236,12 +236,12 @@
 				<div class="card-body">
 					<div ng-repeat="question in questions">
 						<div class="row">
-							<div class="col-2 text-center">
+							<div class="col-sm-2 text-center">
 								<br>
 								<dt>{{question.customer.name}}</dt>
 								<dd>{{question.createdAt | date:"MM/dd/yyyy" :'UTC' }}</dd>
 							</div>
-							<div class="col-10">
+							<div class="col-sm-10">
 								<dt style="margin-bottom: 7px;" >{{question.topic}}</dt>
 								<dd>{{question.replyFirst}}</dd>
 							</div>
@@ -252,7 +252,7 @@
 					<a href="#" style="font-size:13px;">Xem tất cả câu hỏi đã được trả lời...</a>
 					<hr>
 					<div class="row col-12">
-					<div class="col-11">
+					<div class="col-11" style="margin-bottom: 10px;">
 						<input type="text" placeholder="Đặt câu hỏi về sản phẩm..." ng-model="topic" class="form-control" />
 					</div>
 					<div class="col-1">
@@ -270,12 +270,12 @@
 				<div class="card-body">
 					<div ng-repeat="review in reviews">
 						<div class="row">
-							<div class="col-2 text-center">
+							<div class="col-sm-2 text-center">
 								<br>
 								<dt>{{review.customer.name}}</dt>
 								<dd>{{review.createdAt | date:"MM/dd/yyyy" :'UTC' }}</dd>
 							</div>
-							<div class="col-10">
+							<div class="col-sm-10">
 								Đánh giá: <rate-yo rating="review.star"></rate-yo>
 								<div style="color: #4caf50; margin-bottom:15px;">
 									<img width="15" height="16" 

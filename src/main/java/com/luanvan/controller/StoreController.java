@@ -36,6 +36,11 @@ public class StoreController {
 		return StoreService.findAll();
 	}
 	
+	@GetMapping("/active")
+	public List<StoreDTO> findAllActive() {
+		return StoreService.findAllActive();
+	}
+	
 	@GetMapping("{id}")
 	public Store show(@PathVariable(name = "id") Long id) {
 		return StoreService.findById(id);

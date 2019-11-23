@@ -105,6 +105,13 @@
 	.price-new{
 		font-size: 16px;
 	}
+	.price-old{
+		font-size:0.85rem;
+	}
+	
+	h4, .h4 {
+    font-size: 1.3rem;
+	}
 	
 	.card-product .action-wrap{
 	    margin-top: -6px;

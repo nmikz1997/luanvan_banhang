@@ -9,12 +9,11 @@ app.controller('IndexController', function($scope, $http, API){
 			$scope.soCauHoi = res.data;
 		})
 	}).then(function(){
-		hienThi();
+		//hienThi();
 	})
-	
-	function hienThi(){
+	$(document).ready(function() { 
 		document.getElementById('show').style.display= "block";
-	}
+	});
 	
 	$scope.thang = [];
 	$scope.year	= [

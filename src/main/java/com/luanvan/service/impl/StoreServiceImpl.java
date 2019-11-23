@@ -75,6 +75,13 @@ public class StoreServiceImpl implements StoreService{
 		StoreRepository.deleteById(id);
 	}
 
+	@Override
+	public List<StoreDTO> findAllActive() {
+		List<Store> stores = StoreRepository.findByStatus(1);
+		ModelMapper mapper = new ModelMapper();
+		List<StoreDTO> dto = mapper.map(stores,new TypeToken<List<StoreDTO>>(){}.getType());
+		return dto;
+	}
 	
 
 }

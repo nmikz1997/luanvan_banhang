@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,6 +23,7 @@ import com.luanvan.model.Product;
 
 public interface ProductService {
 	
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	List<Product> findAll();
 	
 	Set<ProductDTO> selectAll();
@@ -41,7 +43,8 @@ public interface ProductService {
 	void delete(Long id);
 	
 	void deleteByCategoryId(Long categoryId);
-
+	
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	void update(Product product);
 	
 	//san pham dang khuyen mai
@@ -81,4 +84,6 @@ public interface ProductService {
 	Map<String, String> deleteImage360(List<Long> imageIds);
 
 	ResponseEntity<?> uploadImage360(int product, MultipartFile[] uploadfiles, CustomUserDetails user);
+
+	List<Product> findByStoreId(Long storeId);
 }
