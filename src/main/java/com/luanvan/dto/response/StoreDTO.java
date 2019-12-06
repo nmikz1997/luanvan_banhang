@@ -3,6 +3,9 @@ package com.luanvan.dto.response;
 import java.util.Date;
 
 import com.luanvan.model.Customer;
+import com.luanvan.model.District;
+import com.luanvan.model.Province;
+import com.luanvan.model.Ward;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -17,6 +20,9 @@ public class StoreDTO {
 	private String derciption;
 	private Date createdAt;
 	private User user;
+	private Province province;
+	private District district;
+	private Ward ward;
 	
 	@Getter @Setter
 	public static class User{

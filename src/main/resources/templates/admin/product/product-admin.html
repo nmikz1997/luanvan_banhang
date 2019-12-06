@@ -61,7 +61,7 @@
 									<th>Tên sản phẩm</th>
 									<th ng-hide="true">Số lượng gốc</th>
 									<th>Số lượng tồn</th>
-									<th>Đơn giá gốc</th>
+									<th ng-hide="true">Đơn giá gốc</th>
 									<th>Đơn giá bán</th>
 									<th>Trạng thái</th>
 									<th>Thông tin chi tiết</th>
@@ -79,29 +79,24 @@
 										<input type="number" style="width:auto;" min="0" ng-model="moi" class="form-control d-inline" width="10" ng-value="product.quantity - product.sold">
 										<button class="btn btn-primary float-right d-inline" ng-click="thayDoiSL(product.id,$index,moi)">Lưu</button>
 									</td>-->
-									<td>	{{ product.price | currency:"":0}} đ</td>
+									<td ng-hide="true">	{{ product.price | currency:"":0}} đ</td>
 									<td>	{{ product.priceNew | currency:"":0}} đ</td>
 									<td align="center">
-										<span ng-if="product.status == 0">Chờ duyệt</span>
+										<span ng-if="product.status == 0">Tạm khóa</span>
 										<span ng-if="product.status == 1">Đang kinh doanh</span>
 										<span ng-if="product.status == 2">Ngừng kinh doanh</span>
 									</td>
 									<td align="center">
-										<a href="#" ng-click="modalView360(product.id)" class="btn btn-info" title="Ảnh 360" />
-										<i class="fas fa-sync-alt"></i>
-									</a>
-								</a>
-								<a href="#" ng-click="modal('edit',product.id)" class="btn btn-warning" title="Chỉnh sửa thông tin sản phẩm" />
-								<i class="fas fa-edit"></i>
-							</a>
-						</td>
-					</tr>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-</div>
-</div>
+										<a href="#" ng-click="modal('edit',product.id)" class="btn btn-warning" title="Chỉnh sửa thông tin sản phẩm" />
+											<i class="fas fa-edit"></i>
+										</a>
+									</td>
+								</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
 <!-- /.container-fluid -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
 	<div class="modal-dialog modal-lg">
@@ -210,15 +205,12 @@
 			</div>
 			<div class="modal-footer">		
 				<span sec:authorize="hasRole('ROLE_ADMIN')">
-					<a href="#" ng-if="product.status == 0" ng-click="confirmDelete(product.id,1)" class="btn btn-danger" title="Mở bán sản phẩm">
+					<a href="#" ng-if="product.status == 0" ng-click="confirmDelete(product.id,1)" class="btn btn-success" title="Mở bán sản phẩm">
 						Duyệt sản phẩm
 					</a>
-					<!--<a href="#" ng-if="product.status == 1" ng-click="confirmDelete(product.id,2)" class="btn btn-success" title="Ngừng kinh doanh sản phẩm">
+					<a href="#" ng-if="product.status != 0" ng-click="confirmDelete(product.id,0)" class="btn btn-success" title="Ngừng kinh doanh sản phẩm">
 						Khóa sản phẩm
 					</a>
-					<a href="#" ng-if="product.status == 0" ng-click="confirmDelete(product.id,product.status)" class="btn btn-danger" title="Xóa sản phẩm">
-						Xóa sản phẩm
-					</a>-->
 				</span>
 			</div>
 		</div>

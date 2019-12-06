@@ -50,8 +50,9 @@
 									<th>Tên sản phẩm</th>
 									<th ng-hide="true">Số lượng gốc</th>
 									<th>Số lượng tồn</th>
-									<th>Đơn giá gốc</th>
+									<th ng-hide="true">Đơn giá gốc</th>
 									<th>Đơn giá bán</th>
+									<th>Tình trạng</th>
 									<th>
 										<a href="#" class="btn btn-success" ng-click="modal('add')">
 											Thêm sản phẩm
@@ -62,17 +63,22 @@
 							<tbody>
 								<tr ng-repeat = "product in products">
 									<td style="width:200px">
-										<a href="#">
+										<a ng-href="/chi-tiet-san-pham/{{product.id}}" target="_blank">
 											{{ product.name }}
 										</a>
 									</td>
-									<td>{{ product.quantity }}</td>
+									<td> {{ product.quantity - product.sold }} <span><i style="color:#f4b30d;" ng-if="product.quantity < 5" class="fas fa-exclamation-circle"></i></span></td>
 									<!--<td>	
 										<input type="number" style="width:auto;" min="0" ng-model="moi" class="form-control d-inline" width="10" ng-value="product.quantity - product.sold">
 										<button class="btn btn-primary float-right d-inline" ng-click="thayDoiSL(product.id,$index,moi)">Lưu</button>
 									</td>-->
-									<td>	{{ product.price | currency:"":0}} đ</td>
+									<td ng-hide="true">	{{ product.price | currency:"":0}} đ</td>
 									<td>	{{ product.priceNew | currency:"":0}} đ</td>
+									<td>	{{ product.status == 0 ? 'Tạm khóa' 
+											 : product.status == 1 ? 'Đang kinh doanh' 
+											 : 'Ngừng kinh doanh'
+											}}
+									</td>
 									<td align="center">
 										<a href="#" ng-click="modalView360(product.id)" class="btn btn-info" title="Ảnh 360" />
 										<i class="fas fa-sync-alt"></i>
@@ -83,13 +89,13 @@
 								<a href="#" ng-click="modal('edit',product.id)" class="btn btn-warning" title="Chỉnh sửa thông tin sản phẩm" />
 								<i class="fas fa-edit"></i>
 							</a>
-							<span sec:authorize="hasRole('ROLE_ADMIN')">
-							<a href="#" ng-if="product.status == 1" ng-click="confirmDelete(product.id,product.status)" class="btn btn-danger" title="Ngừng kinh doanh sản phẩm">
-								<i class="fas fa-eye-slash"></i>
-							</a>
-							<a href="#" ng-if="product.status == 0" ng-click="confirmDelete(product.id,product.status)" class="btn btn-success" title="Mở bán sản phẩm">
-								<i class="fas fa-eye"></i>
-							</a>
+							<span>
+								<a href="#" ng-if="product.status == 1" ng-click="confirmDelete(product.id,2)" class="btn btn-danger" title="Ngừng kinh doanh sản phẩm">
+									<i class="fas fa-eye-slash"></i>
+								</a>
+								<a href="#" ng-if="product.status == 2" ng-click="confirmDelete(product.id,1)" class="btn btn-success" title="Mở bán sản phẩm">
+									<i class="fas fa-eye"></i>
+								</a>
 							</span>
 						</td>
 					</tr>

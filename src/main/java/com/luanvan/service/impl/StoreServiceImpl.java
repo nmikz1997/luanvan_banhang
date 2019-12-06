@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.luanvan.dto.request.CreateStoreDTO;
-import com.luanvan.dto.response.ProductDTO;
 import com.luanvan.dto.response.StoreDTO;
 import com.luanvan.exception.NotFoundException;
 import com.luanvan.model.Store;
@@ -21,10 +20,13 @@ import com.luanvan.service.StoreService;
 public class StoreServiceImpl implements StoreService{
 	
 	private StoreRepository StoreRepository;
+	private SendGridEmailService sendGridEmailService;
 	
 	@Autowired
-	public StoreServiceImpl(StoreRepository StoreRepository) {
+	public StoreServiceImpl(StoreRepository StoreRepository,
+			SendGridEmailService sendGridEmailService) {
 		this.StoreRepository = StoreRepository;
+		this.sendGridEmailService 	= sendGridEmailService;
 	}
 	
 	@Override
@@ -68,6 +70,21 @@ public class StoreServiceImpl implements StoreService{
 				.orElseThrow(NotFoundException::new);
 		store.setStatus(status.getStatus());
 		StoreRepository.save(store);
+		
+		StringBuilder  string = new StringBuilder("GreenLife xin kính chào!");
+		if(status.getStatus() == 1) {
+			string.append("<p>Yêu câu bán hàng của bạn đã được duyệt.</p>");
+		}else if(status.getStatus() == 3){
+			string.append("<p>Yêu câu bán hàng của bạn đã bị từ chối.</p>");
+		}else if(status.getStatus() == 2) {
+			string.append("<p>Tài khoản của bạn tạm khóa.</p>");
+		}
+		
+		string.append("<p>Mọi thắc mắc và góp ý vui lòng liên hệ với GreenLife Support qua email: <a href=\"mailto:trinhthenguyen123@gmail.vn\" style=\"color:#099202;text-decoration:none\" target=\"_blank\"> <strong>hotro@greenlife.vn</strong> </a> hoặc gọi số điện thoại 1900-6035 (8-21h cả T7,CN). Đội ngũ GreenLife Support luôn sẵn sàng hỗ trợ bạn bất kì lúc nào.</p>");
+		string.append("<strong>GreenLife</strong><p> Xin cảm ơn!</p>");
+		
+		sendGridEmailService.sendHTML(store.getUser().getEmail(), "Xác nhận bán hàng cùng GreenLife", string.toString());
+
 	}
 
 	@Override

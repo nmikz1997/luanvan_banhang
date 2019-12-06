@@ -17,8 +17,7 @@ app.controller('IndexController', function($scope, $http, API){
 	
 	$scope.thang = [];
 	$scope.year	= [
-		{id:2019, name:"2019"},
-		{id:2018, name:"2018"}
+		{id:2019, name:"2019"}
 	];
 	
 	$scope.nam = $scope.year[0];

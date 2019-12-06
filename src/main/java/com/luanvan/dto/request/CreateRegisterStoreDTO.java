@@ -1,7 +1,5 @@
 package com.luanvan.dto.request;
 
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -27,6 +25,9 @@ public class CreateRegisterStoreDTO {
 	
 	@Valid 
 	private StoreDTO store;
+	
+	@Valid 
+	private CreateCustomerDTO customer;
 	
 	@Setter @Getter
 	public static class StoreDTO {

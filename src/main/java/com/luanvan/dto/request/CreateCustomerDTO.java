@@ -1,17 +1,12 @@
 package com.luanvan.dto.request;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.luanvan.model.Customer;
-import com.luanvan.model.Order;
-import com.luanvan.model.Review;
-import com.luanvan.model.User;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

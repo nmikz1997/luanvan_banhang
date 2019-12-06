@@ -115,7 +115,7 @@
 									<div class="img-small-wrap">
 										<div class="item-gallery" ng-click="changeAvatar(anhChinh)"> <img ng-src="/picture/{{anhChinh}}"></div>
 										<div class="item-gallery" ng-repeat="pic in product.pictures" ng-click="changeAvatar(pic.path)"> <img ng-src="/picture/{{pic.path}}"></div>
-										<div class="item-gallery" ng-click="view360()"> <img src="/img/360.png"></div>
+										<div class="item-gallery" ng-show="coAnh360" ng-click="view360()"> <img src="/img/360.png"></div>
 										
 									</div>
 								</article>
@@ -186,6 +186,7 @@
 										</div>
 									</div>
 										<p ng-if="product.quantity - product.sold <= 0 || product.status == 0" class="alert alert-warning"> Tạm hết hàng</p>
+										<p ng-if="product.status == 2" class="alert alert-warning">Ngừng kinh doanh</p>
 									<!--<a href="#"><i class="far fa-flag"></i> Phản ánh sản phẩm </a> -->
 								</article> 
 							</aside>

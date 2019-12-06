@@ -512,4 +512,20 @@ public class ProductServiceImpl implements ProductService{
 	public List<Product> findByStoreId(Long storeId) {
 		return productRepository.findByStoreId(storeId);	
 	}
+
+	@Override
+	@Transactional
+	public void updateByStore(Product product, Long storeId) {
+		Product pro = productRepository.getOne(product.getId());
+
+		if(pro.getStore().getId() != storeId) {
+			throw new RollbackException("Bạn không phải chủ món hàng này!!");
+		}else if(pro.getStatus() == 1 || pro.getStatus() == 2){
+			pro.setStatus(product.getStatus());
+			productRepository.save(pro);
+		}
+		
+		
+	}
+
 }

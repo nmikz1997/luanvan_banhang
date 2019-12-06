@@ -149,56 +149,39 @@ app.controller('ProductsController', function($scope, $http,$timeout, API){
 	});
 
 
-	 	$scope.confirmDelete = function (id,status) {
-	 		var product = {};
-	 		product.id = id;
-	 		if(status == 1){
-	 			var msg = "Bạn muốn ngừng kinh doanh sản phẩm này?";
-	 			var msgSuccess = "Đã ẩn sản phẩm";
-	 			product.status = 2;
-	 		}else{
-	 			var msg = "Bạn muốn mở bán sản phẩm này?";
-	 			var msgSuccess = "Đã mở bán sản phẩm";
-	 			product.status = 1;
-	 		}
-	 		
-	 		swal({
-				  title: msg,
-				  text: "",
-				  icon: "",
-				  buttons: true,
-				  dangerMode: false,
-				})
-				.then((willDelete) => {
-				  if (willDelete) {
-					  
-					$http.put('/products',product).then(function(res){
-						swal(msgSuccess, {
-							   icon: "success",
-						});
-			 			AjaxRenderData();
-			 		}).catch(function(err){
-			 			console.log(err);
-			 		});
-				  }
-				});	
-//	 		var isConfirmDelete = confirm('Bạn có chắc muốn xóa dòng dữ liệu này hay không');
-//	 		if (isConfirmDelete) {
-//	 			$http.delete(APIResource + id)
-//	 		.then(function (res) { // .then is sync func
-//	 			//async block
-//	 			console.log(res);
-//	 			//
-//	 		})
-//	 		.then(function (){ // delete success
-//	 			AjaxRenderData();
-//	 		})
-//	 		.catch(function(err) { //delete fail
-//	 			console.log(err);
-//	 		});
-//	 	} else {
-//	 		return false;
-//	 	}
+	 $scope.confirmDelete = function (id,status) {
+ 		var product = {};
+ 		product.id = id;
+ 		if(status == 2){
+ 			var msg = "Bạn muốn ngừng kinh doanh sản phẩm này?";
+ 			var msgSuccess = "Đã ẩn sản phẩm";
+ 			product.status = 2;
+ 		}else{
+ 			var msg = "Bạn muốn mở bán sản phẩm này?";
+ 			var msgSuccess = "Đã mở bán sản phẩm";
+ 			product.status = 1;
+ 		}
+ 		
+ 		swal({
+			  title: msg,
+			  text: "",
+			  icon: "",
+			  buttons: true,
+			  dangerMode: false,
+			})
+			.then((willDelete) => {
+			  if (willDelete) {
+				  
+				$http.put('/products/update-by-store',product).then(function(res){
+					swal(msgSuccess, {
+						icon: "success",
+					});
+		 			AjaxRenderData();
+		 		}).catch(function(err){
+		 			console.log(err);
+		 		});
+			  }
+			});
 	 }
 	
 	$http.get(API + 'origins').then(function (response) {

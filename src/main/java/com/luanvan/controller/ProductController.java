@@ -100,6 +100,11 @@ public class ProductController {
 		return productService.chiTietSanPham(id);
 	}
 	
+	@GetMapping("/kiem-tra-status/{id}")
+	public Boolean statusCheck(@PathVariable("id") Long id) {
+		return productService.chiTietSanPham(id).getStatus() == 1;
+	}
+	
 	@GetMapping("inventory/{productId}")
 	public InventoryProductDTO getInventory(@PathVariable Long productId) {
 		return productService.findInventory(productId);
@@ -107,12 +112,14 @@ public class ProductController {
 	
 	@PostMapping("/gio-hang")
 	public List<ProductDTO> gioHang(@RequestBody List<CartItemsDTO> req) {
+		List<ProductDTO> dataCart = new ArrayList<ProductDTO>();
+		if(req.toArray().length == 0) return dataCart;
 		List<Long> ids = new ArrayList<Long>();
 		req.forEach(product ->{
 			ids.add(product.getId());
 		});
 		
-		List<ProductDTO> dataCart = productService.productsInIds(ids);
+		dataCart = productService.productsInIds(ids);
 		
 		dataCart.forEach(product ->{
 			req.forEach(r -> {
@@ -165,6 +172,12 @@ public class ProductController {
 	@ResponseStatus(HttpStatus.OK)
 	public void update(@RequestBody Product product) {
 		productService.update(product);
+	}
+	
+	@PutMapping("/update-by-store")
+	@ResponseStatus(HttpStatus.OK)
+	public void updateByStore(@RequestBody Product product,@AuthenticationPrincipal CustomUserDetails store) {
+		productService.updateByStore(product, store.getStoreId());
 	}
 	
 	@DeleteMapping("{id}")

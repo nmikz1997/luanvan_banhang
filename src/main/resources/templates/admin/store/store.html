@@ -26,15 +26,15 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr ng-repeat = "obj in data">
+                    <tr ng-repeat = "obj in data | filter:{ id: '!3'}">
                       <td>{{ obj.name }}</td>
                       <td style="width:35%">
                      	<ul>
 						  <li><strong>Địa chỉ: </strong>
 						  		{{ obj.address }},
-						  		{{obj.ward.name}},
-						  		{{obj.district.name}},
-						  		{{obj.province.name}}
+						  		{{ obj.ward.name}},
+						  		{{ obj.district.name}},
+						  		{{ obj.province.name}}
 						  </li>
 						  <li><strong>SĐT: </strong>{{ obj.phoneNumber }}</li>
 						</ul>

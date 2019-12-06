@@ -37,6 +37,7 @@ public class UserController{
 	
 	@PostMapping("dang-ky-ban-hang")
 	public void registerStore(@Valid @RequestBody CreateRegisterStoreDTO req) {
+		//System.out.println(req);
 		userService.RegisterStore(req);
 	}
 	

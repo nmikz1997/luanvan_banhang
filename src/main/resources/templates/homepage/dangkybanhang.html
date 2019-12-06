@@ -34,6 +34,26 @@
                 <div class="form-group row">
                 </div>
                 <div class="form-group">
+                  <label for="hoTen">Họ tên</label>
+                  <input type="text" class="form-control form-control-user" ng-model="obj.customer.name" id="hoTen" required="true" ng-required="true" placeholder="Họ tên" autocomplete="off" />
+                </div>
+                <div class="form-group">
+                	<label for="">Giới tính</label><br>
+	                <div class="custom-control custom-radio custom-control-inline">
+					  <input type="radio" class="custom-control-input" id="gender1" ng-model="obj.customer.gender" ng-value="0" name="radio-stacked" required />
+					  <label class="custom-control-label" for="gender1">Nam</label>
+					</div>
+					<div class="custom-control custom-radio custom-control-inline">
+					  <input type="radio" class="custom-control-input" id="gender0" ng-model="obj.customer.gender" ng-value="1" name="radio-stacked" required />
+					  <label class="custom-control-label" for="gender0">Nữ</label>
+					</div>
+				</div>
+				<div class="form-group">
+                  <label for="birthDate">Ngày sinh</label>
+                  <input type="date" ng-model="obj.customer.birthDate" max="{{today | date:'yyyy-MM-dd'}}" class="form-control" id="birthDate" required="true" ng-required="true" />
+                </div>
+                
+                <div class="form-group">
                   <label for="hoTen">Tên cửa hàng</label>
                   <input type="text" class="form-control form-control-user" ng-model="obj.store.name" id="hoTen" required="true" ng-required="true" placeholder="Tên doanh nghiệp" autocomplete="off" />
                 </div>

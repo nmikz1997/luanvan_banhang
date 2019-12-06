@@ -57,10 +57,11 @@ public class UserServiceImpl implements UserService{
 		ModelMapper mapper = new ModelMapper();
 		User user = mapper.map(req.getUser(),User.class);
 		Store store = mapper.map(req.getStore(),Store.class);
+		Customer customer = mapper.map(req.getCustomer(),Customer.class);
 		
-		Customer customer = new Customer();
-		customer.setName(store.getName());
-		customer.setPhoneNumber(store.getPhoneNumber());
+		System.out.println(user);
+		System.out.println(store);
+		System.out.println(customer);
 		
 		HashSet<Role> roles = new HashSet<>();
 		roles.add( roleRepo.findByName("ROLE_STORE") );
@@ -68,8 +69,12 @@ public class UserServiceImpl implements UserService{
 		user.setPassword( passwordEncoder.encode(req.getUser().getPassword() ));
 		user.setRoles( roles );
 		
-		store.setUser( userRepo.save(user) );
+		User newUser = userRepo.save(user);
+		
+		store.setUser(newUser);
 		storeRepository.save(store);
+		
+		customer.setUser(newUser);
 		customerRepository.save(customer);
 	}
 	

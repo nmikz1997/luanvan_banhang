@@ -143,7 +143,17 @@ homepage.controller('ProductDetailController', function($scope,$timeout, $http, 
 		$scope.reviews = res.data;
 	})
 	
+	$http.get('/products/hinh-cua-san-pham-360/'+productId)
+		.then(function(res){
+			$scope.listImg = res.data;
+			if(res.data.length > 0) $scope.coAnh360 = true;
+		});
+	
 	$scope.view360 = function(){
+		let imgsrc = [];
+		$scope.listImg.forEach(function(ele){
+			imgsrc.push('/picture/'+ele.path);
+		})
 		jQuery('#contentProduct').append('<div class="ajax360">'+
 	            '<div class="close360">x</div>'+
 	            '<div class="boxpicture360">'+
@@ -153,20 +163,10 @@ homepage.controller('ProductDetailController', function($scope,$timeout, $http, 
 	                '</div>'+
 	            '</div>'+
 	        '</div>');
-		let imgsrc = [];
-		$http.get('/products/hinh-cua-san-pham-360/'+productId)
-		.then(function(res){
-			$scope.listImg = res.data;
-			$scope.listImg.forEach(function(ele){
-				imgsrc.push('/picture/'+ele.path);
-			})
-		})
-		.then(function(){
-			jQuery("#mySpriteSpin").spritespin({
+		jQuery("#mySpriteSpin").spritespin({
 				source: imgsrc,
 				width: 350,
 				height: 600,
-			});
 		});
 	}
 	

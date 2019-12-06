@@ -12,7 +12,7 @@
   <title>SB Admin 2 - Dashboard</title>
   <!-- Custom fonts for this template-->
   <link th:href="@{/vendor/fontawesome-free/css/all.min.css}" rel="stylesheet" type="text/css">
-  <link th:href="@{https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i}" rel="stylesheet">
+  <link th:href="@{/css/font-family.css}" rel="stylesheet">
 
   <!-- Custom styles for this template-->
   <link th:href="@{/css/sb-admin-2.min.css}" rel="stylesheet">
@@ -81,8 +81,8 @@
       </div>
     </div>
   </div>
-  <script th:src="@{https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular.min.js}"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/ng-ckeditor/0.2.1/ng-ckeditor.min.js"></script>
+  <script th:src="@{/js/angular.min.js}"></script>
+  <script th:src="@{/js/ng-ckeditor.min.js}"></script>
   <script th:src="@{/plugins/ckeditor/ckeditor.js}"></script>
   <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
   
@@ -100,7 +100,7 @@
   <script th:src="@{/app/checkTime.js}"></script>
   <script th:src="@{/js/angular-datatables.min.js}"></script>
   <script th:src="@{/js/jquery.dataTables.min.js}"></script>
-  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script th:src="@{/js/sweetalert.min.js}"></script>
 <section layout:fragment="script"></section>	
 	
 </body>

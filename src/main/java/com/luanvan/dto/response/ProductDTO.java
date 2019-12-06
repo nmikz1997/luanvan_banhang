@@ -9,9 +9,13 @@ import com.luanvan.model.Price;
 import com.luanvan.model.Promotion;
 import com.luanvan.model.Store;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@AllArgsConstructor
+@NoArgsConstructor
 public class ProductDTO {
 	
 	@Getter @Setter private Long id;

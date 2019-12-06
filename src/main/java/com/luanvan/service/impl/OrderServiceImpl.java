@@ -21,6 +21,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.luanvan.dto.request.CreateGroupOrder;
 import com.luanvan.dto.request.CreateOrderDTO;
+import com.luanvan.dto.request.CreateOrderDetailDTO.Product;
 import com.luanvan.dto.response.ChartOrderInf;
 import com.luanvan.dto.response.ChartOrderStore;
 import com.luanvan.dto.response.OrderDTO;
@@ -134,8 +135,9 @@ public class OrderServiceImpl implements OrderService{
 			for( OrderDetail detail : order.getOrdersDetail() ){
 				
 				ProductDTO productDTO = modelMapper.map(productRepository.getOne(detail.getProduct().getId()), ProductDTO.class);
-				if(productDTO.getQuantity() - (productDTO.getSold() + detail.getQuantity()) < 0) {
-					throw new RollbackException("Số lượng không đủ để đáp ứng");
+				
+				if( productDTO.getQuantity() - (productDTO.getSold() + detail.getQuantity()) < 0 || productDTO.getStatus() != 1  ) {
+					throw new RollbackException("Sản phẩm đã hết hàng hoặc ngừng kinh doanh");
 				}
 				
 				detail.getId().setOrderId(orderId);
@@ -145,6 +147,10 @@ public class OrderServiceImpl implements OrderService{
 		message.put("Success", "Thành công");
 		return message;
 	}
+	
+//	private Boolean canSold(Long id) {
+//		return productRepository.getOne(id).getStatus() == 1;
+//	}
 
 	@Override
 	public List<OrderDTO> findByStoreId(Long storeId) {
@@ -176,7 +182,8 @@ public class OrderServiceImpl implements OrderService{
 		Order order = orderRepository.getOne(id);
 		Long count = orderRepository.countByOrderGroupIdAndOrderStatusIdGreaterThan(order.getOrderGroup().getId(), (long) 1);
 		if(orderStatus.getId() == 2 && count == (long) 0) {
-			sendMail(order.getOrderGroup().getId(),order.getCustomer().getUser().getEmail());
+			//order.getCustomer().getUser().getEmail()
+			sendMail(order.getOrderGroup().getId(), "nguyenb1507129@student.ctu.edu.vn");
 		}
 		
 		order.setOrderStatus(orderStatus);

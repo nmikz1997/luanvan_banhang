@@ -1,12 +1,13 @@
 homepage.controller('RegisterStoreController', function($scope,$http,$timeout){
 	$scope.submit = function(){
-		
+		$scope.obj.customer.phoneNumber = $scope.obj.store.phoneNumber;
+		console.log($scope.obj);
 		$http.post('/users/dang-ky-ban-hang', $scope.obj)
 		.then(function (res) {
 			if(res.data.code != 10002){
 				console.log(res);
 				alert('Đăng ký thành công');
-				window.location.href = "/";
+				//window.location.href = "/";
 			}else if(res.data.code == 10002){
 				$scope.validate = "was-validated";
 				let theString = '^(?!'+ $scope.obj.user.email +'$).*';

@@ -20,32 +20,41 @@ homepage.controller('ShoppingCartController', function($scope, $http,$timeout, A
 //	});
 	
 	function refreshData(){
-		$http.post('/products/gio-hang',cart)
-		.then(function(res){
-			$scope.items = res.data;
-			cart = [];
-			$scope.total = 0;
-			res.data.forEach(function(ele){
-				$scope.total = $scope.total + ele.priceNew*ele.soLuongMua;
-				cart.push({id: ele.id, quantity: ele.soLuongMua});
+		if(cart != null){
+			$http.post('/products/gio-hang',cart)
+			.then(function(res){
+				$scope.items = res.data;
+				cart = [];
+				$scope.total = 0;
+				res.data.forEach(function(ele){
+					$scope.total = $scope.total + ele.priceNew*ele.soLuongMua;
+					cart.push({id: ele.id, quantity: ele.soLuongMua});
+				})
+				localStorage.setItem("items", JSON.stringify(cart));
+				resetCart();
 			})
-			localStorage.setItem("items", JSON.stringify(cart));
-			resetCart();
-		})
-		.then(function(){
-//			$http.get('orders/exchange').then(function(res){
-//				let tiGia = Number(res.data.bantienmat);
-//				$scope.totalPaypal = Math.round($scope.total/tiGia*100)/100;
-//			})
-			$http.get('https://api.exchangerate-api.com/v4/latest/USD?fbclid=IwAR130H7vwYrcV1Aa1LAcs4LlpnrNEUqEaV2Zi5EPRNn1G1vCkKBW5RNvZmw').then(function(res){
-				$scope.totalPaypal = Math.round($scope.total/res.data.rates.VND*100)/100;
+			.then(function(){
+//				$http.get('orders/exchange').then(function(res){
+//					let tiGia = Number(res.data.bantienmat);
+//					$scope.totalPaypal = Math.round($scope.total/tiGia*100)/100;
+//				})
+				$http.get('https://api.exchangerate-api.com/v4/latest/USD?fbclid=IwAR130H7vwYrcV1Aa1LAcs4LlpnrNEUqEaV2Zi5EPRNn1G1vCkKBW5RNvZmw').then(function(res){
+					$scope.totalPaypal = Math.round($scope.total/res.data.rates.VND*100)/100;
+				})
+				
 			})
-			
-		})
+		}
+		
 	}
 	
 	$scope.xoa = function(id){
-		console.log(id);
+		for (var i =0; i< cart.length; i++) {
+		    if (cart[i].id == id) {
+		    	cart.splice(i, 1);
+		    }
+		}
+		localStorage.setItem("items", JSON.stringify(cart));
+		refreshData();
 	}	
 	
 	$scope.tangMot = function(id){
@@ -84,7 +93,7 @@ homepage.controller('ShoppingCartController', function($scope, $http,$timeout, A
 		for (var property in grouped) {
 			//tạo 1 order
 			var order = {
-				address:"116A, Mạc thiên tích",
+				address: $scope.diaChi,
 				customer: {id: 1},
 				paymentType: {id: type},
 				store: {id: Number(property)},

@@ -15,11 +15,13 @@ homepage.controller('SearchController', function($scope,$http,$location,API){
 	
 	$http.get('/products/top-ban-chay/3')
 	.then(function(res){
-		console.log(res);
+		//console.log(res);
 		res.data.map(obj => $scope.bestSeller.push(obj.product_id) );
 	})
 	
 	var searchParams = new URLSearchParams(window.location.search);
+
+	$("#name").val(searchParams.get("name"));
 	
 	//$scope.desc = true;
 	
@@ -143,4 +145,46 @@ homepage.controller('SearchController', function($scope,$http,$location,API){
 			})
 		}
 		$('#countItems').text(countItems);
+		
+		function getNestedChildren(arr, parent) {
+			var out = [];
+			for(var i in arr) {
+				if(arr[i].parentId == parent) {
+					var categories = getNestedChildren(arr, arr[i].id);
+					if(categories.length) {
+						arr[i].categories = categories;
+					}
+					out.push(arr[i]);
+				}
+			}
+			return out;
+		}
+		
+//		$http.get(API + 'categories')
+//		.then(function (response) {
+//			$scope.categories = getNestedChildren(response.data, 0);
+//			
+//		}).then(function(response){
+//			console.log($scope.categories);
+//		});
+		
+		$http.get(API + 'categories')
+		.then(function (response) {
+			$scope.categories = getNestedChildren(response.data, 0);
+			document.getElementsByClassName("menu-mobi")[0].style.display = "block";
+		});
+
+		function getNestedChildren(arr, parent) {
+			var out = [];
+			for(var i in arr) {
+				if(arr[i].parentId == parent) {
+					var categories = getNestedChildren(arr, arr[i].id);
+					if(categories.length) {
+						arr[i].categories = categories;
+					}
+					out.push(arr[i]);
+				}
+			}
+			return out;
+		}
 });

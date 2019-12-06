@@ -73,8 +73,8 @@
 				        		<li><strong>Giá: </strong>{{history.memberType.price}}</li>
 				        	</ul>
 				        </td>
-				        <td>{{history.dateStart | date:"dd/MM/yyyy 'at' h:mma"}}</td>
-				        <td>{{history.dateEnd | date:"dd/MM/yyyy 'at' h:mma"}}</td>
+				        <td>{{history.dateStart | date:"dd/MM/yyyy 'at' h:mma" :'UTC'}}</td>
+				        <td>{{history.dateEnd | date:"dd/MM/yyyy 'at' h:mma" :'UTC'}}</td>
 				      </tr>
 				    </tbody>
 			  	</table>

@@ -155,17 +155,15 @@ app.controller('ProductsController', function($scope, $http,$timeout, API){
 		 	$scope.warning=true;
 		 }     
 	});
-
-
 	 	$scope.confirmDelete = function (id,status) {
 	 		var product = {};
 	 		product.id = id;
 	 		if(status == 0){
-	 			var msg = "Bạn muốn ngừng kinh doanh sản phẩm này?";
+	 			var msg = "Bạn muốn khóa sản phẩm này?";
 	 			var msgSuccess = "Đã ẩn sản phẩm";
 	 			product.status = 0;
 	 		}else{
-	 			var msg = "Bạn muốn mở bán sản phẩm này?";
+	 			var msg = "Cho phép kinh doanh sản phẩm này?";
 	 			var msgSuccess = "Đã mở bán sản phẩm";
 	 			product.status = 1;
 	 		}
@@ -178,8 +176,7 @@ app.controller('ProductsController', function($scope, $http,$timeout, API){
 				  dangerMode: false,
 				})
 				.then((willDelete) => {
-				  if (willDelete) {
-					  
+				  if (willDelete) {			  
 					$http.put('/products',product).then(function(res){
 						swal(msgSuccess, {
 							   icon: "success",

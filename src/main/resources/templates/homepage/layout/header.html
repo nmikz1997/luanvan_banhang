@@ -25,7 +25,7 @@
 							<ul class="menu-category">
 								<li ng-repeat="category in categories" ng-include="'categoryTree'"></li>
 								<script type="text/ng-template" id="categoryTree">
-									<a th:href="@{/tim-kiem?pCate={{category.id}}}" ng-click="getCate(category.id)" >{{ category.name }}</a>
+									<a th:href="@{/tim-kiem?cate={{category.id}}}" ng-click="getCate(category.id)" >{{ category.name }}</a>
 									<ul ng-if="category.categories" class="submenu">
 										<li ng-repeat="category in category.categories" ng-include="'categoryTree'">     
 										</li>
